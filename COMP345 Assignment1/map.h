@@ -142,5 +142,6 @@ public:
 	
 //	other functions
 	bool isNumber(string s);
+	void printMap();
 	bool validate(); 
 };

@@ -511,3 +511,25 @@ bool Map::validate() {
 	cout << "map valid!" << endl;
 	return true;	
 }
+
+//function to print all continent, regions and borders in a map
+void Map::printMap(){
+	cout << "---------------------------" << endl;
+	cout << this->name << endl;
+	cout << "---------------------------" << endl;
+	for(Continent* c: continents){
+		cout << "[" << c->getName() << "]" << endl;
+		for(Region* r: c->getRegions()){
+			cout << *r << endl;
+		}
+	}
+	cout << "---------------------------" << endl;
+	cout << "[Borders]" << endl;
+	for(vector<int> b: borders){
+		for(int region: b){
+			cout << region << " " ;
+		}
+		cout << endl;
+	}
+	cout << "---------------------------" << endl;
+}

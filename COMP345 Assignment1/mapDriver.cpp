@@ -59,4 +59,5 @@ int main(){
 
 //validate
 	cout << m->validate() << endl;
+	m->printMap();
 }
