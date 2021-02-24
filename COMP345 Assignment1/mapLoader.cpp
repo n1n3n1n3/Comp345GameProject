@@ -140,6 +140,9 @@ MapLoader::MapLoader(string path)
 	}
 }	
 
+std::ostream& operator<<(std::ostream &strm, const MapLoader &ml) {
+	return strm << "\n--------------------\nMap File:: " << ml.path << "\n--------------------\n";
+}
 string MapLoader::getPath(){
 	return this->path;
 }

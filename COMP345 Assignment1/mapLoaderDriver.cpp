@@ -5,4 +5,5 @@ using namespace std;
 
 int main(){
 	MapLoader *ml = new MapLoader("Birds.map");
+	cout << *ml << endl;
 }
