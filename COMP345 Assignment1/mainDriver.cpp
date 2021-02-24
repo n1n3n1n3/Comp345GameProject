@@ -118,10 +118,4 @@ int main(int argc, char *argv[]) {
 
 //Map loader main	
 //		MapLoader *ml = new MapLoader("Birds.map");
-//		
-//		vector<vector<string>> lc = ml->getListContinents();
-//		vector<vector<string>> lr = ml->getListRegions();
-//		vector<vector<string>> lb = ml->getListBorders();
-//		Map *m = new Map(lc, lr, lb);
-//		cout << m->validate() << endl;
 }
