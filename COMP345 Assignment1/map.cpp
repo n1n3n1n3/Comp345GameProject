@@ -255,7 +255,7 @@ Map::~Map(){
 Map:: Map(vector<vector<string>> listContinents,
 vector<vector<string>> listRegions,
 vector<vector<string>> listBorders){
-	cout << "loading map from file" << endl;
+	cout << "+++ loading map from file +++" << endl;
 	
 	this->loadContinents(listContinents);
 	this->loadRegions(listRegions);
@@ -385,7 +385,7 @@ void Map :: loadContinents(vector<vector<string>> listContinents){
 	int tempID;
 	string tempName;
 	Continent * tempContinent;
-	cout << "loading continents" << endl;
+	cout << "loading continents...";
 	for(vector<string> c: listContinents){
 		//check if the file gives the id, name and nb regions
 		if(c.size() != 3){
@@ -405,11 +405,12 @@ void Map :: loadContinents(vector<vector<string>> listContinents){
 			this->addContinent(*tempContinent);
 		}
 	}
+	cout << "...done" << endl;
 }
 //function  to load regions to the maps continents from file
 void Map :: loadRegions(vector<vector<string>> listRegions){
 	//verify that the vector has the right size
-	cout << "loading regions" << endl;
+	cout << "loading regions...";
 	int tempID;
 	string tempName;
 	string tempContinent;
@@ -429,19 +430,19 @@ void Map :: loadRegions(vector<vector<string>> listRegions){
 				
 				for (Continent* c: this->continents){
 					if(c->getName() == tempContinent){
-						cout << c->getName() << endl;
 						c->addRegion(tempID, tempName);
 					}
 				}
 			}
 		}
 	}
+	cout << "...done" << endl;
 }
 //function to load borders to map from file
 void Map :: loadBorders(vector<vector<string>> listBorders){
 		vector<int> tempV;
 		int tempI;
-		cout << "loading Borders" << endl;
+		cout << "loading Borders...";
 		for(vector<string> b: listBorders){
 			for(int i = 0; i < b.size(); i++){
 				tempI = stoi(b.at(i));
@@ -452,6 +453,7 @@ void Map :: loadBorders(vector<vector<string>> listBorders){
 			//reset for next border
 			tempV.clear();
 		}
+	cout << "...done" << endl;
 }
 //extra function to verify a string is a number
 bool Map::isNumber(string s)
@@ -468,7 +470,7 @@ bool Map::isNumber(string s)
 //
 //
 bool Map::validate() {
-	cout << "Validating Map" << endl;
+	cout << "Validating Map...";
 	
 //1 verify that the map is a connected subgraph
 //1.1 Verify that there is at least one continent in the map
@@ -506,5 +508,6 @@ bool Map::validate() {
 			}
 		}
 	}
+	cout << "map valid!" << endl;
 	return true;	
 }

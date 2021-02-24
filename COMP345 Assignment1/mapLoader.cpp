@@ -13,6 +13,7 @@ MapLoader::MapLoader()
 	temp = "";
 	index = 0;
 	position = 0;
+	Map *m;
 }
 //copy constructor
 MapLoader::MapLoader(const MapLoader& map)
@@ -115,13 +116,28 @@ MapLoader::MapLoader(string path)
 			}
 			cout << "+++ end of borders +++" << endl;
 		}
+		
 	}
 //	printContinents();
 //	printRegions();
 //	printBorders();
 //	cout << listContinents.size() << endl;
 	
+	//once the input is closed
 	input.close();
+	
+	if (this->listContinents.size() == 0 || this->listContinents.size() == 0 || this->listContinents.size() == 0){
+		cout << "Map format invalid" <<endl;
+	}
+	else{
+		this->map = new Map(this->listContinents, this->listRegions, this->listBorders);
+		if(this->map->validate()){
+			cout << "+++ Map successfully loaded +++" << endl;
+		}
+		else{
+			cout << "--- the Map format valid, but the map is invalid ---" <<endl;
+		}
+	}
 }	
 
 string MapLoader::getPath(){
