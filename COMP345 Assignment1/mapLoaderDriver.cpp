@@ -4,6 +4,6 @@ using namespace std;
 #include "map.h"
 
 int main(){
-	MapLoader *ml = new MapLoader("Birds.map");
+	MapLoader *ml = new MapLoader("./maps/BirdsL.map");
 	cout << *ml << endl;
 }

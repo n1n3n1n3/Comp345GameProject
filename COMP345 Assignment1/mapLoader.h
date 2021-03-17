@@ -32,6 +32,7 @@ class MapLoader
 		vector<vector<string>> getListContinents();
 		vector<vector<string>> getListRegions();
 		vector<vector<string>> getListBorders();
+		Map* getMap();
 		
 		//main loading function for each line
 		void loadContinent(string temp, int position);

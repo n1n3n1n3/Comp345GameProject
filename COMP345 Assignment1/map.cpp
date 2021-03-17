@@ -2,7 +2,6 @@
 #include <algorithm>
 
 
-
 /* Begin Region*/
 
 //Empty constructor
@@ -11,7 +10,7 @@ Region::Region() {
 	this->name = "";
 	this->continentId = 0;
 	this->continent = "";
-	this->owner = "";
+	this->owner = "none";
 	this->nbArmies = 0;
 }
 
@@ -27,6 +26,7 @@ Region::Region(const Region& region){
 	this->name = region.name;
 	this->nbArmies = region.nbArmies;
 	this->owner = region.owner;
+	this->player = region.player;
 }
 
 //parameter constructor
@@ -35,13 +35,13 @@ Region::Region(int id, string name, string continent, int continentId){
 	this->name = name;
 	this->continent = continent;
 	this->continentId = continentId;
-	this->owner = "";
+	this->owner = "none";
 	this->nbArmies = 0;
 }
 
 //streaming friend
 std::ostream& operator<<(std::ostream &strm, const Region &r) {
-	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << " of " << r.continent << "\nbelongs to: " << r.owner << " " << r.continent << "\nnb of armies: " << r.nbArmies << "\n--------------------\n";
+	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << "\nbelongs to: " << r.owner << "\nContinent: " << r.continent << "\nnb of armies: " << r.nbArmies << "\n--------------------\n";
 }
 
 //setters and getters
@@ -58,6 +58,17 @@ void Region::setOwner(string owner){
 
 string Region::getOwner(){
 	return this->owner;
+}
+
+
+void Region::setPlayer(Player* player){
+	this->player = player;
+	//update the name of the player that owns the territory
+	this->setOwner(player->getName());
+}
+
+Player* Region::getPlayer(){
+	return this->player;
 }
 
 void Region::addArmies(int nb){
@@ -89,7 +100,11 @@ void Region::setContinent(string continent){
 	this->continent = continent;
 }
 
-string Region::getContinent(){
+void Region::setContinentId(int id){
+	this->continentId = id;
+}
+
+string Region::getContinent() const{
 	return this->continent;
 }
 
@@ -175,6 +190,8 @@ Region* Continent::addRegion(int id, string name){
 ////add region by parameter
 void Continent::addRegion(Region& r){
 	this->regions.push_back(new Region(r));
+	r.setContinentId(this->getId());
+	r.setContinent(this->getName());
 }
 
 bool Continent::hasRegion(int id){
@@ -255,17 +272,19 @@ Map::~Map(){
 Map:: Map(vector<vector<string>> listContinents,
 vector<vector<string>> listRegions,
 vector<vector<string>> listBorders){
-	cout << "+++ loading map from file +++" << endl;
+	cout << "\n+++ loading map from file +++\n" << endl;
 	
 	this->loadContinents(listContinents);
+	cout << "\n";
 	this->loadRegions(listRegions);
+	cout << "\n";
 	this->loadBorders(listBorders);
+	cout << "\n";
 }
 
 
 std::ostream& operator<<(std::ostream &strm, const Map &m) {
-	return strm << "\n--------------------\nMap ::" << m.name << endl;
-//	return strm << "\n--------------------\nMap ::" << m.getName() << "\nhas " << m.getNbContinents() << " continents\nhas " << m.getNbRegions() << " regions\n has" << m.getNbBorders() << " borders\n--------------------\n";
+	return strm << "\n\n-------------- Map :: " << m.getName() << "--------------\nNb of Continents:: " << m.getNbContinents() << "\nNb of regions:: " << m.getNbRegions() << "\n-----------------------------------------" << endl;
 }
 
 //setters
@@ -280,7 +299,7 @@ void Map::setBorders(vector<vector<int>> borders){
 }
 
 
-string Map::getName(){
+const string Map::getName() const{
 	return this->name;
 }
 vector<Continent*> Map::getContinents(){
@@ -299,7 +318,7 @@ void Map::addContinent(Continent& c){
 	this->continents.push_back(new Continent(c));
 } 
 
-int Map::getNbContinents(){
+int Map::getNbContinents() const{
 	return this->continents.size();
 }
 
@@ -344,7 +363,7 @@ void Map::addBorder(vector<int> border){
 	}
 }
 
-int Map::getNbRegions(){
+int Map::getNbRegions() const{
 	int nbRegions = 0;
 	for (Continent* c: this->continents){
 		nbRegions += c->getNbRegions();
@@ -514,11 +533,11 @@ bool Map::validate() {
 
 //function to print all continent, regions and borders in a map
 void Map::printMap(){
-	cout << "---------------------------" << endl;
-	cout << this->name << endl;
-	cout << "---------------------------" << endl;
+	cout << "\n\n---------------------------" << endl;
+	cout << "		" << this->name << endl;
+	cout << "-----------------------------" << endl;
 	for(Continent* c: continents){
-		cout << "[" << c->getName() << "]" << endl;
+		cout << "[" << c->getName() << "]";;
 		for(Region* r: c->getRegions()){
 			cout << *r << endl;
 		}

@@ -1,0 +1,52 @@
+; map: birdsL.map
+
+[files]
+
+
+[Continents]
+1 Albatros 7
+2 Brandt 5
+3 Crow 5
+4 Duck 3
+
+[Regions]
+1 Pelican Albatros
+2 Plover Albatros
+3 Swallow Albatros
+4 Magpie Albatros
+5 Owl Albatros
+6 Gull Albatros
+7 Hawk Albatros
+8 Pheasant Brandt
+9 Pigeon Brandt
+10 Wren Brandt
+11 Sparrow Brandt
+12 Eagle Brandt
+13 Swan Crow
+14 Woodpecker Crow
+15 Dove Crow
+16 Heron Crow
+17 Colibri Crow
+18 Junco Duck
+19 Quail Duck
+20 Loon Duck
+
+[Borders]
+1 2 3
+2 3
+3 4 5
+3 6
+6 7
+4 9
+8 9 10
+8 10 11
+11 12
+10 18
+18 19
+18 20
+20 15
+13 14
+14 15
+15 16
+13 16
+16 17

@@ -1,4 +1,4 @@
-; map: birds.map
+; map: birdsPyramid.map
 
 [files]
 
@@ -35,7 +35,6 @@
 1 2 3
 3 4 5
 4 5
-4 14
 6 7
 8 9 10
 8 10 11

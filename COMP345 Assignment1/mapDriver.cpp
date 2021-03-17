@@ -21,9 +21,16 @@ int main(){
 	Map *m = new Map("Birds");
 //	cout << *m << endl;
 	
+	Player p1(14);
+	p1.setName("George");
+	
+	Player p2(10);
+	p2.setName("Anna");
+	
 //	//Albatros
 	Continent *c1 = new Continent(1, "Albatros");
 	Region *r1 = new Region(1, "Pelican", "Albratros", 1);
+	r1->setPlayer(&p1);
 	c1->addRegion(*r1);
 	c1->addRegion(2, "Plover");
 	c1->addRegion(3, "Swallow");
@@ -37,8 +44,12 @@ int main(){
 //	
 	Continent *c3 = new Continent(3, "Crow");
 	c3->addRegion(14, "Woodpecker");
-	c3->addRegion(15, "Dove");
-	c3->addRegion(16, "Heron");
+	Region *r2 = new Region(15, "Dove", "Crow", 3);
+	r2->setPlayer(&p1);
+	Region *r3 = new Region(16, "Heron", "Crow", 3);
+	r3->setPlayer(&p2);
+	c3->addRegion(*r2);
+	c3->addRegion(*r3);
 //	
 
 //Adding the continents to the map
@@ -58,6 +69,11 @@ int main(){
 	m->addBorder({14,15,16});
 
 //validate
-	cout << m->validate() << endl;
+//	cout << m->validate() << endl;
+//	cout << "\n-------------------------" << endl;
+//	cout << *m << endl;
+//	cout << "\n-------------------------" << endl;
 	m->printMap();
+	cout << "\nx" << endl;
+	cout << r3->getContinent() << endl;
 }

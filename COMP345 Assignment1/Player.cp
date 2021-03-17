@@ -3,13 +3,22 @@
 #include "Player.h"
 using namespace std;
 
-
+int Player::nextID = 0;
 //Constructor sets starting coins, consistent # of army and city tokens
+//default constructor
+Player::Player(){
+	army = 0;
+	city = 0;
+	coin = ' ';
+	this->id = ++nextID;
+}
+
 Player::Player(int c) {
 	army = 18;
 	city = 3;
 	coin = c;
 	cout << "\nNew Player created, parameter of coins passed. Uninitialized void pointers for Territory, cardHand, and Bidding objects yet to be initialized."; 
+	this->id = ++nextID;
 }
 
 //Copy constructor
@@ -18,18 +27,32 @@ Player::Player(const Player &p) {
 	city = p.city;
 	coin = p.coin;
 	name = p.name;
+	this->id = p.id;
 	cout << "\nCopy Constructor used.";
 }
 
 //Assignment operator
 Player& Player::operator = (const Player &p) {
-	cout << "\nAssignment operator used.";
+//	cout << "\nAssignment operator used.";
 	return *this;
 }
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Player &p) {
 	return strm << "Player has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
+}
+
+void Player::setName(std::string name){
+	this->name = name;
+}
+
+std::string Player::getName(){
+	return this->name;
+}
+
+
+int Player::getId(){
+	return this->id;
 }
 
 //Functions that will be defined later

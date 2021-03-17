@@ -30,7 +30,8 @@ MapLoader::~MapLoader(){
 
 //parameter constructor
 MapLoader::MapLoader(string path)
-{
+{	
+//	cout << path << endl;
 	//get the file path
 	this->path = path;
 	
@@ -132,7 +133,7 @@ MapLoader::MapLoader(string path)
 	else{
 		this->map = new Map(this->listContinents, this->listRegions, this->listBorders);
 		if(this->map->validate()){
-			cout << "+++ Map successfully loaded +++" << endl;
+			cout << "\n+++ Map successfully loaded +++" << endl;
 		}
 		else{
 			cout << "--- the Map format valid, but the map is invalid ---" <<endl;
@@ -166,7 +167,9 @@ vector<vector<string>> MapLoader::getListBorders()
 	return this->listBorders;
 }
 
-
+Map* MapLoader::getMap(){
+	return this->map;
+}
 //function to print file for tests
 void MapLoader::printFile(){
 	ifstream input(this->path);

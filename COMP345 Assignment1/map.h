@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <map>
 #include <vector>
@@ -6,7 +5,8 @@
 
 using namespace std;
 
-
+#ifndef MAP_H
+#define MAP_H
 
 class Region {
 private:
@@ -15,6 +15,7 @@ private:
 	int continentId;
 	string continent;
 	string owner;
+	Player* player;
 	int nbArmies;
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Region&);
@@ -33,12 +34,15 @@ public:
 	void removeArmies(int nb);
 	string getOwner();
 	void setOwner(string name);
-	void setContinent(string continent);	
+	Player* getPlayer();
+	void setPlayer(Player* player);
+	void setContinent(string continent);
+	void setContinentId(int id);
 	
 	int getId();
 	string getName();
 	int getNbArmies();
-	string getContinent();
+	string getContinent() const;
 	int getContinentId();
 };
 
@@ -108,14 +112,14 @@ public:
 	void setName(string name);
 	void setContinents(vector<Continent*>);
 	void setBorders(vector<vector<int>> borders);
-	string getName();
+	const string getName()const;
 	vector<Continent*> getContinents();
 	vector<vector<int>> getBorders();
 	
 	//extra continent functions
 	Continent* addContinent(int id, string name);
 	void addContinent(Continent& continent);
-	int getNbContinents();
+	int getNbContinents() const;
 	Continent* getContinentById(int id);
 	bool areAdjacent(Continent* c1, Continent* c2);
 
@@ -124,7 +128,7 @@ public:
 	void addBorder(vector<int> border);
 	
 	//region methods
-	int getNbRegions();
+	int getNbRegions() const;
 	Region* getRegionById(int id);
 	bool areAdjacent(Region* r1, Region* r2);
 	
@@ -145,3 +149,5 @@ public:
 	void printMap();
 	bool validate(); 
 };
+
+#endif
