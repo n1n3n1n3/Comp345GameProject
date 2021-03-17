@@ -27,4 +27,5 @@ int main() {
 	cout << "\nEnd of demonstration of Player methods.";
 	getPlayerById(1, listOfPlayers);
 	getPlayerByName("anna", listOfPlayers);
+	
 }

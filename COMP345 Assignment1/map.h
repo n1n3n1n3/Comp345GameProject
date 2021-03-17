@@ -15,8 +15,8 @@ private:
 	int continentId;
 	string continent;
 	string owner;
-	Player* player;
 	int nbArmies;
+	vector<pair<Player*, int>> playerArmies;
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Region&);
 	
@@ -28,22 +28,25 @@ public:
 	~Region();
 	
 //	setters and getters
+	void setPlayers(vector<Player*> playerList);
+	void setPlayersAndArmies(vector<Player*> playerList, vector<int> armyNbList);
 	void setName(string name);
-	void setArmies(int nb);
-	void addArmies(int nb);
-	void removeArmies(int nb);
+	void setArmies(string playerName, int nb);
+	void addArmies(string playerName, int nb);
+	void removeArmies(string playerName, int nb);
 	string getOwner();
-	void setOwner(string name);
-	Player* getPlayer();
-	void setPlayer(Player* player);
+	void setOwner(Player* player);
+	void determineOwner();
+	void setOwnerByName(string name);
 	void setContinent(string continent);
 	void setContinentId(int id);
 	
 	int getId();
 	string getName();
-	int getNbArmies();
+	int getNbArmiesByName(string name);
 	string getContinent() const;
 	int getContinentId();
+	vector<pair<Player*, int>> getPlayerArmies();
 };
 
 class Continent {
@@ -88,7 +91,6 @@ public:
 };
 
 class Map {
-	
 private:
 	string name;
 	vector<Continent*> continents;
@@ -112,6 +114,7 @@ public:
 	void setName(string name);
 	void setContinents(vector<Continent*>);
 	void setBorders(vector<vector<int>> borders);
+	void setNbPlayersIntoMap(vector<Player*>);
 	const string getName()const;
 	vector<Continent*> getContinents();
 	vector<vector<int>> getBorders();
@@ -136,7 +139,7 @@ public:
 	void loadContinents(vector<vector<string>> listContinents);
 	void loadRegions(vector<vector<string>> listContinents);
 	void loadBorders(vector<vector<string>> listBorders);
-	
+	void loadPlayers(vector<Player*> players);
 
 	
 // sub methods for validate (might be useful later also)

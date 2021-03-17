@@ -11,7 +11,8 @@ Region::Region() {
 	this->continentId = 0;
 	this->continent = "";
 	this->owner = "none";
-	this->nbArmies = 0;
+	//create an empty pair list for players and number of armies
+	this->playerArmies = vector<pair<Player*, int>>();
 }
 
 
@@ -24,9 +25,9 @@ Region::~Region(){
 Region::Region(const Region& region){
 	this->id = region.id;
 	this->name = region.name;
-	this->nbArmies = region.nbArmies;
 	this->owner = region.owner;
-	this->player = region.player;
+	this->playerArmies = region.playerArmies;
+	this->nbArmies = 0;
 }
 
 //parameter constructor
@@ -37,6 +38,7 @@ Region::Region(int id, string name, string continent, int continentId){
 	this->continentId = continentId;
 	this->owner = "none";
 	this->nbArmies = 0;
+	this->playerArmies = vector<pair<Player*, int>>();
 }
 
 //streaming friend
@@ -44,7 +46,16 @@ std::ostream& operator<<(std::ostream &strm, const Region &r) {
 	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << "\nbelongs to: " << r.owner << "\nContinent: " << r.continent << "\nnb of armies: " << r.nbArmies << "\n--------------------\n";
 }
 
+
+
 //setters and getters
+void Region::setPlayers(vector<Player*> playerList){
+	//assume that each player starts with 0 armies
+	for(Player* p: playerList){
+		playerArmies.push_back({p, 0});
+	}
+}
+
 void Region::setName(string name){
 	this->name = name;
 }
@@ -52,8 +63,8 @@ string Region::getName(){
 	return this->name;
 }
 
-void Region::setOwner(string owner){
-	this->owner = owner;
+void Region::setOwner(Player* p){
+	this->owner = p->getName();
 }
 
 string Region::getOwner(){
@@ -61,36 +72,62 @@ string Region::getOwner(){
 }
 
 
-void Region::setPlayer(Player* player){
-	this->player = player;
-	//update the name of the player that owns the territory
-	this->setOwner(player->getName());
+//void Region::setPlayer(int index, Player* player){
+//	this->player = player;
+//	//update the name of the player that owns the territory
+//	this->setOwner(player->getName());
+//}
+
+vector<pair<Player*, int>> Region::getPlayerArmies(){
+	return this->playerArmies;
 }
 
-Player* Region::getPlayer(){
-	return this->player;
-}
-
-void Region::addArmies(int nb){
-	this->nbArmies += nb;
-}
-
-void Region::setArmies(int nb){
-	this->nbArmies = nb;
-}
-
-void Region::removeArmies(int nb){
-	if(this->nbArmies - nb < 0){
-		this->nbArmies = 0;
+void Region::addArmies(string playerName, int nb){
+	for(pair<Player*, int> p: playerArmies){
+		if((p.first->getName().compare(playerName)) == 0){
+			p.second += nb;
+		}
 	}
-	else {
-		this->nbArmies = this->nbArmies - nb;
-	}
+	this->determineOwner();
 }
 
-int Region::getNbArmies(){
-	return this->nbArmies;
+void Region::setArmies(string playerName, int nb){
+	for(pair<Player*, int> p: playerArmies){
+		if((p.first->getName().compare(playerName)) == 0){
+			p.second = nb;
+		}
+	}
+	this->determineOwner();
 }
+
+void Region::removeArmies(string playerName, int nb){
+	//iterate through the list of players
+	for(pair<Player*, int> p: playerArmies){
+		if((p.first->getName().compare(playerName)) == 0){
+			if(p.second - nb < 0){
+				p.second = 0;
+			}
+			else {
+				p.second = p.second - nb;
+			}
+		}
+	}
+	//check if the owner of the territory has changed
+	this->determineOwner();
+}
+
+int Region::getNbArmiesByName(string name){
+	for(pair<Player*, int> p: playerArmies){
+		if((p.first->getName().compare(name)) == 0){
+			return p.second;
+		}
+	}
+	
+	cout << "no such player" << endl;
+	//return 0 if there is no such player
+	return 0;
+}
+
 
 int Region::getId(){
 	return this->id;
@@ -112,6 +149,26 @@ int Region::getContinentId(){
 	return this->continentId;
 }
 
+
+void Region::determineOwner(){
+	string currOwner = "";
+	int currentMax = 0; 
+	for(pair<Player*, int> p: playerArmies){
+		if(p.second > currentMax && p.second > 0){
+			currentMax = p.second;
+			currOwner = p.first->getName();
+		}
+		//If two players have the same max number of armies and it is a tie
+		//there is no owner
+		if (p.second == currentMax && currOwner.compare("") != 0){
+			currOwner = "none";
+		}
+	}
+	if ((this->owner).compare(currOwner) != 0){
+		cout << "region " << this->name << "has gone from " << this->owner << " to " << currOwner << "." << endl;
+		this->owner = currOwner;
+	}
+}
 /*end of region*/
 
 
@@ -482,6 +539,15 @@ bool Map::isNumber(string s)
 		return false;
 	
 	return true;
+}
+
+void Map::loadPlayers(vector<Player*> listPlayers){
+	//run through each region in each territory and add the list of players
+	for (Continent* c: this->continents){
+		for (Region* r: c->getRegions()){
+			r->setPlayers(listPlayers);
+		}
+	}
 }
 
 
