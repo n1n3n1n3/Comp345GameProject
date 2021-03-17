@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Player.h"
+
 using namespace std;
 
 int Player::nextID = 0;
@@ -11,6 +13,14 @@ Player::Player(){
 	city = 0;
 	coin = ' ';
 	this->id = ++nextID;
+}
+
+Player::Player(int c, string name){
+	army = 18;
+	city = 3;
+	coin = c;
+	this->id = ++nextID;
+	this->name = name;
 }
 
 Player::Player(int c) {
@@ -26,7 +36,7 @@ Player::Player(const Player &p) {
 	army = p.army;
 	city = p.city;
 	coin = p.coin;
-	name = p.name;
+	this->name = p.name;
 	this->id = p.id;
 	cout << "\nCopy Constructor used.";
 }
@@ -76,3 +86,26 @@ void Player::DestroyArmy() {
 	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
 }
 
+Player* getPlayerById(int id, vector<Player*> playerList){
+	cout << "getting player by ID" << endl;
+	for(Player* p: playerList){
+			if(p->getId() == id){
+				return p;
+			}
+		}
+	//return empty player
+	cout << "no player with id " << id << endl;
+	return new Player();
+}
+
+Player* getPlayerByName(string name, vector<Player*> playerList){
+	cout << "getting player by Name" << endl;
+	for(Player* p: playerList){
+		if((p->getName()).compare(name) == 0){
+			return p;
+		}
+	}
+	cout << "no player with name " << name << endl;
+	//return empty player
+	return new Player();
+}

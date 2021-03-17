@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
 class Player {
 
 protected:
@@ -21,7 +23,7 @@ private:
 	int coin;
 	int army;
 	int city;
-	std::string name;
+	string name;
 	int id;
 
 	//Output
@@ -31,6 +33,7 @@ public:
 	//Constructor that sets starting coins, copy, assignment
 	Player();
 	Player(int c);
+	Player(int c, string name);
 	Player(const Player &p);
 	Player& operator = (const Player &p);
 	
@@ -48,5 +51,8 @@ public:
 	void DestroyArmy();
 	
 };
+
+Player* getPlayerById(int id, vector<Player*> playerList);
+Player* getPlayerByName(string name, vector<Player*> playerList);
 
 #endif
