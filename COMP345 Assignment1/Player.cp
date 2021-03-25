@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Player.h"
+//#include "Cards.h"
 
 using namespace std;
 
@@ -125,6 +126,19 @@ void Player::makeBid(int bid){
 	}
 }
 
+void Player::exchange(Card* c){
+	if (this->getCoins() < c->getCost()){
+			cout << "player has insufficient funds";
+			return;
+	}
+	else {
+		// pay the cost
+		this->coin = this->coin - c->getCost();
+		// add card to the players list
+		playerCards.push_back(c);
+	}
+}
+
 Player* getPlayerById(int id, vector<Player*> playerList){
 	cout << "getting player by ID" << endl;
 	for(Player* p: playerList){
@@ -148,4 +162,3 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 	//return empty player
 	return new Player();
 }
-

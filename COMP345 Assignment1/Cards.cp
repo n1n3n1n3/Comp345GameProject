@@ -8,26 +8,28 @@ using namespace std;
 
 //Default constructor for Card
 Card::Card() {
-	name = "";
-	type = ' ';
-	good = 0;
-	action = 0;
+	this->name = "";
+	this->type = ' ';
+	this->good = 0;
+	this->action = 0;
+	this->cost = 0;
 }
 
 //Constructor
 Card::Card(string n, char t, int g, int a) {
-	name = n;
-	type = t;
-	good = g;
-	action = a;
+	this->name = n;
+	this->type = t;
+	this->good = g;
+	this->action = a;
+	this->cost = 0;
 }
 
 //Copy
 Card::Card(const Card &c) {
-	name = c.name;
-	type = c.type;
-	good = c.good;
-	action = c.action;
+	this->name = c.name;
+	this->type = c.type;
+	this->good = c.good;
+	this->action = c.action;
 }
 
 //Assignment operator
@@ -41,11 +43,19 @@ std::ostream& operator<<(std::ostream &strm, const Card &c) {
 	return strm << "\n--------------------\n" << c.name << "\n~~~~~~~~~~~~~~~~~~~~\nGood: " << c.good << "\n~~~~~~~~~~~~~~~~~~~~\nAction: " << c.action << "\n--------------------\n";
 }
 
-//Accessor
-string Card::getName() {
-	return name;
+//mutators
+void Card::setCost(int c){
+	this->cost = c;
 }
 
+//Accessor
+string Card::getName() {
+	return this->name;
+}
+
+int Card::getCost() {
+	return this->cost;
+}
 /*
 For actions and goods:
 
@@ -135,7 +145,7 @@ Deck::Deck(int numPlayers) {
 	}
 
 	//Set the initial Hand by drawing 6 cards
-	hand.setHand(draw(), draw(), draw(), draw(), draw(), draw());
+	hand.setHand(draw(0), draw(1), draw(1), draw(2), draw(2), draw(3));
 	
 }
 
@@ -162,12 +172,13 @@ std::ostream& operator<<(std::ostream &strm, const Deck &d) {
 
 
 //Draw method that returns a Card
-Card Deck::draw() {
+Card Deck::draw(int cost) {
 	//Select a random number within the bounds of the array
 	srand(time(0));
 	int select = rand() % size;
 	Card c = *cardDeck[select];
-	
+	//set the cost of the card
+	c.setCost(cost);
 	//Reorder the deck to fill in the drawn card
 	for (int i = select; i < size; i++) {
 		cardDeck[i] = cardDeck[i+1];
@@ -183,6 +194,11 @@ Card Deck::draw() {
 
 Hand Deck::getHand(){
 	return this->hand;
+}
+
+void Deck::drawCardToHand(){
+	hand.shiftHand();
+	hand.getHand() = draw(3);
 }
 
 //Hand defaut constructor of blank Cards
@@ -211,17 +227,9 @@ std::ostream& operator<<(std::ostream &strm, const Hand &h) {
 }
 
 
-/*void Hand::addCard(Card c) {
-	for (int i = 0; i < 6; i ++) {
-		Card q = *hand[i];
-		if (q.getName() == "") {
-			cout << "\n\nAdding card " << c << " to hand position " << i;
-			*hand[i] = c;
-			i = 6;
-		}
-	}
-	
-}*/
+//void Hand::addCard(int index) {
+//	hand[index] =
+//}
 
 //Initially set hands
 void Hand::setHand(Card a, Card b, Card c, Card d, Card e, Card f) {
@@ -233,16 +241,29 @@ void Hand::setHand(Card a, Card b, Card c, Card d, Card e, Card f) {
 	hand[5] = new Card(f);
 }
 
-//This will allow players to exchange coins for a card
-void Hand::exchange(Player* p, int index) {
-//	check if player has enough coins
-	if (p->getCoins() < cost[index]){
-		cout << "player has insufficient funds";
-		return;
-	}
-	
-	else {
-		p->payCoin(cost[index]);
-		
+void Hand::shiftHand(){
+	for (int i = 1; i < 6; i++){
+		//set the cost to the new cost
+		hand[i]->setCost(hand[i - 1]->getCost());
+		//swap the elements
+		hand[i - 1] = hand[i];
 	}
 }
+
+Card*[6] Hand::getHand(){
+	return this->hand;
+}
+
+//This will allow players to exchange coins for a card
+//void Hand::exchange(Player* p, int index) {
+////	check if player has enough coins
+//	if (p->getCoins() < cost[index]){
+//		cout << "player has insufficient funds";
+//		return;
+//	}
+//	
+//	else {
+//		p->payCoin(cost[index]);
+//		
+//	}
+//}

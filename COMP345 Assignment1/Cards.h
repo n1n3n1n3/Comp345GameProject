@@ -43,6 +43,7 @@ private:
 	char type;
 	int action;
 	int good;
+	int cost;
 	
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Card&);
@@ -60,12 +61,14 @@ public:
 	void setType(char t);
 	void setAction(int a);
 	void setgood(int g);
+	void setCost(int c);
 	
 	//Accessors
 	std::string getName();
 	char getType();
 	int getAction();
 	int getGood();
+	int getCost();
 };
 
 
@@ -73,8 +76,8 @@ class Hand {
 	
 	//The hand of the deck is an array of 6 Cards
 private:
+	Card carCost;
 	Card *hand[6];
-	int cost[6] = {0, 1, 1, 2, 2, 3};
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Hand&);
 public:
@@ -84,8 +87,11 @@ public:
 	Hand(const Hand &h);
 	Hand& operator = (const Hand &h);
 	void setHand(Card a, Card b, Card c, Card d, Card e, Card f);
+	Card*[6] getHand();
 	void addCard(Card c);
-	void exchange(Player* p, int index);
+//	void exchange(Player* p, int index);
+	
+	void shiftHand();
 };
 
 class Deck {
@@ -93,6 +99,7 @@ class Deck {
 private:
 	
 	//A deck has a max of 34 cards, a hand, and a size
+	Card *cardCost;
 	Card *cardDeck[34];
 	Hand hand;
 	int size;
@@ -107,10 +114,12 @@ public:
 	Deck& operator = (const Deck &d);
 	
 	//Draw method that returns a card
-	Card draw();
+	Card draw(int cost);
 	
 	//setters and getters
 	Hand getHand();
+	
+	void drawCardToHand();
 };
 
 

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Bid.h"
+#include "Cards.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ private:
 	//give a name and an id to the player
 	//Pointers to bjects of territory on Map, hand of Cards, and Bid obkject
 	void* ownedTerritory;
-	void* cardHand;
+	vector<Card*> playerCards;
 	void* bidding;
 	
 	//Attributes
@@ -57,7 +58,7 @@ public:
 	void BuildCity();
 	void DestroyArmy();
 	void makeBid(int bid);
-	void exchange();
+	void exchange(Card* c);
 };
 
 Player* getPlayerById(int id, vector<Player*> playerList);
