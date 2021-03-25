@@ -126,7 +126,7 @@ void Player::makeBid(int bid){
 	}
 }
 
-void Player::exchange(Card* c){
+void Player::exchange(Deck* d, Card* c){
 	if (this->getCoins() < c->getCost()){
 			cout << "player has insufficient funds";
 			return;
@@ -136,6 +136,8 @@ void Player::exchange(Card* c){
 		this->coin = this->coin - c->getCost();
 		// add card to the players list
 		playerCards.push_back(c);
+		
+		d->exchangeCardInHand(c);
 	}
 }
 

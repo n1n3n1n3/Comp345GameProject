@@ -124,13 +124,10 @@ void Hand::setHand(Card* a, Card* b, Card* c, Card* d, Card* e, Card* f){
 	cards.push_back(f);
 }
 
-//void Hand::setHand(vector<Card*> cardList){
-//	cout << cardList.at(2)->getName() << endl;
-//	for(Card* c : cardList){
-//		cout << c->getName() << endl;
-//		this->cards.push_back(c);
-//	}
-//}
+void Hand::addCard(Card* c){
+	//adds new card at the end of the hand
+	cards.push_back(c);
+}
 
 void Hand::placeCardAtIndex(Card* c, int index){
 	this->cards.at(index) = c;
@@ -240,4 +237,34 @@ vector<Card*> Deck::getCardDeck(){
 
 Hand* Deck::getHand(){
 	return this->deckHand;
+}
+
+void Deck::exchangeCardInHard(Card* c){
+//	for (Card* dc : this->deckHand->getCards()){
+//		if(c == c){
+//			
+//		}
+//	}
+	int index = -1;
+	for (int i = 0; i < 6; i++){
+		if (c == this->deckHand->getCards().at(i)){
+			index = i;
+		}
+	}
+	
+	if (index == -1){
+		cout << "such card does not exist in hand" << endl;
+	}
+	
+	//shift the cards and draw a new one
+	else {
+		for (int i = index; i < 5; i++){
+			deckHand->getCards().at(i) = deckHand->getCards().at(i + 1);
+		}
+		deckHand->getCards().at(5) = draw();
+		
+		//adjust card costs
+		deckHand->setCardsCosts();
+	}
+	
 }

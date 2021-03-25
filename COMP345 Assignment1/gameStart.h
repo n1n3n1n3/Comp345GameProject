@@ -40,9 +40,10 @@ public:
 	void selectMap();
 	void setPlayers();
 	void setPlayers(vector<Player*> playerList);
-//	void setDeck();
+	void setDeck();
 	
-//	Deck* getDeck();
+	Deck* getDeck();
+	Hand* getHand();
 
 	
 //	void exchange(Player* p);

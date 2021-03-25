@@ -58,7 +58,7 @@ public:
 	void BuildCity();
 	void DestroyArmy();
 	void makeBid(int bid);
-	void exchange(Card* c);
+	void exchange(Deck* d, Card* c);
 };
 
 Player* getPlayerById(int id, vector<Player*> playerList);

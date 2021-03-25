@@ -112,6 +112,7 @@ void GameStart::setPlayers(vector<Player*> playerList){
 }
 
 void GameStart::setDeck(){
+	cout << "setting deck" << endl;
 	this->deck = new Deck(this->nbPlayers);
 }
 
@@ -119,40 +120,6 @@ Deck* GameStart::getDeck(){
 	return this->deck;
 }
 
-Hand GameStart::getHand(){
+Hand* GameStart::getHand(){
 	return this->deck->getHand();
-}
-
-Player* GameStart::getPlayerByIndex(int index){
-	return players.at(index);
-}
-
-void GameStart::exchange(Player* p){
-	cout << this->deck->getHand() << endl;
-	cout << "scroll up to see hand" << endl;
-	char doesExchange;
-	cout << "would you like to exchange a card? (y) (n) :" ;
-	cin >> doesExchange;
-	while(doesExchange != 'y' && doesExchange != 'n'){
-		cout << "please enter 'y' or 'n' "<< endl;
-	}
-//	if player doesnt want to exchange, exit
-	if (doesExchange == 'n'){
-		return; 
-	}
-	
-	else {
-//		card to purchase
-		int cardIndex;
-		cout << "enter index of desired card: ";
-		cin >> cardIndex;
-		while (cardIndex < 0  || cardIndex > 5){
-			cout << "please enter an index between 0 and 5" << endl;
-			cin >> cardIndex;
-		}
-		
-		this->deck->getHand().exchange(p, cardIndex);
-		
-	}
-	
 }
