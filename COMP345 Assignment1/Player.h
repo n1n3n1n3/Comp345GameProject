@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+#include "Bid.h"
+
 using namespace std;
 
 class Player {
@@ -25,6 +27,7 @@ private:
 	int city;
 	string name;
 	int id;
+	Bid* bid;
 
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Player&);
@@ -33,23 +36,28 @@ public:
 	//Constructor that sets starting coins, copy, assignment
 	Player();
 	Player(int c);
+	Player(string name);
 	Player(int c, string name);
 	Player(const Player &p);
 	Player& operator = (const Player &p);
 	
 	//setters and getters
 	void setName(std::string name);
+	void setCoin(int c);
 	std::string getName();
 	int getId();
+	int getCoins();
+	Bid* getBid();
 	
 	//All possible actions
-	void PayCoin();
+	void payCoin(int amount);
 	void PlaceNewArmies();
 	void MoveArmies();
 	void MoveOverLand();
 	void BuildCity();
 	void DestroyArmy();
-	
+	void makeBid(int bid);
+	void exchange();
 };
 
 Player* getPlayerById(int id, vector<Player*> playerList);

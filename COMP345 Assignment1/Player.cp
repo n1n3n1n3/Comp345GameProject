@@ -9,35 +9,47 @@ int Player::nextID = 0;
 //Constructor sets starting coins, consistent # of army and city tokens
 //default constructor
 Player::Player(){
-	army = 0;
-	city = 0;
-	coin = ' ';
+	this->army = 0;
+	this->city = 0;
+	this->coin = 0;
 	this->id = ++nextID;
+	this->bid = new Bid();
+}
+
+Player::Player(string name){
+	this->army = 18;
+	this->city = 3;
+	this->id = ++nextID;
+	this->name = name;
+	this->bid = new Bid(name);
 }
 
 Player::Player(int c, string name){
-	army = 18;
-	city = 3;
-	coin = c;
+	this->army = 18;
+	this->city = 3;
+	this->coin = c;
 	this->id = ++nextID;
 	this->name = name;
+	this->bid = new Bid(name);
 }
 
 Player::Player(int c) {
-	army = 18;
-	city = 3;
-	coin = c;
+	this->army = 18;
+	this->city = 3;
+	this->coin = c;
+	this->bid = new Bid();
 	cout << "\nNew Player created, parameter of coins passed. Uninitialized void pointers for Territory, cardHand, and Bidding objects yet to be initialized."; 
 	this->id = ++nextID;
 }
 
 //Copy constructor
 Player::Player(const Player &p) {
-	army = p.army;
-	city = p.city;
-	coin = p.coin;
+	this->army = p.army;
+	this->city = p.city;
+	this->coin = p.coin;
 	this->name = p.name;
 	this->id = p.id;
+	this->bid = new Bid(*p.bid);
 	cout << "\nCopy Constructor used.";
 }
 
@@ -56,6 +68,14 @@ void Player::setName(std::string name){
 	this->name = name;
 }
 
+void Player::setCoin(int c){
+	this->coin = c;
+}
+
+int Player::getCoins(){
+	return this->coin;
+}
+
 std::string Player::getName(){
 	return this->name;
 }
@@ -65,9 +85,19 @@ int Player::getId(){
 	return this->id;
 }
 
+Bid* Player::getBid(){
+	return this->bid;
+}
+
 //Functions that will be defined later
-void Player::PayCoin() {
-	cout << "\nPayCoin() will subtract a coin from a Player.";
+void Player::payCoin(int amount) {
+	if (this->coin -= amount < 0){
+		cout << "player has insufficient funds" << endl;
+	}
+	else {
+		this->coin -= amount;
+		cout << "player:" << this->name << " paid " << amount << "and now has " << this->coin << " coins";
+	}
 }
 
 void Player::PlaceNewArmies() {
@@ -84,6 +114,15 @@ void Player::BuildCity() {
 }
 void Player::DestroyArmy() {
 	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
+}
+
+void Player::makeBid(int bid){
+	if (bid > this->coin){
+		cout << "cannot make bid greater than the number of coins" << endl;
+	}
+	else {
+		this->bid->betCoins(bid);
+	}
 }
 
 Player* getPlayerById(int id, vector<Player*> playerList){
@@ -109,3 +148,4 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 	//return empty player
 	return new Player();
 }
+

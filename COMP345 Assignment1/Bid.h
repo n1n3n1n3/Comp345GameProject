@@ -3,44 +3,47 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
+using namespace std;
 
 class Bid {
-	
-//Bid objects have a name and the coins that were bid
 private:
-	std::string name;
+	//class variables
+	static int maxBid;
+	static int nbBids;
+	static vector<Bid*> allBids;
+	//instance variables
+	string name;
 	int coinsBet;
-	
-	//Static variables to compare all created Bid objects
-	static int totalBidders;
-	static int maxCoins;
-	static Bid *allBidders[4];
-	
-	//for custom output
+	//friend functions
 	friend std::ostream& operator<<(std::ostream&, const Bid&);
-	
+
 public:
-	
-	//Constructors, copy, assignment
-	Bid(std::string n, int c);
-	Bid(std::string n);
+//	constructors
 	Bid();
+	Bid(int c);
+	Bid(string n);
+	Bid(string n, int c);
 	Bid(const Bid &b);
 	Bid& operator = (const Bid &b);
 	
-	//Mutators
-	void setName(std::string n);
+//	setters
+	void setName(string n);
 	void betCoins(int c);
 	
-	//Manually set bids for allBidders
-	static void makeBids();
+//	getters
+	string getName();
+	int getBid();
 	
-	//Compare bids of allBidders
-	static Bid compareBids();
-
-
+// static functions
+	static int getNbBidders();
+	static vector<Bid*> getAllBidders();
+	static vector<int> getAllBids();
+	static void makeBids();
+	static Bid* compareBids();
 };
+
 
 
 #endif

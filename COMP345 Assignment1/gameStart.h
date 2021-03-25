@@ -6,6 +6,7 @@
 
 #include "map.h"
 #include "mapLoader.h"
+#include "Cards.h"
 
 using namespace std;
 
@@ -21,6 +22,9 @@ private:
 	Map *map;
 	
 	vector<Player*> players;
+	int nbPlayers;
+	
+	Deck *deck;
 	
 	friend std::ostream& operator<<(std::ostream&, const GameStart&);
 	
@@ -30,10 +34,19 @@ public:
 	GameStart();
 //	~GameStart();
 	
+	
 	//functions
 	void loadMapFilePaths();
 	void selectMap();
-	void enterNbPlayers();
+	void setPlayers();
+	void setPlayers(vector<Player*> playerList);
+	void setDeck();
+	
+	Deck* getDeck();
+	Hand getHand();
+	Player* getPlayerByIndex(int index);
+	
+	void exchange(Player* p);
 };
 
 #endif

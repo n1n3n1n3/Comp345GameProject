@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Cards.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -180,6 +181,10 @@ Card Deck::draw() {
 	return c;
 }
 
+Hand Deck::getHand(){
+	return this->hand;
+}
+
 //Hand defaut constructor of blank Cards
 Hand::Hand() {
 	for (int i = 0; i < 6; i++) {
@@ -226,10 +231,18 @@ void Hand::setHand(Card a, Card b, Card c, Card d, Card e, Card f) {
 	hand[3] = new Card(d);
 	hand[4] = new Card(e);
 	hand[5] = new Card(f);
-	
 }
 
 //This will allow players to exchange coins for a card
-void Hand::exchange() {
-	cout << "This will let a Player exchange coins for a card in the Hand.";
+void Hand::exchange(Player* p, int index) {
+//	check if player has enough coins
+	if (p->getCoins() < cost[index]){
+		cout << "player has insufficient funds";
+		return;
+	}
+	
+	else {
+		p->payCoin(cost[index]);
+		
+	}
 }

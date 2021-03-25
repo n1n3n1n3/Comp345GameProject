@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include "Player.h"
 /*
 For actions and goods:
 
@@ -73,7 +74,7 @@ class Hand {
 	//The hand of the deck is an array of 6 Cards
 private:
 	Card *hand[6];
-	
+	int cost[6] = {0, 1, 1, 2, 2, 3};
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Hand&);
 public:
@@ -84,7 +85,7 @@ public:
 	Hand& operator = (const Hand &h);
 	void setHand(Card a, Card b, Card c, Card d, Card e, Card f);
 	void addCard(Card c);
-	void exchange();
+	void exchange(Player* p, int index);
 };
 
 class Deck {
@@ -107,7 +108,9 @@ public:
 	
 	//Draw method that returns a card
 	Card draw();
-
+	
+	//setters and getters
+	Hand getHand();
 };
 
 

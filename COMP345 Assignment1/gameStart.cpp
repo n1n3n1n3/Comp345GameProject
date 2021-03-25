@@ -54,20 +54,105 @@ void GameStart::loadMapFilePaths(){
 	closedir(dir);
 }
 
-void GameStart::enterNbPlayers(){
-	int nbPlayers;
+void GameStart::setPlayers(){
+//	int nbPlayers;
 	
 	cout << "Enter number of players (2-4): ";
-	cin >> nbPlayers;
+	cin >> this->nbPlayers;
 	
 	//prompt the user to enter a correct amount
-	while (nbPlayers < 2 || nbPlayers > 4){
+	while (this->nbPlayers < 2 || this->nbPlayers > 4){
 		cout << "enter a number of players between 2 and 4" << endl;
-		cin >> nbPlayers;
+		cin >> this->nbPlayers;
+	}
+	
+	int startCoins;
+	switch(this->nbPlayers){
+		case 2:
+			startCoins = 12;
+			break;
+		case 3:
+			startCoins = 11;
+			break;
+		case 4:
+			startCoins = 9;
+			break;
 	}
 	
 	for(int i = 0; i < nbPlayers; i++){
-		players.push_back(new Player());
+		cout << "enter player " << i << " name: ";
+		string playerName;
+		cin >> playerName;
+		players.push_back(new Player(startCoins, playerName));
+	}
+		
+	//generate a deck
+}
+
+void GameStart::setPlayers(vector<Player*> playerList){
+	//	int nbPlayers;
+	this->nbPlayers = playerList.size();	
+	int startCoins;
+	switch(this->nbPlayers){
+		case 2:
+			startCoins = 12;
+			break;
+		case 3:
+			startCoins = 11;
+			break;
+		case 4:
+			startCoins = 9;
+			break;
+	}
+	//assign the list of players to the class variable
+	for (Player* p: playerList){
+		p->setCoin(startCoins);
+	}
+	this->players = playerList;
+}
+
+void GameStart::setDeck(){
+	this->deck = new Deck(this->nbPlayers);
+}
+
+Deck* GameStart::getDeck(){
+	return this->deck;
+}
+
+Hand GameStart::getHand(){
+	return this->deck->getHand();
+}
+
+Player* GameStart::getPlayerByIndex(int index){
+	return players.at(index);
+}
+
+void GameStart::exchange(Player* p){
+	cout << this->deck->getHand() << endl;
+	cout << "scroll up to see hand" << endl;
+	char doesExchange;
+	cout << "would you like to exchange a card? (y) (n) :" ;
+	cin >> doesExchange;
+	while(doesExchange != 'y' && doesExchange != 'n'){
+		cout << "please enter 'y' or 'n' "<< endl;
+	}
+//	if player doesnt want to exchange, exit
+	if (doesExchange == 'n'){
+		return; 
+	}
+	
+	else {
+//		card to purchase
+		int cardIndex;
+		cout << "enter index of desired card: ";
+		cin >> cardIndex;
+		while (cardIndex < 0  || cardIndex > 5){
+			cout << "please enter an index between 0 and 5" << endl;
+			cin >> cardIndex;
+		}
+		
+		this->deck->getHand().exchange(p, cardIndex);
+		
 	}
 	
 }
