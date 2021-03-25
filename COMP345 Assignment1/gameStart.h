@@ -43,10 +43,9 @@ public:
 //	void setDeck();
 	
 //	Deck* getDeck();
-//	Hand getHand();
-	Player* getPlayerByIndex(int index);
+
 	
-	void exchange(Player* p);
+//	void exchange(Player* p);
 };
 
 #endif
