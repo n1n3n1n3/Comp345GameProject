@@ -37,5 +37,20 @@ void MainLoop::showBoard() {
 	//map->printMap();
 	cout << *deck;
 	
+}
+
+void MainLoop::takeAction(Card *c) {
+	
+}
+
+void MainLoop::singleTurn(Player *p) {
+	showBoard();
+	int cardChoice;
+	cout << p->getName() <<"... Enter the card selection # that you would like to choose: ";
+	cin >> cardChoice;
+	Card* theCard = deck->getCardDeck().at(cardChoice);
+	p->exchange(deck, theCard);
+	
+	takeAction(theCard);
 	
 }

@@ -22,7 +22,15 @@ public:
 	MainLoop(vector<Player*> players, Deck* deck, Map* map);
 	MainLoop& operator = (const MainLoop &m);
 	Player* whoseTurn() const;
+	
 	void showBoard();
+	
+	void takeAction(Card* c);
+	
+	void singleTurn(Player* p);
+	
+	void playGame();
+	
 	
 	
 };
