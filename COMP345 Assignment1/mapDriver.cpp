@@ -49,9 +49,6 @@ int main(){
 	c3->addRegion(r2);
 	c3->addRegion(r3);
 //	cout << *r2 << endl;
-	
-	r2->addArmies("George", 2);
-	r2->addArmies("Anna", 6);
 ////	
 //
 ////Adding the continents to the map
@@ -75,9 +72,11 @@ int main(){
 	pList.push_back(p2);
 	
 	m->loadPlayers(pList);
-	
+	r2->addArmies(p1, 2);
+	r2->addArmies(p1, 2);
+//	r2->addArmies(p2, 6);
 //	cout << *m << endl;
-	m->printMap();
+//	m->printMap();
 //validate
 //	cout << m->validate() << endl;
 //	cout << "\n-------------------------" << endl;

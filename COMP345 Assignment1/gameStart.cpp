@@ -50,6 +50,20 @@ Map* GameStart::selectMap(){
 	return mapLoader->getMap();
 }
 
+
+Map* GameStart::selectMap(string path){
+	//load the map fromt the path
+	cout << "...loading file from path: " << path << endl;
+	//load the map from file with the map loader
+	
+	//set the path, load the map and validate (already does it in the mapload constructor
+	mapLoader = new MapLoader(path);
+	
+	//return generated map
+	return mapLoader->getMap();
+}
+
+
 //function that loads all available maps in the maps directory
 void GameStart::loadMapFilePaths(){
 	struct dirent *entry;

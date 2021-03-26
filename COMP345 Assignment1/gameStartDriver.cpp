@@ -5,7 +5,8 @@
 using namespace std;
 int main(int argc, char *argv[]) {
 	
-	Map* map = GameStart::selectMap();
+//	Map* map = GameStart::selectMap();
+	Map* map = GameStart::selectMap("./maps/BirdsL.map");
 	
 //	//manually enter players
 //	vector<Player*> players= GameStart::setPlayers();

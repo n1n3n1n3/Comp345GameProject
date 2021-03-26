@@ -32,7 +32,7 @@ public:
 	void setPlayersAndArmies(vector<Player*> playerList, vector<int> armyNbList);
 	void setName(string name);
 	void setArmies(string playerName, int nb);
-	void addArmies(string playerName, int nb);
+	void addArmies(Player* p, int nb);
 	void removeArmies(string playerName, int nb);
 	string getOwner();
 	void setOwner(Player* player);

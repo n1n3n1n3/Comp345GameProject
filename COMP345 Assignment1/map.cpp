@@ -27,7 +27,6 @@ Region::Region(const Region& region){
 	this->name = region.name;
 	this->owner = region.owner;
 	this->playerArmies = region.playerArmies;
-//	this->nbArmies = 0;
 }
 
 //parameter constructor
@@ -37,7 +36,6 @@ Region::Region(int id, string name, string continent, int continentId){
 	this->continent = continent;
 	this->continentId = continentId;
 	this->owner = "none";
-//	this->nbArmies = 0;
 	this->playerArmies = vector<pair<Player*, int>>();
 }
 
@@ -94,12 +92,25 @@ vector<pair<Player*, int>> Region::getPlayerArmies(){
 	return this->playerArmies;
 }
 
-void Region::addArmies(string playerName, int nb){
-	for(pair<Player*, int> p: playerArmies){
-		if((p.first->getName().compare(playerName)) == 0){
-			p.second += nb;
+void Region::addArmies(Player* player, int nb){
+	cout << player->getName() << " is adding " << nb << " armies to " << this->name << endl;
+	cout << playerArmies.size() << endl;
+//	for(pair<Player*, int> p: this->playerArmies){
+//		if(p.first == player){
+//			p.second += nb;
+//		}
+//	}
+	for (int i = 0; i < playerArmies.size(); i++){
+		if(playerArmies.at(i).first == player){
+			cout << "x" << endl;
+			playerArmies.at(i).second += nb;
 		}
 	}
+//	
+//	for(pair<Player*, int> p: this->playerArmies){
+//		cout << p.second << endl;
+//	}
+	
 	this->determineOwner();
 }
 
@@ -259,7 +270,6 @@ Region* Continent::addRegion(int id, string name){
 ////add region by parameter
 void Continent::addRegion(Region* r){
 	this->regions.push_back(r);
-	cout << this->getId() << endl;
 	r->setContinentId(this->getId());
 	r->setContinent(this->getName());
 }
