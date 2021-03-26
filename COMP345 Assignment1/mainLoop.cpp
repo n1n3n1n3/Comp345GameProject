@@ -40,7 +40,7 @@ void MainLoop::showBoard() {
 }
 
 void MainLoop::takeAction(Card *c) {
-	
+	cout << "\nAction taken!\n";
 }
 
 void MainLoop::singleTurn(Player *p) {
@@ -48,9 +48,28 @@ void MainLoop::singleTurn(Player *p) {
 	int cardChoice;
 	cout << p->getName() <<"... Enter the card selection # that you would like to choose: ";
 	cin >> cardChoice;
-	Card* theCard = deck->getCardDeck().at(cardChoice);
+	Card* theCard = deck->getHand()->getCardByIndex(cardChoice);
+	cout << *theCard << endl;
 	p->exchange(deck, theCard);
 	
 	takeAction(theCard);
 	
+	cout << "\n\n**************************\nHere are all your cards: \n";
+	for (Card* c : p->getPlayerCards()) {
+		cout << *c;
+	}
+	cout << "\n**************************\n...Turn Over...\n\n";
 }
+
+void MainLoop::playGame() {
+	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n";
+	while (turnsRemaining > 0) {
+		Player* thePlayer = players.at(turnsRemaining%numPlayers);
+		singleTurn(thePlayer);
+		turnsRemaining--;
+	}
+	
+	cout << "\nCard limit reached! Time to tally the score...\n";
+	
+}
+

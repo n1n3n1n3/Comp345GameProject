@@ -25,8 +25,7 @@ int main() {
 	
 	MainLoop ml = MainLoop(pl, deck, map);
 	
-	ml.showBoard();
-	cout << ml;
+	ml.playGame();
 	
 	
 	
