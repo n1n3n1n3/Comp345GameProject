@@ -7,28 +7,23 @@ int main() {
 	//*******************************
 	//COPY FROM GAMESTART FOR TESTING
 	//*******************************
-	GameStart gs = GameStart();
-	gs.selectMap();
-	//manually set players
-	//	gs.setPlayers();
-	//set players with a list cus we debugging
+	Map* map = GameStart::selectMap("./maps/BirdsL.map");
+	
+	//	//manually enter players
+	//	vector<Player*> players= GameStart::setPlayers();
+	
 	vector<Player*> pl;
 	pl.push_back(new Player("anna"));
 	pl.push_back(new Player("paul"));
-	gs.setPlayers(pl);
-	gs.setDeck();
+	GameStart::setPlayers(pl);
 	
 	
-	Map* m = gs.getMap();
-	Deck* d = gs.getDeck();
-	
-	Bid::makeBids();
-	Bid::compareBids();
+	Deck* deck = GameStart::setDeck();
 	//*******************************
 	//COPY FROM GAMESTART FOR TESTING
 	//*******************************
 	
-	MainLoop ml = MainLoop(pl, d, m);
+	MainLoop ml = MainLoop(pl, deck, map);
 	
 	ml.showBoard();
 	cout << ml;

@@ -3,13 +3,16 @@
 #include "mainLoop.h"
 using namespace std;
 
+int MainLoop::numPlayers = 0;
+int MainLoop::turnsRemaining = 0;
+
 MainLoop::MainLoop(vector<Player*> players, Deck* deck, Map* map) {
 	this->players = players;
 	this->deck = deck;
 	this->map = map;
-	numPlayers = players.size();
+	this->numPlayers = players.size();
 	if (numPlayers == 2)
-		turnsRemaining = 26;
+		this->turnsRemaining = 26;
 	else {
 		cout << "\n*Error*, must be two players.";
 		exit(0);
