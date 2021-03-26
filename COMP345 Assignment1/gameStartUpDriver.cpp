@@ -1,7 +1,7 @@
 #include <iostream>
 #include "gameStart.h"
 #include "GameStartUp.h"
-
+#include "Bid.h"
 
 using namespace std;
 int main(int argc, char *argv[]) {
@@ -19,4 +19,7 @@ int main(int argc, char *argv[]) {
 	
 	Map* m = gs.getMap();
 	Deck* d = gs.getDeck();
+	
+	Bid::makeBids();
+	Bid::compareBids();
 }
