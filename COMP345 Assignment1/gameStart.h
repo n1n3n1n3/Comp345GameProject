@@ -44,6 +44,7 @@ public:
 	
 	Deck* getDeck();
 	Hand* getHand();
+	Map* getMap();
 	vector<Player*> getPlayers();
 	
 //	void exchange(Player* p);

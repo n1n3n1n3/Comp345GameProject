@@ -102,9 +102,9 @@ Hand& Hand::operator = (const Hand &h) {
 }
 
 ////Output
-std::ostream& operator<<(std::ostream &strm, const Hand &h) {
-		return strm << "Coin Cost 0: " << *h.hand[0] << "\n\nCoin Cost 1: " << *h.hand[1] << "\n\nCoin Cost 1: " << *h.hand[2] << "\n\nCoin Cost 2: " << *h.hand[3] << "\n\nCoin Cost2: " << *h.hand[4] << "\n\nCoin Cost 3: " << *h.hand[5];
-}
+//std::ostream& operator<<(std::ostream &strm, const Hand &h) {
+//		return strm << "Coin Cost 0: " << *h.hand[0] << "\n\nCoin Cost 1: " << *h.hand[1] << "\n\nCoin Cost 1: " << *h.hand[2] << "\n\nCoin Cost 2: " << *h.hand[3] << "\n\nCoin Cost2: " << *h.hand[4] << "\n\nCoin Cost 3: " << *h.hand[5];
+//}
 
 vector<Card*> Hand::getCards(){
 	return this->cards;
