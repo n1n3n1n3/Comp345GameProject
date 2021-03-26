@@ -116,6 +116,10 @@ void GameStart::setDeck(){
 	this->deck = new Deck(this->nbPlayers);
 }
 
+vector<Player*> Hand::getPlayers(){
+	return this->players;
+}
+
 Deck* GameStart::getDeck(){
 	return this->deck;
 }

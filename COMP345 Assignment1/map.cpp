@@ -355,6 +355,9 @@ void Map::setBorders(vector<vector<int>> borders){
 	this->borders = borders;
 }
 
+void Map::setStartingRegion(Region* r){
+	this->startingRegion = r;
+}
 
 const string Map::getName() const{
 	return this->name;
@@ -378,6 +381,7 @@ void Map::addContinent(Continent& c){
 int Map::getNbContinents() const{
 	return this->continents.size();
 }
+
 
 Continent* Map::getContinentById(int id){
 	//declare an empty continent

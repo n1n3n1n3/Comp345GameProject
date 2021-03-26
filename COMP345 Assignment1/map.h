@@ -93,9 +93,11 @@ public:
 class Map {
 private:
 	string name;
+	Region* startingRegion;
 	vector<Continent*> continents;
 	vector<vector<int>> borders;
 	friend std::ostream& operator<<(std::ostream&, const Map&);	
+	
 public:
 	//default constructor
 	Map();
@@ -115,9 +117,11 @@ public:
 	void setContinents(vector<Continent*>);
 	void setBorders(vector<vector<int>> borders);
 	void setNbPlayersIntoMap(vector<Player*>);
+	void setStartingRegion(Region* r);
 	const string getName()const;
 	vector<Continent*> getContinents();
 	vector<vector<int>> getBorders();
+	Region* getStartingRegion();
 	
 	//extra continent functions
 	Continent* addContinent(int id, string name);
