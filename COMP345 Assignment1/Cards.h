@@ -58,6 +58,7 @@ public:
 	//draws a card and shifts hand
 	void placeCardAtIndex(Card* c, int index);
 	void setCardsCosts();
+	const string handToString() const;
 };
 
 
@@ -84,6 +85,7 @@ public:
 	
 	Card* draw();
 	void slideCardInHand(Card* c);
+	const string deckToString() const;
 };
 
 #endif

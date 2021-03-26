@@ -6,9 +6,10 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	
 	Map* map = GameStart::selectMap();
+	
+//	//manually enter players
 //	vector<Player*> players= GameStart::setPlayers();
-//	gs.setPlayers();
-//	gs.setDeck();
+
 	vector<Player*> pl;
 	pl.push_back(new Player("anna"));
 	pl.push_back(new Player("paul"));

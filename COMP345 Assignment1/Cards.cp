@@ -74,6 +74,10 @@ int Card::getGood(){
 	return this->good;
 }
 
+int Card::getAction(){
+	return this->action;
+}
+
 int Card::getCost() {
 	return this->cost;
 }
@@ -102,9 +106,9 @@ Hand& Hand::operator = (const Hand &h) {
 }
 
 ////Output
-//std::ostream& operator<<(std::ostream &strm, const Hand &h) {
-//		return strm << "Coin Cost 0: " << *h.hand[0] << "\n\nCoin Cost 1: " << *h.hand[1] << "\n\nCoin Cost 1: " << *h.hand[2] << "\n\nCoin Cost 2: " << *h.hand[3] << "\n\nCoin Cost2: " << *h.hand[4] << "\n\nCoin Cost 3: " << *h.hand[5];
-//}
+std::ostream& operator<<(std::ostream &strm, const Hand &h) {
+	return strm << "++++++++++++ H A N D +++++++++++++\n" << h.handToString() << "++++++++++++++++++++++++++++++++\n" << endl;
+}
 
 vector<Card*> Hand::getCards(){
 	return this->cards;
@@ -113,6 +117,8 @@ vector<Card*> Hand::getCards(){
 Card* Hand::getCardByIndex(int index){
 	return this->cards.at(index);
 }
+
+
 
 void Hand::setHand(Card* a, Card* b, Card* c, Card* d, Card* e, Card* f){
 	cout << "x" << endl;
@@ -143,8 +149,23 @@ void Hand::setCardsCosts(){
 	this->cards.at(5)->setCost(3);
 }
 
+
+const string Hand::handToString() const{
+	string handString = "";
+	
+	for (Card* c : cards){
+		handString += "\n--------------------\n" + c->getName();
+		handString += "\n~~~~~~~~~~~~~~~~~~~~\nGood: " + to_string(c->getGood());
+		handString += "\n~~~~~~~~~~~~~~~~~~~~\nAction: " + to_string(c->getAction());
+		handString += "\n~~~~~~~~~~~~~~~~~~~~\nCost: " + to_string(c->getCost());
+		handString += "\n--------------------\n\n";
+	}
+	
+	return handString;
+}
+
+//empty constructor
 Deck::Deck(){
-//	this->nbPlayers = 0;
 }
 
 
@@ -205,6 +226,8 @@ Deck::Deck(int nbPlayers){
 	
 	//generate hand based on cards drawn
 	deckHand = new Hand(tempHand);
+	//set the cost of card
+	deckHand->setCardsCosts();
 }
 
 Deck::Deck(const Deck &d){
@@ -212,6 +235,11 @@ Deck::Deck(const Deck &d){
 	this->nbPlayers = d.nbPlayers;
 	this->cardDeck = d.cardDeck;
 	this->deckHand = d.deckHand;
+}
+
+////Output
+std::ostream& operator<<(std::ostream &strm, const Deck &d) {
+	return strm << "++++++++++++ D E C K +++++++++++++\n" << d.deckToString() << "++++++++++++++++++++++++++++++++\n" << endl;
 }
 
 Card* Deck::draw(){
@@ -243,11 +271,6 @@ Hand* Deck::getHand(){
 }
 
 void Deck::slideCardInHand(Card* c){
-//	for (Card* dc : this->deckHand->getCards()){
-//		if(c == c){
-//			
-//		}
-//	}
 	int index = -1;
 	for (int i = 0; i < 6; i++){
 		if (c == this->deckHand->getCards().at(i)){
@@ -270,4 +293,11 @@ void Deck::slideCardInHand(Card* c){
 		deckHand->setCardsCosts();
 	}
 	
+}
+
+const string Deck::deckToString() const{
+	string temp = "\n+++++++ H A N D +++++++";
+	temp += deckHand->handToString();
+	temp += "\ndeck has " + to_string(deckSize) + " remaining cards\n";
+	return temp;
 }

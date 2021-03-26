@@ -72,6 +72,7 @@ int main(){
 	
 	m->loadPlayers(pList);
 	
+	cout << *m << endl;
 //validate
 //	cout << m->validate() << endl;
 //	cout << "\n-------------------------" << endl;
