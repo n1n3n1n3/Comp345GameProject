@@ -86,6 +86,12 @@ int Player::getId(){
 	return this->id;
 }
 
+
+vector<Card*> Player::getPlayerCards() {
+	return this->playerCards;
+}
+
+
 Bid* Player::getBid(){
 	return this->bid;
 }

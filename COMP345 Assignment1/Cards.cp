@@ -152,15 +152,15 @@ void Hand::setCardsCosts(){
 
 const string Hand::handToString() const{
 	string handString = "";
-	
+	int i = 0;
 	for (Card* c : cards){
 		handString += "\n--------------------\n" + c->getName();
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nGood: " + to_string(c->getGood());
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nAction: " + to_string(c->getAction());
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nCost: " + to_string(c->getCost());
-		handString += "\n--------------------\n\n";
+		handString += "\n--------------------\nSELECTION #: " + to_string(i) + "\n\n";
+		i++;
 	}
-	
 	return handString;
 }
 

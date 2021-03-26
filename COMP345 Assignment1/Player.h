@@ -48,6 +48,8 @@ public:
 	std::string getName();
 	int getId();
 	int getCoins();
+	vector<Card*> getPlayerCards();
+	
 	Bid* getBid();
 	
 	//All possible actions
