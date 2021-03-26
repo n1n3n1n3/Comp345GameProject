@@ -15,7 +15,7 @@ private:
 	int continentId;
 	string continent;
 	string owner;
-	int nbArmies;
+//	int nbArmies;
 	vector<pair<Player*, int>> playerArmies;
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Region&);
@@ -47,6 +47,7 @@ public:
 	string getContinent() const;
 	int getContinentId();
 	vector<pair<Player*, int>> getPlayerArmies();
+	const string getPlayersAndArmiesString() const;
 };
 
 class Continent {
@@ -80,7 +81,7 @@ public:
 	//extra functions for region management
 	int getNbRegions();
 	Region* addRegion(int id, string name);
-	void addRegion(Region& region);
+	void addRegion(Region* region);
 	bool hasRegion(int id);
 	Region* getRegionById(int id);
 	

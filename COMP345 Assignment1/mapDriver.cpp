@@ -29,7 +29,7 @@ int main(){
 	Continent *c1 = new Continent(1, "Albatros");
 	Region *r1 = new Region(1, "Pelican", "Albratros", 1);
 //	r1->setPlayer(&p1);
-	c1->addRegion(*r1);
+	c1->addRegion(r1);
 	c1->addRegion(2, "Plover");
 	c1->addRegion(3, "Swallow");
 	c1->addRegion(4, "Magpie");
@@ -46,11 +46,15 @@ int main(){
 //	r2->setPlayer(&p1);
 	Region *r3 = new Region(16, "Heron", "Crow", 3);
 //	r3->setPlayer(&p2);
-	c3->addRegion(*r2);
-	c3->addRegion(*r3);
-//	
-
-//Adding the continents to the map
+	c3->addRegion(r2);
+	c3->addRegion(r3);
+//	cout << *r2 << endl;
+	
+	r2->addArmies("George", 2);
+	r2->addArmies("Anna", 6);
+////	
+//
+////Adding the continents to the map
 	m->addContinent(*c1);
 	m->addContinent(*c2);
 	m->addContinent(*c3);
@@ -72,7 +76,8 @@ int main(){
 	
 	m->loadPlayers(pList);
 	
-	cout << *m << endl;
+//	cout << *m << endl;
+	m->printMap();
 //validate
 //	cout << m->validate() << endl;
 //	cout << "\n-------------------------" << endl;

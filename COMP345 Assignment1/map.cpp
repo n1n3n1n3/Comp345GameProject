@@ -8,7 +8,7 @@
 Region::Region() {
 	this->id = 0;
 	this->name = "";
-	this->continentId = 0;
+//	this->continentId = 0;
 	this->continent = "";
 	this->owner = "none";
 	//create an empty pair list for players and number of armies
@@ -27,7 +27,7 @@ Region::Region(const Region& region){
 	this->name = region.name;
 	this->owner = region.owner;
 	this->playerArmies = region.playerArmies;
-	this->nbArmies = 0;
+//	this->nbArmies = 0;
 }
 
 //parameter constructor
@@ -37,15 +37,26 @@ Region::Region(int id, string name, string continent, int continentId){
 	this->continent = continent;
 	this->continentId = continentId;
 	this->owner = "none";
-	this->nbArmies = 0;
+//	this->nbArmies = 0;
 	this->playerArmies = vector<pair<Player*, int>>();
 }
 
 //streaming friend
 std::ostream& operator<<(std::ostream &strm, const Region &r) {
-	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << "\nbelongs to: " << r.owner << "\nContinent: " << r.continent << "\nnb of armies: " << r.nbArmies << "\n--------------------\n";
+	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << "\nbelongs to: " << r.owner << "\nContinent: " << r.continent << "\n" << r.getPlayersAndArmiesString() << endl;
+	
+//	<< "\nnb of armies ++ \n" << r.player << "\n--------------------\n";
 }
 
+const string Region::getPlayersAndArmiesString() const{
+	string temp = "\n";
+	for (pair<Player*, int> p : playerArmies){
+		temp += p.first->getName();
+		temp += "       armies: " + to_string(p.second) + "\n";
+	}
+	
+	return temp;
+}
 
 
 //setters and getters
@@ -74,6 +85,7 @@ string Region::getOwner(){
 
 //void Region::setPlayer(int index, Player* player){
 //	this->player = player;
+//	//update the name of the player that owns the territory
 //	//update the name of the player that owns the territory
 //	this->setOwner(player->getName());
 //}
@@ -245,10 +257,11 @@ Region* Continent::addRegion(int id, string name){
 	return this->regions.back();
 }
 ////add region by parameter
-void Continent::addRegion(Region& r){
-	this->regions.push_back(new Region(r));
-	r.setContinentId(this->getId());
-	r.setContinent(this->getName());
+void Continent::addRegion(Region* r){
+	this->regions.push_back(r);
+	cout << this->getId() << endl;
+	r->setContinentId(this->getId());
+	r->setContinent(this->getName());
 }
 
 bool Continent::hasRegion(int id){
