@@ -143,16 +143,8 @@ void Hand::setCardsCosts(){
 	this->cards.at(5)->setCost(3);
 }
 
-Card* Deck::draw(){
-	srand(time(0));
-	int select = rand() % this->deckSize;
-	//create a copy of the card inside the deck
-	Card* c = new Card(*cardDeck.at(select));
-	//remove the card from the deck
-	this->cardDeck.erase(this->cardDeck.begin() + select);
-	this->deckSize--;
-	//Return drawn card
-	return c;
+Deck::Deck(){
+//	this->nbPlayers = 0;
 }
 
 
@@ -222,6 +214,17 @@ Deck::Deck(const Deck &d){
 	this->deckHand = d.deckHand;
 }
 
+Card* Deck::draw(){
+	srand(time(0));
+	int select = rand() % this->deckSize;
+	//create a copy of the card inside the deck
+	Card* c = new Card(*cardDeck.at(select));
+	//remove the card from the deck
+	this->cardDeck.erase(this->cardDeck.begin() + select);
+	this->deckSize--;
+	//Return drawn card
+	return c;
+}
 
 int Deck::getDeckSize(){
 	return this->deckSize;
@@ -239,7 +242,7 @@ Hand* Deck::getHand(){
 	return this->deckHand;
 }
 
-void Deck::exchangeCardInHand(Card* c){
+void Deck::slideCardInHand(Card* c){
 //	for (Card* dc : this->deckHand->getCards()){
 //		if(c == c){
 //			

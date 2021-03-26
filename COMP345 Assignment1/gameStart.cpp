@@ -1,22 +1,33 @@
 #include "gameStart.h"
+#include "mapLoader.h"
 #include <dirent.h>
 #include <sys/types.h>
 #include <filesystem>
 namespace fs = std::filesystem;
 
+
+//instantiate static variables
+string GameStart::path = "";
+int GameStart::nbPlayers = 0;
+MapLoader* GameStart::mapLoader = new MapLoader();
+Deck* GameStart::deck = new Deck();
+vector<string> GameStart::mapFiles = vector<string>();
+vector<Player*> GameStart::players = vector<Player*>();
+
+
 //default constructor
 GameStart::GameStart(){
-	this->path = "";
-	this->mapFiles = vector<string>();
-	loadMapFilePaths();
-	
 }
 
-void GameStart::selectMap(){
+Map* GameStart::selectMap(){
+	//load the files in path
+	loadMapFilePaths();
+	//display available maps
 	cout << "+++		Available Maps		+++" << endl;
 	for (int i = 0; i < mapFiles.size(); i++){
-		cout << "(" << i << ") " << this->mapFiles.at(i).substr(0, this->mapFiles.at(i).size() - 4) << endl;
+		cout << "(" << i << ") " << mapFiles.at(i).substr(0, mapFiles.at(i).size() - 4) << endl;
 	}
+	//let player choose map
 	int entry;
 	cout << "choose map file: ";
 	cin >> entry;
@@ -27,13 +38,16 @@ void GameStart::selectMap(){
 		cin >> entry;
 	}
 	
-	this->path = "./maps/" + mapFiles.at(entry);
+	path = "./maps/" + mapFiles.at(entry);
 	//load the map fromt the path
-	cout << "...loading file from path" << endl;
+	cout << "...loading file from path: " << path << endl;
 	//load the map from file with the map loader
-	this->mapLoader = new MapLoader(this->path);
-	//use the pointer constructor to make game map
-	this->map = mapLoader->getMap();
+	
+	//set the path, load the map and validate (already does it in the mapload constructor
+	mapLoader = new MapLoader(path);
+	
+	//return generated map
+	return mapLoader->getMap();
 }
 
 //function that loads all available maps in the maps directory
@@ -48,26 +62,26 @@ void GameStart::loadMapFilePaths(){
 	while ((entry = readdir(dir)) != NULL) {
 		temp = entry->d_name;
 		if (temp.find(".map") != -1){
-			this->mapFiles.push_back(temp);
+			mapFiles.push_back(temp);
 		}
 	}
 	closedir(dir);
 }
 
-void GameStart::setPlayers(){
+vector<Player*> GameStart::setPlayers(){
 //	int nbPlayers;
 	
 	cout << "Enter number of players (2-4): ";
-	cin >> this->nbPlayers;
+	cin >> nbPlayers;
 	
 	//prompt the user to enter a correct amount
-	while (this->nbPlayers < 2 || this->nbPlayers > 4){
+	while (nbPlayers < 2 || nbPlayers > 4){
 		cout << "enter a number of players between 2 and 4" << endl;
-		cin >> this->nbPlayers;
+		cin >> nbPlayers;
 	}
 	
 	int startCoins;
-	switch(this->nbPlayers){
+	switch(nbPlayers){
 		case 2:
 			startCoins = 12;
 			break;
@@ -86,14 +100,14 @@ void GameStart::setPlayers(){
 		players.push_back(new Player(startCoins, playerName));
 	}
 		
-	//generate a deck
+	return players;
 }
 
 void GameStart::setPlayers(vector<Player*> playerList){
 	//	int nbPlayers;
-	this->nbPlayers = playerList.size();	
+	nbPlayers = playerList.size();	
 	int startCoins;
-	switch(this->nbPlayers){
+	switch(nbPlayers){
 		case 2:
 			startCoins = 12;
 			break;
@@ -105,29 +119,33 @@ void GameStart::setPlayers(vector<Player*> playerList){
 			break;
 	}
 	//assign the list of players to the class variable
+	cout << "-------------------------------------------------" << endl;
 	for (Player* p: playerList){
+		cout << "+++ Player " << p->getName() << " is participating in the game!" << endl;
 		p->setCoin(startCoins);
 	}
-	this->players = playerList;
+	cout << "-------------------------------------------------\n" << endl;
+	players = playerList;
 }
 
-void GameStart::setDeck(){
-	cout << "setting deck" << endl;
-	this->deck = new Deck(this->nbPlayers);
+Deck* GameStart::setDeck(){
+	cout << "\n +++ setting deck +++\n" << endl;
+	deck = new Deck(nbPlayers);
+	return deck;
 }
 
-vector<Player*> GameStart::getPlayers(){
-	return this->players;
-}
-
-Map* GameStart::getMap(){
-	return this->map;
-}
-
-Deck* GameStart::getDeck(){
-	return this->deck;
-}
-
-Hand* GameStart::getHand(){
-	return this->deck->getHand();
-}
+//vector<Player*> GameStart::getPlayers(){
+//	return players;
+//}
+//
+//Map* GameStart::getMap(){
+//	return map;
+//}
+//
+//Deck* GameStart::getDeck(){
+//	return deck;
+//}
+//
+//Hand* GameStart::getHand(){
+//	return deck->getHand();
+//}

@@ -14,17 +14,17 @@ class GameStart {
 private:
 	
 	//Pointers to bjects of territory on Map, hand of Cards, and Bid obkject
-	string path;
+	static string path;
 	//list of map files
-	vector<string> mapFiles;
+	static vector<string> mapFiles;
 	//Output
-	MapLoader *mapLoader;
-	Map *map;
+	static MapLoader *mapLoader;
+	static Map *map;
 	
-	vector<Player*> players;
-	int nbPlayers;
+	static vector<Player*> players;
+	static int nbPlayers;
 	
-	Deck *deck;
+	static Deck *deck;
 	
 	friend std::ostream& operator<<(std::ostream&, const GameStart&);
 	
@@ -36,16 +36,16 @@ public:
 	
 	
 	//functions
-	void loadMapFilePaths();
-	void selectMap();
-	void setPlayers();
-	void setPlayers(vector<Player*> playerList);
-	void setDeck();
+	static void loadMapFilePaths();
+	static Map* selectMap();
+	static vector<Player*> setPlayers();
+	void static setPlayers(vector<Player*> playerList);
+	static Deck* setDeck();
 	
-	Deck* getDeck();
-	Hand* getHand();
-	Map* getMap();
-	vector<Player*> getPlayers();
+	static Deck* getDeck();
+	static Hand* getHand();
+	static Map* getMap();
+	static vector<Player*> getPlayers();
 	
 //	void exchange(Player* p);
 };

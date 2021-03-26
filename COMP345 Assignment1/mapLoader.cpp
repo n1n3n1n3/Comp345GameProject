@@ -13,7 +13,7 @@ MapLoader::MapLoader()
 	temp = "";
 	index = 0;
 	position = 0;
-	Map *m;
+	Map *m = new Map();
 }
 //copy constructor
 MapLoader::MapLoader(const MapLoader& map)
@@ -301,3 +301,99 @@ void MapLoader::loadBorder(string temp, int position){
 void MapLoader::printRegion(int position){
 	cout << "Loaded Region #" << position << " :: " << listRegions[position][0] << " " << listRegions[position][1] << " " << listRegions[position][2] << endl;
 }
+
+//Map* MapLoader::loadMap(){
+//	
+////	if there is no path to choose from warn the user and return empty map
+//	if (path == ""){
+//		cout << "there is no file to load" << endl;
+//		return new Map();
+//	}
+//	
+//	else {
+//	
+//	ifstream input(path);
+//	
+//	while (!input.eof()){
+//		
+//		temp = "";
+//		index = 0;
+//		position = 0;
+//		
+//		getline(input, temp);
+//		cout << temp << endl;
+//		
+//		//		if entering the continent section
+//		if (temp.find("[Continents]") != -1){
+//			cout << "+++ getting continents +++" << endl;
+//			position = 0;
+//			//while we are still in the continents subsection
+//			while(temp.find("[Regions]") == -1 && temp.find("[Borders]") == -1 && temp.length() != 0){
+//				//add a continent to the list
+//				if (input.eof()){
+//					break;
+//				}
+//				getline(input, temp);
+//				//if the line is null, dont add a continent
+//				if (temp == "") {
+//					break;
+//				}
+//				listContinents.push_back(vector<string>());
+//				loadContinent(temp, position);
+//				printContinent(position);
+//				position++;
+//			}
+//			cout << "+++ end of continents +++" << endl;
+//		}
+//		
+//		position = 0;
+//		
+//		if (temp.find("[Regions]") != -1){
+//			cout << "+++ getting regions +++" << endl;
+//			position = 0;
+//			//while we are still in the continents subsection
+//			while(temp.find("[Continents]") == -1 || temp.find("[Borders]") == -1 || temp.length() != 0){
+//				//add a continent to the list
+//				if (input.eof()){
+//					break;
+//				}
+//				getline(input, temp);
+//				//if the line is null, dont add a continent
+//				if (temp == "") {
+//					break;
+//				}
+//				listRegions.push_back(vector<string>());
+//				loadRegion(temp, position);
+//				printRegion(position);
+//				position++;
+//			}
+//			cout << "+++ end of regions +++" << endl;
+//		}
+//		
+//		if (temp.find("[Borders]") != -1){
+//			cout << "+++ getting borders +++" << endl;
+//			position = 0;
+//			
+//			//while we are still in the continents subsection
+//			while(temp.find("[Continents]") == -1 && temp.find("[Regions]") == -1 && temp.length() != 0){
+//				//add a continent to the list
+//				if (input.eof()){
+//					break;
+//				}
+//				getline(input, temp);
+//				//if the line is null, dont add a continent
+//				if (temp == "") {
+//					break;
+//				}
+//				//make space for new border
+//				listBorders.push_back(vector<string>());
+//				loadBorder(temp, position);
+//				printBorder(position);
+//				position++;
+//			}
+//			cout << "+++ end of borders +++" << endl;
+//		}
+//	}
+//	return map;
+//    }
+//}

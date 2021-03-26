@@ -83,7 +83,7 @@ public:
 	Hand* getHand();
 	
 	Card* draw();
-	void exchangeCardInHand(Card* c);
+	void slideCardInHand(Card* c);
 };
 
 #endif

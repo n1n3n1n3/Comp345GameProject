@@ -559,12 +559,14 @@ void Map::loadPlayers(vector<Player*> listPlayers){
 //
 //
 bool Map::validate() {
-	cout << "Validating Map...";
+	cout << "++++++++++++++++++++++++++++++++++" << endl;
+	cout << "Validating Map   " << endl;
+	
 	
 //1 verify that the map is a connected subgraph
 //1.1 Verify that there is at least one continent in the map
 	if (this->continents.size() < 1){
-		cout << "Map has no regions" << endl;
+		cout << "Map has no continents" << endl;
 		return false;
 	}
 //1.2 Verify that each continent has at least one region
@@ -575,14 +577,14 @@ bool Map::validate() {
 			return false;
 		}
 	}
-	
+	cout << "." ;
 //2 verify continents are connected subgraph:: each continent has at least one connection
 	for (Continent* c : this->continents){
 		if(c->getNbConnectedContinents() < 1){
-			cout << c->getName() << endl;
-			cout << "continent has no connections" << endl;
+			cout << c->getName() << " continent has no connections" << endl;
 			return false;
 		}
+		cout << "." ;
 	}
 		
 		
@@ -597,7 +599,8 @@ bool Map::validate() {
 			}
 		}
 	}
-	cout << "map valid!" << endl;
+	cout << ". map valid!" << endl;
+	cout << "++++++++++++++++++++++++++++++++++\n\n";
 	return true;	
 }
 

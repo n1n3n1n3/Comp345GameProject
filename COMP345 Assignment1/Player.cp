@@ -137,7 +137,7 @@ void Player::exchange(Deck* d, Card* c){
 		// add card to the players list
 		playerCards.push_back(c);
 		
-		d->exchangeCardInHand(c);
+		d->slideCardInHand(c);
 	}
 }
 

@@ -11,7 +11,7 @@ class MapLoader
 		vector<vector<string>> listContinents;
 		vector<vector<string>> listRegions;
 		vector<vector<string>> listBorders;
-		Map* map = new Map();
+		Map* map;
 		
 		friend std::ostream& operator<<(std::ostream&, const MapLoader&);
 		
@@ -35,6 +35,7 @@ class MapLoader
 		Map* getMap();
 		
 		//main loading function for each line
+		Map* loadMap();
 		void loadContinent(string temp, int position);
 		void loadRegion(string temp, int position);
 		void loadBorder(string temp, int position);
