@@ -167,6 +167,9 @@ void MainLoop::singleTurn(Player *p) {
 	//Player takes the card from the hand, hand is updated
 	p->exchange(deck, theCard);
 	
+	if (theCard->getGood() == 9)
+		map->setImmunePlayer(p);
+	
 	//Player takes the action of the Card
 	takeAction(p, theCard);
 	

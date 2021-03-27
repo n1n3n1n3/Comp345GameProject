@@ -328,7 +328,41 @@ void Player::BuildCity(Map* m) {
 }
 
 void Player::DestroyArmy(Map* m) {
-	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
+	bool valid = false;
+	Region* r;
+	vector<pair<Player*, int>> players;
+	while (true) {
+		while (!valid) {
+			int choice = 0;
+			cout << "\nEnter the Region ID where you would like to destroy an opponent's army (or 0 to skip) ->";
+			cin >> choice;
+			if (choice == 0)
+				return;
+			r = m->getRegionById(choice);
+			players = r->getPlayerArmies();
+			for (int i = 0; i < players.size(); i++) {
+				if (players.at(i).first != this) {
+					if (players.at(i).second > 0) {
+						valid = true;
+						break;
+					}
+				}
+			}
+			cout << "\nThis Region has no opponent armies on it...\n";
+		}
+		valid = false;
+		
+		while (!valid) {
+			int choice = 0;
+			cout << r << "\n\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
+			cin >> choice;
+			if (choice == 0)
+				break;
+			choice -= 1;
+			
+		}
+	
+	}
 }
 
 void Player::AndOrAction() {
@@ -411,3 +445,4 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 	//return empty player
 	return new Player();
 }
+		
