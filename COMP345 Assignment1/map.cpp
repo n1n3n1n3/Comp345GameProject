@@ -56,7 +56,15 @@ const string Region::getPlayersAndArmiesString() const{
 	string temp = "\n";
 	for (pair<Player*, int> p : playerArmies){
 		temp += p.first->getName();
-		temp += "       armies: " + to_string(p.second) + "\n";
+		temp += "       armies: " + to_string(p.second) + ". City? ";
+		for (pair<Player*, bool> q : playerCity) {
+			if (p.first == q.first) {
+				if (q.second)
+					temp += "YES.\n";
+				else
+					temp += "NO.\n";
+			}
+		}
 	}
 	
 	return temp;

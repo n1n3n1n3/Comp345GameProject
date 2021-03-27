@@ -189,9 +189,23 @@ void Player::MoveArmies(int a, Map* m) {
 void Player::MoveOverLand(int a, Map* m) {
 	cout << "\nThis function will move an army to only adjacent land spaces, not over water.";
 }
-void Player::BuildCity(Map* m) {
-	cout << "\nBuildCity() will let a Player place a city somewhere on the board.";
+
+void Player::MoveOverWater(int a, Map *m) {
+	
 }
+
+void Player::BuildCity(Map* m) {
+	bool valid = false;
+	while (!valid) {
+		int choice = 0;
+		cout << "\nEnter the Region ID that you would like to build a city on ->";
+		cin >> choice;
+		Region* r = m->getRegionById(choice);
+		if (r->addCity(this))
+			valid = true;
+	}
+}
+
 void Player::DestroyArmy(Map* m) {
 	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
 }
