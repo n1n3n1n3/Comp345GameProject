@@ -81,57 +81,43 @@ string Region::getOwner(){
 }
 
 
-//void Region::setPlayer(int index, Player* player){
-//	this->player = player;
-//	//update the name of the player that owns the territory
-//	//update the name of the player that owns the territory
-//	this->setOwner(player->getName());
-//}
-
 vector<pair<Player*, int>> Region::getPlayerArmies(){
 	return this->playerArmies;
 }
 
-void Region::addArmies(Player* player, int nb){
-	cout << player->getName() << " is adding " << nb << " armies to " << this->name << endl;
+void Region::addArmies(Player* p, int nb){
+	cout << p->getName() << " is adding " << nb << " armies to " << this->name << endl;
 	cout << playerArmies.size() << endl;
-//	for(pair<Player*, int> p: this->playerArmies){
-//		if(p.first == player){
-//			p.second += nb;
-//		}
-//	}
+	
 	for (int i = 0; i < playerArmies.size(); i++){
-		if(playerArmies.at(i).first == player){
-			cout << "x" << endl;
+		if (playerArmies.at(i).first == p){
 			playerArmies.at(i).second += nb;
 		}
 	}
-//	
-//	for(pair<Player*, int> p: this->playerArmies){
-//		cout << p.second << endl;
-//	}
 	
 	this->determineOwner();
 }
 
-void Region::setArmies(string playerName, int nb){
-	for(pair<Player*, int> p: playerArmies){
-		if((p.first->getName().compare(playerName)) == 0){
-			p.second = nb;
+void Region::setArmies(Player *p, int nb){
+	for(pair<Player*, int> pair: playerArmies){
+		if(pair.first == p){
+			pair.second = nb;
+			cout << pair.second << endl;
 		}
 	}
 	this->determineOwner();
 }
 
-void Region::removeArmies(string playerName, int nb){
+void Region::removeArmies(Player* p, int nb){
 	//iterate through the list of players
-	for(pair<Player*, int> p: playerArmies){
-		if((p.first->getName().compare(playerName)) == 0){
-			if(p.second - nb < 0){
-				p.second = 0;
+	for (int i = 0; i < playerArmies.size(); i++){
+		if(playerArmies.at(i).first == p){
+			//can't have less than 0 armies
+			if(playerArmies.at(i).second - nb < 0){
+				playerArmies.at(i).second = 0;
 			}
 			else {
-				p.second = p.second - nb;
+				playerArmies.at(i).second = playerArmies.at(i).second - nb;
 			}
 		}
 	}
@@ -176,14 +162,16 @@ int Region::getContinentId(){
 void Region::determineOwner(){
 	string currOwner = "";
 	int currentMax = 0; 
-	for(pair<Player*, int> p: playerArmies){
-		if(p.second > currentMax && p.second > 0){
-			currentMax = p.second;
-			currOwner = p.first->getName();
+	
+	for(int i = 0; i < playerArmies.size(); i++){
+		if (playerArmies.at(i).second > currentMax && playerArmies.at(i).second > 0) {
+			currentMax = playerArmies.at(i).second;
+			currOwner = playerArmies.at(i).first->getName();
+			cout << currOwner << endl;
 		}
-		//If two players have the same max number of armies and it is a tie
-		//there is no owner
-		if (p.second == currentMax && currOwner.compare("") != 0){
+		
+		//if two players have the same number of armies set owner to none
+		if (playerArmies.at(i).second == currentMax && currOwner.compare(playerArmies.at(i).first->getName()) != 0){
 			currOwner = "none";
 		}
 	}

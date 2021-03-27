@@ -74,6 +74,9 @@ int main(){
 	m->loadPlayers(pList);
 	r2->addArmies(p1, 2);
 	r2->addArmies(p1, 2);
+	r2->addArmies(p2, 4);
+	cout << *r2 << endl;
+//	r2->setArmies(p1, 4);
 //	r2->addArmies(p2, 6);
 //	cout << *m << endl;
 //	m->printMap();

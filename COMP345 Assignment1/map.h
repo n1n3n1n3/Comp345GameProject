@@ -31,9 +31,9 @@ public:
 	void setPlayers(vector<Player*> playerList);
 	void setPlayersAndArmies(vector<Player*> playerList, vector<int> armyNbList);
 	void setName(string name);
-	void setArmies(string playerName, int nb);
+	void setArmies(Player* p, int nb);
 	void addArmies(Player* p, int nb);
-	void removeArmies(string playerName, int nb);
+	void removeArmies(Player* p, int nb);
 	string getOwner();
 	void setOwner(Player* player);
 	void determineOwner();
