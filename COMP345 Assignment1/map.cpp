@@ -293,6 +293,15 @@ string Continent::getName(){
 vector<Region*> Continent::getRegions(){
 		return this->regions;
 }
+
+vector<int> Continent::getListOfRegionId(){
+	vector<int> listOfRegionIds = vector<int>();
+	for (Region* r : this->regions){
+		listOfRegionIds.push_back(r->getId());
+	}
+	return listOfRegionIds;
+}
+
 int Continent::getNbRegions(){
 	return this->regions.size();
 }
@@ -446,6 +455,17 @@ int Map::getNbContinents() const{
 	return this->continents.size();
 }
 
+Continent* Map::getRegionContinent(Region* r){
+	
+	for (Continent* c : this->continents){
+		if(c->getName() == r->getContinent()){
+			return c;
+		}
+	}
+	//if you can't find the regions continent, warn the user
+	cout << "cannot find regions continent" << endl;
+	return new Continent();
+}
 
 Continent* Map::getContinentById(int id){
 	//declare an empty continent
@@ -582,6 +602,50 @@ void Map :: loadRegions(vector<vector<string>> listRegions){
 	}
 	cout << "...done" << endl;
 }
+
+void Map::determineStartingRegion(){
+	cout << "determining starting region" << endl;
+	//	get the continent that is connected to more than one region
+	Region* r;
+	for(Continent* c: continents){
+		if (c->getNbConnectedContinents() > 1){
+			{
+				srand(time(0));
+				int select = rand() % c->getNbRegions();
+				vector<int> listOfRegionIds = c->getListOfRegionId();
+				r = c->getRegionById(listOfRegionIds.at(select));
+				
+				while (!connectedToOtherContinent(r)){
+					srand(time(0));
+					int select = rand() % c->getNbRegions();
+					vector<int> listOfRegionIds = c->getListOfRegionId();
+					r = c->getRegionById(listOfRegionIds.at(select));
+				}
+				cout << "starting region is " << r->getName() << "!" << endl;
+				setStartingRegion(r);
+			}
+		}
+	}
+}
+
+bool Map::connectedToOtherContinent(Region* r){
+	for (vector<int> border: this->borders){
+		if (border.at(0) == r->getId()){
+			if (r->getContinent() != getRegionById(border.at(1))->getContinent()){
+				return true;
+			}
+		}
+		
+		if(border.at(1) == r->getId()){
+			if (r->getContinent() != getRegionById(border.at(0))->getContinent()){
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+
 //function to load borders to map from file
 void Map :: loadBorders(vector<vector<string>> listBorders){
 		vector<int> tempV;

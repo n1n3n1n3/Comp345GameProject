@@ -88,6 +88,7 @@ public:
 	void addRegion(Region* region);
 	bool hasRegion(int id);
 	Region* getRegionById(int id);
+	vector<int> getListOfRegionId();
 	
 	//extra function for connected continent management
 	void addConnectedContinent(int id);
@@ -129,6 +130,7 @@ public:
 	Region* getStartingRegion();
 	
 	//extra continent functions
+	void determineStartingRegion();
 	Continent* addContinent(int id, string name);
 	void addContinent(Continent& continent);
 	int getNbContinents() const;
@@ -138,6 +140,8 @@ public:
 	//extra Border functions
 	int getNbBorders();
 	void addBorder(vector<int> border);
+	
+	Continent* getRegionContinent(Region* r);
 	
 	//region methods
 	int getNbRegions() const;
@@ -152,6 +156,7 @@ public:
 
 	
 // sub methods for validate (might be useful later also)
+	bool connectedToOtherContinent(Region* r);
 	bool connectedToOtherContinent(Continent * c);
 	int getContinentIdofRegion(int regionId);
 //	returns I
