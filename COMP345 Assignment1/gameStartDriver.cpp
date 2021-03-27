@@ -6,7 +6,7 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	
 //	Map* map = GameStart::selectMap();
-//	Map* map = GameStart::selectMap("./maps/BirdsL.map");
+	Map* map = GameStart::selectMap("./maps/BirdsPyramid.map");
 	
 	
 //	//manually enter players
@@ -20,7 +20,13 @@ int main(int argc, char *argv[]) {
 	
 	Deck* deck = GameStart::setDeck();
 	
+	map->determineStartingRegion();
+//	
+//	Region* r1 =map->getRegionById(16);
+//	
+//	cout << map->connectedToOtherContinent(r1) << endl;
 	
+//	cout << *map->getRegionById(18) << endl;
 //	deck->getHand()->printCardNames();
 //	players.at(0)->exchange(deck, deck->getHand()->getCards().at(5));
 //	deck->getHand()->printCardNames();

@@ -45,6 +45,7 @@ int main(){
 	Region *r2 = new Region(15, "Dove", "Crow", 3);
 //	r2->setPlayer(&p1);
 	Region *r3 = new Region(16, "Heron", "Crow", 3);
+	
 //	r3->setPlayer(&p2);
 	c3->addRegion(r2);
 	c3->addRegion(r3);
@@ -65,7 +66,9 @@ int main(){
 	m->addBorder({8, 10, 11});
 //	remove this one to invalidate map by edge connections
 	m->addBorder({11, 14});
-	m->addBorder({14,15,16});
+	m->addBorder({14,15});
+	m->addBorder({15, 16});
+	m->addBorder({16, 18});
 	
 	vector<Player*> pList = vector<Player*>();
 	pList.push_back(p1);
@@ -76,6 +79,8 @@ int main(){
 	r2->addArmies(p1, 2);
 	r2->addArmies(p2, 4);
 	cout << *r2 << endl;
+	
+	cout << m->connectedToOtherContinent(r3) << endl;
 //	r2->setArmies(p1, 4);
 //	r2->addArmies(p2, 6);
 //	cout << *m << endl;

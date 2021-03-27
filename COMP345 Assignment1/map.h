@@ -84,6 +84,7 @@ public:
 	void addRegion(Region* region);
 	bool hasRegion(int id);
 	Region* getRegionById(int id);
+	vector<int> getListOfRegionId();
 	
 	//extra function for connected continent management
 	void addConnectedContinent(int id);
@@ -125,6 +126,7 @@ public:
 	Region* getStartingRegion();
 	
 	//extra continent functions
+	void determineStartingRegion();
 	Continent* addContinent(int id, string name);
 	void addContinent(Continent& continent);
 	int getNbContinents() const;
@@ -139,6 +141,7 @@ public:
 	int getNbRegions() const;
 	Region* getRegionById(int id);
 	bool areAdjacent(Region* r1, Region* r2);
+	Continent* getRegionContinent(Region* r);
 	
 //	load the lists witht the map loader
 	void loadContinents(vector<vector<string>> listContinents);
@@ -149,6 +152,7 @@ public:
 	
 // sub methods for validate (might be useful later also)
 	bool connectedToOtherContinent(Continent * c);
+	bool connectedToOtherContinent(Region* r);
 	int getContinentIdofRegion(int regionId);
 //	returns I
 	
