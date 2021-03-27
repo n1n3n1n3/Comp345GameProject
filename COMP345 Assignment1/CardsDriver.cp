@@ -14,6 +14,7 @@ int main() {
 	
 //	testing friend functions
 	cout << *d1 << endl;
-	
 	d1->shuffle();
+	
+	cout << *d1 << endl;
 }

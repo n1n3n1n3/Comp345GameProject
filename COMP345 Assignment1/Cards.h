@@ -63,6 +63,7 @@ public:
 	void placeCardAtIndex(Card* c, int index);
 	void setCardsCosts();
 	const string handToString() const;
+	void slideCards(Card* c);
 };
 
 

@@ -313,6 +313,28 @@ Card* Hand::getCardByIndex(int index){
 	return this->cards.at(index);
 }
 
+void Hand::slideCards(Card* c){
+	int index = -1;
+	for (int i = 0; i < 6; i++){
+		if (c == this->cards.at(i)){
+			index = i;
+		}
+	}
+	
+	if (index == -1){
+		cout << "such card does not exist in hand" << endl;
+	}
+	//shift the cards and draw a new one
+	
+	if (index != 5){
+		cout << "sliding cards in handx" << endl;
+		for (int i = index + 1; i < 5; i++){
+				cards.at(i - 1) = cards.at(i);
+		}
+//		cards.at(5) 
+	}
+}
+
 
 
 void Hand::setHand(Card* a, Card* b, Card* c, Card* d, Card* e, Card* f){
@@ -466,27 +488,11 @@ Hand* Deck::getHand(){
 }
 
 void Deck::slideCardInHand(Card* c){
-	int index = -1;
-	for (int i = 0; i < 6; i++){
-		if (c == this->deckHand->getCards().at(i)){
-			index = i;
-		}
-	}
-	
-	if (index == -1){
-		cout << "such card does not exist in hand" << endl;
-	}
-	
-	//shift the cards and draw a new one
-	else {
-		for (int i = index; i < 5; i++){
-			deckHand->getCards().at(i) = deckHand->getCards().at(i + 1);
-		}
-		deckHand->getCards().at(5) = draw();
+	deckHand->slideCards(c);
+	deckHand->addCard(draw());
 		
-		//adjust card costs
-		deckHand->setCardsCosts();
-	}
+	//adjust card costs
+	deckHand->setCardsCosts();
 }
 
 void Deck::shuffle(){
