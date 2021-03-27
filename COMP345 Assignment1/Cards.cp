@@ -16,7 +16,7 @@ Card::Card() {
 }
 
 //Constructor
-Card::Card(string n, char t, int g, int a) {
+Card::Card(string n, char t, int a, int g) {
 	this->name = n;
 	this->type = t;
 	this->good = g;
@@ -41,7 +41,7 @@ Card& Card::operator = (const Card &c) {
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Card &c) {
-	return strm << "\n--------------------\n" << c.name << "\n~~~~~~~~~~~~~~~~~~~~\nGood: " << c.good << "\n~~~~~~~~~~~~~~~~~~~~\nAction: " << c.action << "\n--------------------\n";
+	return strm << "\n--------------------\n" << c.name << "\n~~~~~~~~~~~~~~~~~~~~\nGood: " << c.getGoodString() << "\n~~~~~~~~~~~~~~~~~~~~\nAction: " << c.getActionString() << "\n--------------------\n";
 }
 
 void Card::setName(string n){
@@ -83,6 +83,199 @@ int Card::getAction(){
 int Card::getCost() {
 	return this->cost;
 }
+
+/*
+integers xy where x = action type, y = # of times.
+
+If card contains 2 actions, array will be passed as:
+-wxyz for OR
+wxyz for AND
+
+Actions:
+
+1 - Place Armies
+2 - Move Armies
+3 - Destroy Army
+4 - Build City
+
+Goods:
+1 - Placement
+2 - Movement
+3 - Flying
+4 - Elixer
+5 - Coins
+6 - VP/Name (y = Card type)
+7 - VP/Set (wxyz, - x = VPs, y = Set Size, z = Card Type) (a = 1, r = 2, c = 3, d = 4, f = 5, m = 6, n = 7,, o = 8)
+8 - 1VP/ (y = 1 -> 3coins, y = 2 -> flying).
+9 - Immune to Attack
+
+*/
+string Card::getTypeString(int t) const{
+	switch (t) {
+		case 1:
+			return "Ancient";
+			break;
+		case 2:
+			return "Arcane";
+			break;
+		case 3:
+			return "Cursed";
+			break;
+		case 4:
+			return "Dire";
+			break;
+		case 5:
+			return "Forest";
+			break;
+		case 6:
+			return "Mountain";
+			break;
+		case 7:
+			return "Night";
+			break;
+		case 8:
+			return "Noble";
+			break;
+		default:
+			return "invalid";
+	}
+
+}
+
+string Card::getGoodString() const{
+	if (good == 4152)
+		return "1 Elixir AND 2 Coins";
+	int len = 0;
+	int first = 0;
+	int second = 0;
+	int third = 0;
+	int fourth = 0;
+	for (int i = good; i > 0; i = i/10) {
+		len++;
+	}
+	if (len == 4) {
+		first = good/1000;
+		second = (good/100)%10;
+		third = (good/10)%10;
+		fourth = good%10;
+	}
+	else if (len == 2) {
+		first = good/10;
+		second = good%10;
+	}
+	else {
+		first = good;
+	}
+	
+	switch (first) {
+		case 1:
+			return "+1 Placement";
+			break;
+		case 2:
+			return "+1 Movement";
+			break;
+		case 3:
+			return "+1 Flying";
+			break;
+		case 4:
+			return "+" + to_string(second) + " Elixir";
+			break;
+		case 5:
+			return "+" + to_string(second) + " Coins";
+			break;
+		case 6:
+			return "+1 VP per " + getTypeString(second);
+			break;
+		case 7:
+			return to_string(second) + "VPs for " + to_string(third) + "of type " + getTypeString(fourth);
+			break;
+		case 8:
+			switch(second) {
+				case 1:
+					return "1 VP per 3 Coins";
+					break;
+				case 2:
+					return "1 VP per Flying";
+					break;
+				default:
+					return "Invalid";
+					break;
+			}
+		case 9:
+			return "Immune to attack.";
+			break;
+		default:
+			return "Invalid: must be a single length int.";
+	}
+	
+}
+
+
+string Card::getActionString() const{
+	int len = 0;
+	int first = 0;
+	int second = 0;
+	int third = 0;
+	int fourth = 0;
+	string split = "";
+	string ret = "";
+	int looper = 1;
+	int tempAction = action;
+	if (tempAction > 0)
+		split = "AND";
+	else {
+		tempAction*=-1;
+		split = "OR";
+	}
+
+	for (int i = tempAction; i > 0; i = i/10) {
+		len++;
+	}
+	
+	if (len == 4) {
+		looper = 2;
+				
+		first = tempAction/1000;
+		second = (tempAction/100)%10;
+		third = (tempAction/10)%10;
+		fourth = tempAction%10;
+		
+		
+	}
+	else if (len == 2) {
+		first = tempAction/10;
+		second = tempAction%10;
+	}
+	else {
+		first = tempAction;
+	}
+	
+	for (int i = 0; i < looper; i++) {
+		if (i == 1) {
+			ret+= " " + split + " ";
+			first = third;
+			second = fourth;
+		}
+		switch (first) {
+			case 1:
+				ret+= "Place " + to_string(second) + " Armies.";
+				break;
+			case 2:
+				ret+= "Move " + to_string(second) + " Armies.";
+				break;
+			case 3:
+				ret+= "Destroy an Army.";
+				break;
+			case 4:
+				ret+= "Build a City.";
+				break;
+			default:
+				ret+= "Invalid...";
+		}
+	}
+	return ret;
+}
+
 
 Hand::Hand() {
 	//add six new empty cards
@@ -157,8 +350,8 @@ const string Hand::handToString() const{
 	
 	for (Card* c : cards){
 		handString += "\n--------------------\n" + c->getName();
-		handString += "\n~~~~~~~~~~~~~~~~~~~~\nGood: " + to_string(c->getGood());
-		handString += "\n~~~~~~~~~~~~~~~~~~~~\nAction: " + to_string(c->getAction());
+		handString += "\n~~~~~~~~~~~~~~~~~~~~\nGood: " + c->getGoodString();
+		handString += "\n~~~~~~~~~~~~~~~~~~~~\nAction: " + c->getActionString();
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nCost: " + to_string(c->getCost());
 		handString += "\n--------------------\n\n";
 	}

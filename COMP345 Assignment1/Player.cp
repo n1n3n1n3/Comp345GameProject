@@ -96,6 +96,38 @@ Bid* Player::getBid(){
 	return this->bid;
 }
 
+int Player::checkPlacementBonus() {
+	int ret = 0;
+	for (Card* c : playerCards) {
+		if (c->getGood() == 1)
+			ret++;
+	}
+	return ret;
+}
+
+int Player::checkMovementBonus() {
+	int ret = 0;
+	for (Card* c : playerCards) {
+		if (c->getGood() == 2)
+			ret++;
+	}
+	return ret;
+}
+
+int Player::checkFlying() {
+	int ret = 0;
+	for (Card* c : playerCards) {
+		if (c->getGood() == 3)
+			ret++;
+	}
+	if ((3 - ret) >= 1)
+		return (3-ret);
+	else
+		return 1;
+}
+
+
+
 //Functions that will be defined later
 void Player::payCoin(int amount) {
 	if (this->coin -= amount < 0){
@@ -107,13 +139,13 @@ void Player::payCoin(int amount) {
 	}
 }
 
-void Player::PlaceNewArmies() {
+void Player::PlaceNewArmies(int a) {
 	cout << "\nPlaceNewArmies() will let a Player place an army somewhere on the board.";
 }
-void Player::MoveArmies() {
+void Player::MoveArmies(int a) {
 	cout << "\nMoveArmies() will move an army to any space, over land or water.";
 }
-void Player::MoveOverLand() {
+void Player::MoveOverLand(int a) {
 	cout << "\nThis function will move an army to only adjacent land spaces, not over water.";
 }
 void Player::BuildCity() {

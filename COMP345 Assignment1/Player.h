@@ -52,11 +52,15 @@ public:
 	
 	Bid* getBid();
 	
+	int checkPlacementBonus();
+	int checkMovementBonus();
+	int checkFlying();
+	
 	//All possible actions
 	void payCoin(int amount);
-	void PlaceNewArmies();
-	void MoveArmies();
-	void MoveOverLand();
+	void PlaceNewArmies(int a);
+	void MoveArmies(int a);
+	void MoveOverLand(int a);
 	void BuildCity();
 	void DestroyArmy();
 	void makeBid(int bid);
