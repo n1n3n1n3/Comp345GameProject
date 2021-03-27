@@ -73,8 +73,8 @@ public:
 	void payCoin(int amount);
 	void PlaceNewArmies(int a, Map* m);
 	void MoveArmies(int a, Map* m);
-	void MoveOverLand(int a, Map* m);
-	void MoveOverWater(int a, Map* m);
+	int MoveOverLand(int a, Region* start, Region* move);
+	int MoveOverWater(int a, Region* start, Region* move);
 	void BuildCity(Map* m);
 	void DestroyArmy(Map* m);
 	void AndOrAction();

@@ -202,33 +202,104 @@ void Player::PlaceNewArmies(int a, Map* m) {
 
 
 void Player::MoveArmies(int a, Map* m) {
-	bool valid = false;
-	while (!valid) {
-		int choice = 0;
-		cout << "\nEnter the Region ID that you would like to move armies from ->";
-		cin >> choice;
-		Region* r = m->getRegionById(choice);
-		vector<pair<Player*, int>> players = r->getPlayerArmies();
-		for (int i = 0; i < players.size(); i++){
-			if (players.at(i).first == this) {
-				if (players.at(i).second > 0) {
-					valid = true;
-				}
-				else {
-					cout << "\nInvalid Region, no armies to move...\n";
+	while (a > 0) {
+		bool valid = false;
+		Region* starting;
+		Region* moving;
+		cout << "\nYou have " << a << " movement points...\n";
+		while (!valid) {
+			int choice = 0;
+			cout << "\nEnter the Region ID that you would like to move armies from (0 to skip) ->";
+			cin >> choice;
+			if (choice == 0) {
+				return;
+			}
+			starting = m->getRegionById(choice);
+			vector<pair<Player*, int>> players = starting->getPlayerArmies();
+			for (int i = 0; i < players.size(); i++){
+				if (players.at(i).first == this) {
+					if (players.at(i).second > 0) {
+						valid = true;
+					}
+					else {
+						cout << "\nInvalid Region, no armies to move...\n";
+					}
 				}
 			}
 		}
+		
+		valid = false;
+		while (!valid) {
+			int choice = 0;
+			cout << "\nEnter the Region ID that you would like to move to (consult the borders displayed above) ->";
+			cin >> choice;
+			moving = m->getRegionById(choice);
+			if (m->areAdjacent(starting, moving)) {
+				int moves = a;
+				if ((m->getRegionContinent(starting)) != (m->getRegionContinent(moving))) {
+					if (a < this->checkFlying()) {
+						cout << "\nRegions are adjacent, but you need at least " << this->checkFlying() << " movements to move over water...\n";
+					}
+					//MOVE OVER WATER
+					else {
+						a -= MoveOverWater(moves, starting, moving);
+						valid = true;
+					}
+				}
+				//MOVE OVER LAND
+				else {
+					a -= MoveOverLand(moves, starting, moving);
+					valid = true;
+				}
+			}
+			else 
+				cout << "\nInvalid Region, must be adjacent to " << starting->getName() << "...\n";
+		}
+		
+		
 	}
-	
-	
 }
-void Player::MoveOverLand(int a, Map* m) {
-	cout << "\nThis function will move an army to only adjacent land spaces, not over water.";
+int Player::MoveOverLand(int a, Region* start, Region* move) {
+	bool valid = false;
+	int choice = 0;
+	int maxMoves = a;
+	while (!valid) {
+		
+		cout << "Enter the number of armies you'd like to move (max " << maxMoves << ") ->";
+		cin >> choice;
+		if ((choice > maxMoves)||(choice < 1))
+			cout << "\nInvalid, try again...\n";
+		else {
+			start->removeArmies(this, choice);
+			move->addArmies(this, choice);
+			valid = true;
+		}
+	}
+	return choice;
+	
 }
 
-void Player::MoveOverWater(int a, Map *m) {
+int Player::MoveOverWater(int a, Region* start, Region* move) {
+	bool valid = false;
+	int choice = 0;
+	int maxMoves = a/(this->checkFlying());
+	if ((start->getNbArmiesByName(this->getName())) < maxMoves)
+		maxMoves = start->getNbArmiesByName(this->getName());
 	
+	while (!valid) {
+		
+		cout << "Enter the number of armies you'd like to move (max " << maxMoves << ") ->";
+		cin >> choice;
+		if ((choice > maxMoves)||(choice < 1))
+			cout << "\nInvalid, try again...\n";
+		else {
+			start->removeArmies(this, choice);
+			move->addArmies(this, choice);
+			choice *= this->checkFlying();
+			valid = true;
+		}
+	}
+	return choice;
 }
 
 void Player::BuildCity(Map* m) {
