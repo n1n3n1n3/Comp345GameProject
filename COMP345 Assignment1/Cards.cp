@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <random> 
 #include "Cards.h"
 
 using namespace std;
@@ -152,15 +154,15 @@ void Hand::setCardsCosts(){
 
 const string Hand::handToString() const{
 	string handString = "";
-	int i = 0;
+	
 	for (Card* c : cards){
 		handString += "\n--------------------\n" + c->getName();
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nGood: " + to_string(c->getGood());
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nAction: " + to_string(c->getAction());
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nCost: " + to_string(c->getCost());
-		handString += "\n--------------------\nSELECTION #: " + to_string(i) + "\n\n";
-		i++;
+		handString += "\n--------------------\n\n";
 	}
+	
 	return handString;
 }
 
@@ -292,7 +294,13 @@ void Deck::slideCardInHand(Card* c){
 		//adjust card costs
 		deckHand->setCardsCosts();
 	}
-	
+}
+
+void Deck::shuffle(){
+	cout << "\nshuffling deck" << endl;
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::shuffle(cardDeck.begin(), cardDeck.end(), g);
 }
 
 const string Deck::deckToString() const{

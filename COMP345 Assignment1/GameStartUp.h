@@ -11,7 +11,12 @@
 using namespace std;
 
 class GameStartUp {
-	
+public:
+	static void setCardCost();
+	static void shuffleDeck();
+	static void setPlayerPieces();
+	static void setPlayerTokens();
+	static void makeBids();
 };
 
 #endif

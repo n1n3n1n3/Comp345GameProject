@@ -84,6 +84,7 @@ public:
 	Hand* getHand();
 	
 	Card* draw();
+	void shuffle();
 	void slideCardInHand(Card* c);
 	const string deckToString() const;
 };
