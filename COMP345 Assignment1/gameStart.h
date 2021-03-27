@@ -47,8 +47,6 @@ public:
 	static Hand* getHand();
 	static Map* getMap();
 	static vector<Player*> getPlayers();
-	
-//	void exchange(Player* p);
 };
 
 #endif

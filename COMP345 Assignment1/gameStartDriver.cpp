@@ -18,6 +18,9 @@ int main(int argc, char *argv[]) {
 	
 	
 	Deck* deck = GameStart::setDeck();
-
+	
+	cout << *(deck->getHand()) << endl;
+	pl.at(0)->exchange(deck, deck->getHand()->getCards().at(4));
+	cout << *(deck->getHand()) << endl;
 //	gs.exchange(pl.at(0));
 }
