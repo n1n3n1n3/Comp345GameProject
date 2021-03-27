@@ -1,14 +1,19 @@
-
-#ifndef PLAYER_H
-#define PLAYER_H
-
 #include <iostream>
 #include <string>
 
 #include "Bid.h"
 #include "Cards.h"
 
+
+#ifndef PLAYER_H
+#define PLAYER_H
+
+
 using namespace std;
+
+class Map;
+class Continent;
+class Region;
 
 class Player {
 
@@ -45,13 +50,9 @@ public:
 	//setters and getters
 	void setName(std::string name);
 	void setCoin(int c);
-	void setArmy(int a);
-	void setCity(int c);
 	std::string getName();
 	int getId();
 	int getCoins();
-	int getArmy();
-	int getCity();
 	vector<Card*> getPlayerCards();
 	
 	Bid* getBid();
@@ -60,14 +61,17 @@ public:
 	int checkMovementBonus();
 	int checkFlying();
 	
+	//Action helpers
+	bool checkPlacementValidity(Map* m, Region* r);
+	
 	//All possible actions
 	void payCoin(int amount);
-	void PlaceNewArmies(int a);
-	void MoveArmies(int a);
-	void MoveOverLand(int a);
-	void MoveOverWater(int a);
-	void BuildCity();
-	void DestroyArmy();
+	void PlaceNewArmies(int a, Map* m);
+	void MoveArmies(int a, Map* m);
+	void MoveOverLand(int a, Map* m);
+	void MoveOverWater(int a, Map* m);
+	void BuildCity(Map* m);
+	void DestroyArmy(Map* m);
 	void AndOrAction();
 	void makeBid(int bid);
 	void exchange(Deck* d, Card* c);

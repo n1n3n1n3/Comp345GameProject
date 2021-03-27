@@ -113,32 +113,34 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				first = third;
 				second = fourth;
 			}
+			else
+				break;
 		}
-
+		//map->printMap();
 		switch (first) {
 			case 1:
 				bonus = p->checkPlacementBonus();
 				num = second + bonus;
 				cout << "Placing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
-				map->printMap();
-				p->PlaceNewArmies(num);
+				
+				p->PlaceNewArmies(num, map);
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();
 				num = second + bonus;
 				cout << "Moving " << second << " armies with a bonus of " << bonus << " for a total of " << num << ".\nMoving over water costs " << p->checkFlying() << " per Army.";
-				map->printMap();
-				p->MoveArmies(num);
+				
+				p->MoveArmies(num, map);
 				break;
 			case 3:
 				cout << "Destroying an army...";
-				map->printMap();
-				p->DestroyArmy();
+				
+				p->DestroyArmy(map);
 				break;
 			case 4:
 				cout << "Building a city...";
-				map->printMap();
-				p->BuildCity();
+				
+				p->BuildCity(map);
 				break;
 			default:
 				ret+= "Invalid...";

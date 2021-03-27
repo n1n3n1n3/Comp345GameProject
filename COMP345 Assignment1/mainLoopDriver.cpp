@@ -22,6 +22,7 @@ int main() {
 	//*******************************
 	//COPY FROM GAMESTART FOR TESTING
 	//*******************************
+	map->setStartingRegion(map->getRegionById(5));
 	
 	MainLoop ml = MainLoop(pl, deck, map);
 	

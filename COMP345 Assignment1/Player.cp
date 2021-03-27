@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Player.h"
+#include "map.h"
 //#include "Cards.h"
 
 using namespace std;
@@ -62,7 +63,7 @@ Player& Player::operator = (const Player &p) {
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Player &p) {
-	return strm << "Player has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
+	return strm << p.name << " has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
 }
 
 void Player::setName(std::string name){
@@ -71,14 +72,6 @@ void Player::setName(std::string name){
 
 void Player::setCoin(int c){
 	this->coin = c;
-}
-
-void Player::setArmy(int a){
-	this->army = a;
-}
-
-void Player::setCity(int c){
-	this->city = c;
 }
 
 int Player::getCoins(){
@@ -92,14 +85,6 @@ std::string Player::getName(){
 
 int Player::getId(){
 	return this->id;
-}
-
-int Player::getArmy(){
-	return this->army;
-}
-
-int Player::getCity(){
-	return this->city;
 }
 
 
@@ -144,31 +129,75 @@ int Player::checkFlying() {
 
 
 
-//Functions that will be defined later
+//Main action functions
 void Player::payCoin(int amount) {
-	if ((this->coin -= amount) < 0){
-		cout << "player has insufficient funds: " << this->getName() << " only has " << this->getCoins() << " coins, cost is " << amount << " coins" << endl;
+
+	int res = coin - amount;
+	if (res < 0) {
+		cout << this->getName() << " has insufficient funds with only " << this->coin << " coins." << endl;
 	}
 	else {
-		this->coin -= amount;
-		cout << this->name << " paid " << amount << " and now has " << this->coin << " coins" << endl;
+		this->setCoin(res);
+		cout << this->name << " paid " << amount << " and now has " << this->getCoins() << " coins" << endl;
 	}
 }
 
-void Player::PlaceNewArmies(int a) {
-	cout << "\nPlaceNewArmies() will let a Player place an army somewhere on the board.";
+bool Player::checkPlacementValidity(Map* m, Region *r) {
+	if ((r->checkStartingRegion(m))||(r->checkCity(this)))
+		return true;
+	else
+		return false;
+	
 }
-void Player::MoveArmies(int a) {
+
+void Player::PlaceNewArmies(int a, Map* m) {
+	while (a > 0) {
+		bool valid = false;
+		while (!valid) {
+			int choice = 0;
+			cout << "\nEnter the Region ID that you would like to place on ->";
+			cin >> choice;
+			Region* r = m->getRegionById(choice);
+			if (checkPlacementValidity(m, r)) {
+				valid = true;
+				bool val = false;
+				while (!val) {
+					int arms = 0;
+					cout << "Enter # of armies to place (max " << a << ") ->";
+					cin >> arms;
+					if (arms > a)
+						cout << "\nInvalid, try again...\n";
+					else {
+						val = true;
+						r->addArmies(this, arms);
+						a -= arms;
+					}
+				}
+			}
+			else 
+				cout << "\nInvalid Region, must be the Starting Region or a region where you own a city...\n";
+		}
+	}
+	cout << "\nDone placing Armies!";
+}
+
+
+
+void Player::MoveArmies(int a, Map* m) {
 	cout << "\nMoveArmies() will move an army to any space, over land or water.";
 }
-void Player::MoveOverLand(int a) {
+void Player::MoveOverLand(int a, Map* m) {
 	cout << "\nThis function will move an army to only adjacent land spaces, not over water.";
 }
-void Player::BuildCity() {
+void Player::BuildCity(Map* m) {
 	cout << "\nBuildCity() will let a Player place a city somewhere on the board.";
 }
-void Player::DestroyArmy() {
+void Player::DestroyArmy(Map* m) {
 	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
+}
+
+void Player::AndOrAction() {
+	
 }
 
 void Player::makeBid(int bid){
@@ -181,19 +210,13 @@ void Player::makeBid(int bid){
 }
 
 void Player::exchange(Deck* d, Card* c){
-	if (this->getCoins() < c->getCost()){
-			cout << "player has insufficient funds: " << this->getName() << "only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
-			return;
-	}
-	else {
-		cout << this->getName() << " is purchasing card [" << c->getName() << "] for " << c->getCost() << " coins." << endl;
-		// pay the cost
-		this->payCoin(c->getCost());
-		// add card to the players list
-		playerCards.push_back(c);
+	
+	payCoin(c->getCost());
+	// add card to the players list
+	playerCards.push_back(c);
 		
-		d->slideCardInHand(c);
-	}
+	d->slideCardInHand(c);
+	
 }
 
 Player* getPlayerById(int id, vector<Player*> playerList){

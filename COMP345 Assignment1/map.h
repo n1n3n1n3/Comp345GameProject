@@ -17,6 +17,7 @@ private:
 	string owner;
 //	int nbArmies;
 	vector<pair<Player*, int>> playerArmies;
+	vector<pair<Player*, bool>> playerCity;
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Region&);
 	
@@ -33,6 +34,8 @@ public:
 	void setName(string name);
 	void setArmies(Player* p, int nb);
 	void addArmies(Player* p, int nb);
+	bool addCity(Player* p);
+	bool checkCity(Player* p);
 	void removeArmies(Player* p, int nb);
 	string getOwner();
 	void setOwner(Player* player);
@@ -48,6 +51,7 @@ public:
 	int getContinentId();
 	vector<pair<Player*, int>> getPlayerArmies();
 	const string getPlayersAndArmiesString() const;
+	bool checkStartingRegion(Map* m);
 };
 
 class Continent {
@@ -84,7 +88,6 @@ public:
 	void addRegion(Region* region);
 	bool hasRegion(int id);
 	Region* getRegionById(int id);
-	vector<int> getListOfRegionId();
 	
 	//extra function for connected continent management
 	void addConnectedContinent(int id);
@@ -126,7 +129,6 @@ public:
 	Region* getStartingRegion();
 	
 	//extra continent functions
-	void determineStartingRegion();
 	Continent* addContinent(int id, string name);
 	void addContinent(Continent& continent);
 	int getNbContinents() const;
@@ -141,7 +143,6 @@ public:
 	int getNbRegions() const;
 	Region* getRegionById(int id);
 	bool areAdjacent(Region* r1, Region* r2);
-	Continent* getRegionContinent(Region* r);
 	
 //	load the lists witht the map loader
 	void loadContinents(vector<vector<string>> listContinents);
@@ -152,7 +153,6 @@ public:
 	
 // sub methods for validate (might be useful later also)
 	bool connectedToOtherContinent(Continent * c);
-	bool connectedToOtherContinent(Region* r);
 	int getContinentIdofRegion(int regionId);
 //	returns I
 	

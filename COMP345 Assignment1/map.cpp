@@ -11,8 +11,10 @@ Region::Region() {
 //	this->continentId = 0;
 	this->continent = "";
 	this->owner = "none";
+	//this->startingRegion = false;
 	//create an empty pair list for players and number of armies
 	this->playerArmies = vector<pair<Player*, int>>();
+	this->playerCity = vector<pair<Player*, bool>>();
 }
 
 
@@ -27,6 +29,8 @@ Region::Region(const Region& region){
 	this->name = region.name;
 	this->owner = region.owner;
 	this->playerArmies = region.playerArmies;
+	this->playerCity = region.playerCity;
+	//this->startingRegion = region.startingRegion;
 }
 
 //parameter constructor
@@ -36,7 +40,9 @@ Region::Region(int id, string name, string continent, int continentId){
 	this->continent = continent;
 	this->continentId = continentId;
 	this->owner = "none";
+//	this->startingRegion = false;
 	this->playerArmies = vector<pair<Player*, int>>();
+	this->playerCity = vector<pair<Player*, bool>>();
 }
 
 //streaming friend
@@ -62,6 +68,7 @@ void Region::setPlayers(vector<Player*> playerList){
 	//assume that each player starts with 0 armies
 	for(Player* p: playerList){
 		playerArmies.push_back({p, 0});
+		playerCity.push_back({p, false});
 	}
 }
 
@@ -96,6 +103,41 @@ void Region::addArmies(Player* p, int nb){
 	}
 	
 	this->determineOwner();
+}
+
+bool Region::addCity(Player *p) {
+	cout << p->getName() << " is adding a city to " << this->name << endl;
+	for (int i = 0; i < playerCity.size(); i++){
+		if (playerCity.at(i).first == p){
+			if (playerCity.at(i).second == true) {
+				cout << "\nCity is already there, choose another Region...\n";
+				return false;
+			}
+			else {
+				cout << "\nSuccess!\n";
+				playerCity.at(i).second = true;
+				return true;
+			}
+		}
+	}
+	cout << "\nUnexpected error.\n";
+	return false;
+}
+
+bool Region::checkCity(Player *p) {
+	for (int i = 0; i < playerCity.size(); i++){
+		if (playerCity.at(i).first == p){
+			if (playerCity.at(i).second == true) {
+				return true;
+			}
+			else {
+				cout << "\nNo city for this player at this region";
+				return false;
+			}
+		}
+	}
+	cout << "\nUnexpected error.\n";
+	return false;
 }
 
 void Region::setArmies(Player *p, int nb){
@@ -176,9 +218,16 @@ void Region::determineOwner(){
 		}
 	}
 	if ((this->owner).compare(currOwner) != 0){
-		cout << "region " << this->name << "has gone from " << this->owner << " to " << currOwner << "." << endl;
+		cout << "region " << this->name << " has gone from " << this->owner << " to " << currOwner << "." << endl;
 		this->owner = currOwner;
 	}
+}
+
+bool Region::checkStartingRegion(Map* m) {
+	if (m->getStartingRegion() == this)
+		return true;
+	else
+		return false;
 }
 /*end of region*/
 
@@ -303,13 +352,6 @@ int Continent::getNbConnectedContinents(){
 	return this->connectedContinents.size();
 }
 
-vector<int> Continent::getListOfRegionId(){
-	vector<int> listOfRegionIds = vector<int>();
-	for (Region* r : this->regions){
-		listOfRegionIds.push_back(r->getId());
-	}
-	return listOfRegionIds;
-}
 /* end of continent functions */
 
 
@@ -387,6 +429,10 @@ vector<vector<int>> Map::getBorders(){
 	return this->borders;
 }
 
+Region* Map::getStartingRegion() {
+	return this->startingRegion;
+}
+
 Continent* Map::addContinent(int id, string name){
 	this->continents.push_back(new Continent(id, name));
 	return this->continents.back();
@@ -400,17 +446,6 @@ int Map::getNbContinents() const{
 	return this->continents.size();
 }
 
-Continent* Map::getRegionContinent(Region* r){
-	
-	for (Continent* c : this->continents){
-		if(c->getName() == r->getContinent()){
-			return c;
-		}
-	}
-	//if you can't find the regions continent, warn the user
-	cout << "cannot find regions continent" << endl;
-	return new Continent();
-}
 
 Continent* Map::getContinentById(int id){
 	//declare an empty continent
@@ -583,49 +618,6 @@ void Map::loadPlayers(vector<Player*> listPlayers){
 	}
 }
 
-void Map::determineStartingRegion(){
-	cout << "determining starting region" << endl;
-//	get the continent that is connected to more than one region
-	Region* r;
-	for(Continent* c: continents){
-		if (c->getNbConnectedContinents() > 1){
-			{
-			srand(time(0));
-			int select = rand() % c->getNbRegions();
-			vector<int> listOfRegionIds = c->getListOfRegionId();
-			r = c->getRegionById(listOfRegionIds.at(select));
-			
-			while (!connectedToOtherContinent(r)){
-				srand(time(0));
-				int select = rand() % c->getNbRegions();
-				vector<int> listOfRegionIds = c->getListOfRegionId();
-				r = c->getRegionById(listOfRegionIds.at(select));
-			    }
-			cout << "starting region is " << r->getName() << "!" << endl;
-			setStartingRegion(r);
-		    }
-		}
-	}
-}
-
-bool Map::connectedToOtherContinent(Region* r){
-	for (vector<int> border: this->borders){
-			if (border.at(0) == r->getId()){
-				if (r->getContinent() != getRegionById(border.at(1))->getContinent()){
-					return true;
-				}
-			}
-			
-			if(border.at(1) == r->getId()){
-				if (r->getContinent() != getRegionById(border.at(0))->getContinent()){
-					return true;
-				}
-			}
-	}
-	
-	return false;
-}
-
 
 
 //
@@ -684,6 +676,8 @@ void Map::printMap(){
 	for(Continent* c: continents){
 		cout << "[" << c->getName() << "]";;
 		for(Region* r: c->getRegions()){
+			if (r == this->getStartingRegion())
+				cout << "*******\\/\\/\\/\\/\\/ STARTING REGION BELOW \\/\\/\\/\\/\\/*******";
 			cout << *r << endl;
 		}
 	}
