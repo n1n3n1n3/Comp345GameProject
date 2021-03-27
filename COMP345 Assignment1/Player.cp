@@ -62,7 +62,7 @@ Player& Player::operator = (const Player &p) {
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Player &p) {
-	return strm << "Player has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
+	return strm << p.name << " has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
 }
 
 void Player::setName(std::string name){
@@ -128,14 +128,16 @@ int Player::checkFlying() {
 
 
 
-//Functions that will be defined later
+//Main action functions
 void Player::payCoin(int amount) {
-	if (this->coin -= amount < 0){
-		cout << "player has insufficient funds" << endl;
+
+	int res = coin - amount;
+	if (res < 0) {
+		cout << this->getName() << " has insufficient funds with only " << this->coin << " coins." << endl;
 	}
 	else {
-		this->coin -= amount;
-		cout << "player:" << this->name << " paid " << amount << "and now has " << this->coin << " coins";
+		this->setCoin(res);
+		cout << this->name << " paid " << amount << "and now has " << this->getCoins() << " coins" << endl;
 	}
 }
 
@@ -155,6 +157,10 @@ void Player::DestroyArmy() {
 	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
 }
 
+void Player::AndOrAction() {
+	
+}
+
 void Player::makeBid(int bid){
 	if (bid > this->coin){
 		cout << "cannot make bid greater than the number of coins" << endl;
@@ -165,18 +171,13 @@ void Player::makeBid(int bid){
 }
 
 void Player::exchange(Deck* d, Card* c){
-	if (this->getCoins() < c->getCost()){
-			cout << "player has insufficient funds";
-			return;
-	}
-	else {
-		// pay the cost
-		this->coin = this->coin - c->getCost();
-		// add card to the players list
-		playerCards.push_back(c);
+	
+	payCoin(c->getCost());
+	// add card to the players list
+	playerCards.push_back(c);
 		
-		d->slideCardInHand(c);
-	}
+	d->slideCardInHand(c);
+	
 }
 
 Player* getPlayerById(int id, vector<Player*> playerList){

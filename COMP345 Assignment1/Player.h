@@ -61,8 +61,10 @@ public:
 	void PlaceNewArmies(int a);
 	void MoveArmies(int a);
 	void MoveOverLand(int a);
+	void MoveOverWater(int a);
 	void BuildCity();
 	void DestroyArmy();
+	void AndOrAction();
 	void makeBid(int bid);
 	void exchange(Deck* d, Card* c);
 };
