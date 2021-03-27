@@ -18,10 +18,6 @@ void GameStartUp::setPlayerPieces(vector<Player*> pl){
 	}
 }
 
-void GameStartUp::setPlayerTokens(vector<Player*> pl){
-	
-}
-
 void GameStartUp::chooseStartingRegion(Map* m){
 	m->determineStartingRegion();
 }

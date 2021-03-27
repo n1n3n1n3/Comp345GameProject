@@ -210,13 +210,19 @@ void Player::makeBid(int bid){
 }
 
 void Player::exchange(Deck* d, Card* c){
-	
-	payCoin(c->getCost());
-	// add card to the players list
-	playerCards.push_back(c);
+	if (this->getCoins() < c->getCost()){
+		cout << "player has insufficient funds: " << this->getName() << "only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
+		return;
+	}
+	else {
+		cout << this->getName() << " is purchasing card [" << c->getName() << "] for " << c->getCost() << " coins." << endl;
+		// pay the cost
+		this->payCoin(c->getCost());
+		// add card to the players list
+		playerCards.push_back(c);
 		
-	d->slideCardInHand(c);
-	
+		d->slideCardInHand(c);
+	}
 }
 
 Player* getPlayerById(int id, vector<Player*> playerList){

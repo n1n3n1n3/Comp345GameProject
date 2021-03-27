@@ -15,7 +15,6 @@ public:
 	static void setCardCost(Deck* d);
 	static void shuffleDeck(Deck* d);
 	static void setPlayerPieces(vector<Player*> pl);
-	static void setPlayerTokens(vector<Player*> pl);
 	static void chooseStartingRegion(Map* m);
 	static void makeBids();
 };
