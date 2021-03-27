@@ -328,7 +328,7 @@ void Hand::slideCards(Card* c){
 	
 	if (index != 5){
 		cout << "sliding cards in handx" << endl;
-		for (int i = index + 1; i < 5; i++){
+		for (int i = index + 1; i < 6; i++){
 				cards.at(i - 1) = cards.at(i);
 		}
 //		cards.at(5) 
@@ -379,6 +379,15 @@ const string Hand::handToString() const{
 	}
 	
 	return handString;
+}
+
+
+void Hand::printCardNames() {
+	cout << "\n+++  cards in deck  +++" << endl;
+	for (Card* c : cards){
+		cout << c->getName() << endl;
+	}
+	cout << "\n" << endl;
 }
 
 //empty constructor
@@ -488,8 +497,12 @@ Hand* Deck::getHand(){
 }
 
 void Deck::slideCardInHand(Card* c){
+	
+	cout << c->getName() << endl;
 	deckHand->slideCards(c);
-	deckHand->addCard(draw());
+	
+	
+	deckHand->placeCardAtIndex(draw(), 5);
 		
 	//adjust card costs
 	deckHand->setCardsCosts();

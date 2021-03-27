@@ -6,21 +6,21 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	
 //	Map* map = GameStart::selectMap();
-	Map* map = GameStart::selectMap("./maps/BirdsL.map");
+//	Map* map = GameStart::selectMap("./maps/BirdsL.map");
+	
 	
 //	//manually enter players
 //	vector<Player*> players= GameStart::setPlayers();
 
-	vector<Player*> pl;
-	pl.push_back(new Player("anna"));
-	pl.push_back(new Player("paul"));
-	GameStart::setPlayers(pl);
+	vector<Player*> players;
+	players.push_back(new Player("anna"));
+	players.push_back(new Player("paul"));
+	GameStart::setPlayers(players);
 	
 	
 	Deck* deck = GameStart::setDeck();
 	
-	cout << *(deck->getHand()) << endl;
-	pl.at(0)->exchange(deck, deck->getHand()->getCards().at(4));
-	cout << *(deck->getHand()) << endl;
-//	gs.exchange(pl.at(0));
+	deck->getHand()->printCardNames();
+	players.at(0)->exchange(deck, deck->getHand()->getCards().at(5));
+	deck->getHand()->printCardNames();
 }

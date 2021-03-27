@@ -12,6 +12,6 @@ int main(int argc, char *argv[]) {
 	Bid* b3 = new Bid("Felicia Frostberry", 7);
 	Bid* b4 = new Bid("Xeno Xenegrade", 7);
 	
-//	Bid::makeBids();
+	Bid::makeBids();
 	Bid::compareBids();
 }

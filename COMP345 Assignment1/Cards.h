@@ -64,6 +64,9 @@ public:
 	void setCardsCosts();
 	const string handToString() const;
 	void slideCards(Card* c);
+	
+	//print functions
+	void printCardNames();
 };
 
 
