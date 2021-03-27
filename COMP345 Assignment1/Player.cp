@@ -14,6 +14,7 @@ Player::Player(){
 	this->army = 0;
 	this->city = 0;
 	this->coin = 0;
+	this->elixir = 0;
 	this->id = ++nextID;
 	this->bid = new Bid();
 }
@@ -21,6 +22,7 @@ Player::Player(){
 Player::Player(string name){
 	this->army = 18;
 	this->city = 3;
+	this->elixir = 0;
 	this->id = ++nextID;
 	this->name = name;
 	this->bid = new Bid(name);
@@ -30,6 +32,7 @@ Player::Player(int c, string name){
 	this->army = 18;
 	this->city = 3;
 	this->coin = c;
+	this->elixir = 0;
 	this->id = ++nextID;
 	this->name = name;
 	this->bid = new Bid(name);
@@ -39,6 +42,7 @@ Player::Player(int c) {
 	this->army = 18;
 	this->city = 3;
 	this->coin = c;
+	this->elixir = 0;
 	this->bid = new Bid();
 	cout << "\nNew Player created, parameter of coins passed. Uninitialized void pointers for Territory, cardHand, and Bidding objects yet to be initialized."; 
 	this->id = ++nextID;
@@ -50,6 +54,7 @@ Player::Player(const Player &p) {
 	this->city = p.city;
 	this->coin = p.coin;
 	this->name = p.name;
+	this->elixir = p.elixir;
 	this->id = p.id;
 	this->bid = new Bid(*p.bid);
 	cout << "\nCopy Constructor used.";
@@ -86,6 +91,14 @@ int Player::getCity(){
 
 void Player::setName(std::string name){
 	this->name = name;
+}
+
+void Player::addCoin(int c) {
+	this->coin += c;
+}
+
+void Player::addElixir(int e) {
+	this->elixir += e;
 }
 
 void Player::setCoin(int c){
@@ -342,6 +355,34 @@ void Player::exchange(Deck* d, Card* c){
 		this->payCoin(c->getCost());
 		// add card to the players list
 		playerCards.push_back(c);
+		int good = c->getGood();
+		
+		//IMMEDIATELY ADD COIN OR ELIXIR
+		if (good == 4152) {
+			addCoin(2);
+			addElixir(1);
+		}
+		else {
+			int len = 0;
+			int first = 0;
+			int second = 0;
+			for (int i = good; i > 0; i = i/10) {
+				len++;
+			}
+			if (len == 2) {
+				first = good/10;
+				second = good%10;
+				if (first == 4) {
+					cout << "\nAdding " << second << " Elixir...";
+					addElixir(second);
+				}
+				else if (first == 5) {
+					cout << "\nAdding " << second << " Coins...";
+					addCoin(second);
+				}
+					
+			}
+		}
 		
 		d->slideCardInHand(c);
 	}

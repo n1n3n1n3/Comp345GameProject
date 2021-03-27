@@ -29,6 +29,7 @@ private:
 	
 	//Attributes
 	int coin;
+	int elixir;
 	int army;
 	int city;
 	string name;
@@ -54,6 +55,8 @@ public:
 	
 	//setters and getters
 	void setName(std::string name);
+	void addCoin(int c);
+	void addElixir(int e);
 	void setCoin(int c);
 	std::string getName();
 	int getId();
