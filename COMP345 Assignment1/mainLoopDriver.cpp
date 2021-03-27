@@ -16,7 +16,7 @@ int main() {
 	pl.push_back(new Player("anna"));
 	pl.push_back(new Player("paul"));
 	GameStart::setPlayers(pl);
-	
+	map->loadPlayers(pl);
 	
 	Deck* deck = GameStart::setDeck();
 	//*******************************

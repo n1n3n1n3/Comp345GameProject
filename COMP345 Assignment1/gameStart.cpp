@@ -140,6 +140,7 @@ void GameStart::setPlayers(vector<Player*> playerList){
 	}
 	cout << "-------------------------------------------------\n" << endl;
 	players = playerList;
+	
 }
 
 Deck* GameStart::setDeck(){
