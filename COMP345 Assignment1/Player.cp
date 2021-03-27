@@ -66,6 +66,24 @@ std::ostream& operator<<(std::ostream &strm, const Player &p) {
 	return strm << p.name << " has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
 }
 
+
+void Player::setArmy(int a){
+	this->army = a;
+}
+
+void Player::setCity(int c){
+	this->city = c;
+}
+
+int Player::getArmy(){
+	return this->army;
+}
+
+int Player::getCity(){
+	return this->city;
+}
+
+
 void Player::setName(std::string name){
 	this->name = name;
 }
@@ -184,7 +202,26 @@ void Player::PlaceNewArmies(int a, Map* m) {
 
 
 void Player::MoveArmies(int a, Map* m) {
-	cout << "\nMoveArmies() will move an army to any space, over land or water.";
+	bool valid = false;
+	while (!valid) {
+		int choice = 0;
+		cout << "\nEnter the Region ID that you would like to move armies from ->";
+		cin >> choice;
+		Region* r = m->getRegionById(choice);
+		vector<pair<Player*, int>> players = r->getPlayerArmies();
+		for (int i = 0; i < players.size(); i++){
+			if (players.at(i).first == this) {
+				if (players.at(i).second > 0) {
+					valid = true;
+				}
+				else {
+					cout << "\nInvalid Region, no armies to move...\n";
+				}
+			}
+		}
+	}
+	
+	
 }
 void Player::MoveOverLand(int a, Map* m) {
 	cout << "\nThis function will move an army to only adjacent land spaces, not over water.";

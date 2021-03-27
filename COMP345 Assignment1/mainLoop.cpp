@@ -116,7 +116,7 @@ void MainLoop::takeAction(Player* p, Card *c) {
 			else
 				break;
 		}
-		//map->printMap();
+		map->printMap();
 		switch (first) {
 			case 1:
 				bonus = p->checkPlacementBonus();

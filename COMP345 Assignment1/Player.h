@@ -47,6 +47,11 @@ public:
 	Player(const Player &p);
 	Player& operator = (const Player &p);
 	
+	void setArmy(int a);
+	void setCity(int c);
+	int getArmy();
+	int getCity();
+	
 	//setters and getters
 	void setName(std::string name);
 	void setCoin(int c);
