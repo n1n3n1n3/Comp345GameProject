@@ -61,7 +61,7 @@ public:
 	void addCard(Card* c);
 	//draws a card and shifts hand
 	void placeCardAtIndex(Card* c, int index);
-	void setCardsCosts();
+	void setCardsCosts(int cardsCostCard[6]);
 	const string handToString() const;
 	void slideCards(Card* c);
 	
@@ -74,6 +74,7 @@ class Deck {
 private:	
 	int nbPlayers;
 	int deckSize;
+	int cardCostCard[6];
 	vector<Card*> cardDeck;
 	Hand* deckHand;
 	
@@ -90,6 +91,8 @@ public:
 	int getDeckSize();
 	vector<Card*> getCardDeck();
 	Hand* getHand();
+	void setCardCostCard(int cardsCostCard[6]);
+	void setCardCosts();
 	
 	Card* draw();
 	void shuffle();

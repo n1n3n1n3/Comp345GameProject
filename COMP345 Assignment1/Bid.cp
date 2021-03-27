@@ -100,8 +100,8 @@ void Bid::makeBids(){
 	//adapt max bid to nb of players
 	switch (nbBids) {
 		case 2:
-			cout << "max coin bid is 14\n";
-			maxBid = 14;
+			cout << "max coin bid is 12\n";
+			maxBid = 12;
 			break;
 		case 3:
 			cout << "max coin bid is 11\n";

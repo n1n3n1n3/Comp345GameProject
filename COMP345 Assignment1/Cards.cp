@@ -187,7 +187,7 @@ string Card::getGoodString() const{
 			return "+1 VP per " + getTypeString(second);
 			break;
 		case 7:
-			return to_string(second) + "VPs for " + to_string(third) + " of type " + getTypeString(fourth);
+			return to_string(second) + "VPs for " + to_string(third) + "of type " + getTypeString(fourth);
 			break;
 		case 8:
 			switch(second) {
@@ -356,16 +356,11 @@ void Hand::placeCardAtIndex(Card* c, int index){
 	this->cards.at(index) = c;
 }
 
-void Hand::setCardsCosts(){
-	//this function could be modified based on cost card values
-	this->cards.at(0)->setCost(0);
-	this->cards.at(1)->setCost(1);
-	this->cards.at(2)->setCost(1);
-	this->cards.at(3)->setCost(2);
-	this->cards.at(4)->setCost(2);
-	this->cards.at(5)->setCost(3);
+void Hand::setCardsCosts(int cardCostCard[6]){
+	for (int i = 0; i < 6; i++){
+		this->cards.at(i)->setCost(cardCostCard[i]);
+	}
 }
-
 
 const string Hand::handToString() const{
 	string handString = "";
@@ -396,6 +391,7 @@ Deck::Deck(){
 
 
 Deck::Deck(int nbPlayers){
+	cout << "generating deck for " << nbPlayers << " players." << endl;
 	this->nbPlayers = nbPlayers;
 	//27 cards if 2 players
 	if (nbPlayers >= 2) {
@@ -444,16 +440,26 @@ Deck::Deck(int nbPlayers){
 		cardDeck.push_back(new Card("Castle 2", 'q', 2340, 41));
 	}
 	
+	cout << "added " << this->deckSize << " cards to the deck" << endl;
+
+	
+	cout << "placing card cost card aside & drawing hand" << endl;
 	//draw six cards to the hand
 	vector<Card*> tempHand;
 	for (int i = 0; i < 6; i++){
 		tempHand.push_back(draw());
 	}
 	
+	cardCostCard[0] = 0;
+	cardCostCard[1] = 1;
+	cardCostCard[2] = 1;
+	cardCostCard[3] = 2;
+	cardCostCard[4] = 2;
+	cardCostCard[5] = 3;
 	//generate hand based on cards drawn
 	deckHand = new Hand(tempHand);
 	//set the cost of card
-	deckHand->setCardsCosts();
+	deckHand->setCardsCosts(cardCostCard);
 }
 
 Deck::Deck(const Deck &d){
@@ -461,7 +467,13 @@ Deck::Deck(const Deck &d){
 	this->nbPlayers = d.nbPlayers;
 	this->cardDeck = d.cardDeck;
 	this->deckHand = d.deckHand;
+	
+	for (int i = 0; i < 6; i++){
+		this->cardCostCard[i] = d.cardCostCard[i];
+	}
 }
+
+
 
 ////Output
 std::ostream& operator<<(std::ostream &strm, const Deck &d) {
@@ -498,18 +510,17 @@ Hand* Deck::getHand(){
 
 void Deck::slideCardInHand(Card* c){
 	
-	cout << c->getName() << endl;
 	deckHand->slideCards(c);
 	
 	
 	deckHand->placeCardAtIndex(draw(), 5);
 		
 	//adjust card costs
-	deckHand->setCardsCosts();
+	deckHand->setCardsCosts(this->cardCostCard);
 }
 
 void Deck::shuffle(){
-	cout << "\nshuffling deck" << endl;
+	cout << "\n++++++++++++ shuffling deck ++++++++++++" << endl;
 	std::random_device rd;
 	std::mt19937 g(rd());
 	std::shuffle(cardDeck.begin(), cardDeck.end(), g);

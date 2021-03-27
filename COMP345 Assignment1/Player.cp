@@ -62,7 +62,7 @@ Player& Player::operator = (const Player &p) {
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Player &p) {
-	return strm << p.name << " has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
+	return strm << "Player has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
 }
 
 void Player::setName(std::string name){
@@ -71,6 +71,14 @@ void Player::setName(std::string name){
 
 void Player::setCoin(int c){
 	this->coin = c;
+}
+
+void Player::setArmy(int a){
+	this->army = a;
+}
+
+void Player::setCity(int c){
+	this->city = c;
 }
 
 int Player::getCoins(){
@@ -84,6 +92,14 @@ std::string Player::getName(){
 
 int Player::getId(){
 	return this->id;
+}
+
+int Player::getArmy(){
+	return this->army;
+}
+
+int Player::getCity(){
+	return this->city;
 }
 
 
@@ -128,16 +144,14 @@ int Player::checkFlying() {
 
 
 
-//Main action functions
+//Functions that will be defined later
 void Player::payCoin(int amount) {
-
-	int res = coin - amount;
-	if (res < 0) {
-		cout << this->getName() << " has insufficient funds with only " << this->coin << " coins." << endl;
+	if ((this->coin -= amount) < 0){
+		cout << "player has insufficient funds: " << this->getName() << " only has " << this->getCoins() << " coins, cost is " << amount << " coins" << endl;
 	}
 	else {
-		this->setCoin(res);
-		cout << this->name << " paid " << amount << "and now has " << this->getCoins() << " coins" << endl;
+		this->coin -= amount;
+		cout << this->name << " paid " << amount << " and now has " << this->coin << " coins" << endl;
 	}
 }
 
@@ -157,10 +171,6 @@ void Player::DestroyArmy() {
 	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
 }
 
-void Player::AndOrAction() {
-	
-}
-
 void Player::makeBid(int bid){
 	if (bid > this->coin){
 		cout << "cannot make bid greater than the number of coins" << endl;
@@ -171,13 +181,19 @@ void Player::makeBid(int bid){
 }
 
 void Player::exchange(Deck* d, Card* c){
-	
-	payCoin(c->getCost());
-	// add card to the players list
-	playerCards.push_back(c);
+	if (this->getCoins() < c->getCost()){
+			cout << "player has insufficient funds: " << this->getName() << "only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
+			return;
+	}
+	else {
+		cout << this->getName() << " is purchasing card [" << c->getName() << "] for " << c->getCost() << " coins." << endl;
+		// pay the cost
+		this->payCoin(c->getCost());
+		// add card to the players list
+		playerCards.push_back(c);
 		
-	d->slideCardInHand(c);
-	
+		d->slideCardInHand(c);
+	}
 }
 
 Player* getPlayerById(int id, vector<Player*> playerList){

@@ -20,7 +20,8 @@ int main(int argc, char *argv[]) {
 	
 	Deck* deck = GameStart::setDeck();
 	
-	deck->getHand()->printCardNames();
-	players.at(0)->exchange(deck, deck->getHand()->getCards().at(5));
-	deck->getHand()->printCardNames();
+	
+//	deck->getHand()->printCardNames();
+//	players.at(0)->exchange(deck, deck->getHand()->getCards().at(5));
+//	deck->getHand()->printCardNames();
 }

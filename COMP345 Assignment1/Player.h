@@ -45,9 +45,13 @@ public:
 	//setters and getters
 	void setName(std::string name);
 	void setCoin(int c);
+	void setArmy(int a);
+	void setCity(int c);
 	std::string getName();
 	int getId();
 	int getCoins();
+	int getArmy();
+	int getCity();
 	vector<Card*> getPlayerCards();
 	
 	Bid* getBid();
