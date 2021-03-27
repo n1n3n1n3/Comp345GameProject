@@ -187,7 +187,7 @@ string Card::getGoodString() const{
 			return "+1 VP per " + getTypeString(second);
 			break;
 		case 7:
-			return to_string(second) + "VPs for " + to_string(third) + "of type " + getTypeString(fourth);
+			return to_string(second) + "VPs for " + to_string(third) + " of type " + getTypeString(fourth);
 			break;
 		case 8:
 			switch(second) {

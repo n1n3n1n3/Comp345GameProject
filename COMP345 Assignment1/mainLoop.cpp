@@ -38,7 +38,7 @@ Player* MainLoop::whoseTurn() const{
 //Display Map&Hand
 void MainLoop::showBoard() {
 	cout << "**************************\n"; 
-	//map->printMap();
+	map->printMap();
 	cout << *deck;
 	
 }
@@ -92,12 +92,16 @@ void MainLoop::takeAction(Player* p, Card *c) {
 		if (orAction) {
 			int choice = 0;
 			cout << *c << endl;
-			cout << "Which action would you like to take? (0 or 1) ->";
+			cout << "Which action would you like to take? (0 or 1, anything else for skip.) ->";
 			cin >> choice;
+		
 			if (choice == 1) {
 				first = third;
 				second = fourth;
 			}
+		}
+		else {
+			
 		}
 		
 		if (i == 1) {
@@ -116,20 +120,24 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				bonus = p->checkPlacementBonus();
 				num = second + bonus;
 				cout << "Placing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
+				map->printMap();
 				p->PlaceNewArmies(num);
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();
 				num = second + bonus;
 				cout << "Moving " << second << " armies with a bonus of " << bonus << " for a total of " << num << ".\nMoving over water costs " << p->checkFlying() << " per Army.";
+				map->printMap();
 				p->MoveArmies(num);
 				break;
 			case 3:
 				cout << "Destroying an army...";
+				map->printMap();
 				p->DestroyArmy();
 				break;
 			case 4:
 				cout << "Building a city...";
+				map->printMap();
 				p->BuildCity();
 				break;
 			default:
