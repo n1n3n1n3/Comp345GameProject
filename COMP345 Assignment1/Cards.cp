@@ -39,7 +39,7 @@ Card& Card::operator = (const Card &c) {
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Card &c) {
-	return strm << "\n--------------------\n" << c.name << "\n~~~~~~~~~~~~~~~~~~~~\nGood: " << c.good << "\n~~~~~~~~~~~~~~~~~~~~\nAction: " << c.action << "\n--------------------\n";
+	return strm << "\n--------------------\n" << c.name << "\n~~~~~~~~~~~~~~~~~~~~\nGood: " << c.getGoodString() << "\n~~~~~~~~~~~~~~~~~~~~\nAction: " << c.getActionString() << "\n--------------------\n";
 }
 
 void Card::setName(string n){
@@ -108,7 +108,7 @@ Goods:
 9 - Immune to Attack
 
 */
-string Card::getTypeString(int t) {
+string Card::getTypeString(int t) const{
 	switch (t) {
 		case 1:
 			return "Ancient";
@@ -140,7 +140,7 @@ string Card::getTypeString(int t) {
 
 }
 
-string Card::getGoodString() {
+string Card::getGoodString() const{
 	if (good == 4152)
 		return "1 Elixir AND 2 Coins";
 	int len = 0;
@@ -209,7 +209,7 @@ string Card::getGoodString() {
 }
 
 
-string Card::getActionString() {
+string Card::getActionString() const{
 	int len = 0;
 	int first = 0;
 	int second = 0;
@@ -218,34 +218,34 @@ string Card::getActionString() {
 	string split = "";
 	string ret = "";
 	int looper = 1;
-	
-	if (action > 0)
+	int tempAction = action;
+	if (tempAction > 0)
 		split = "AND";
 	else {
-		action*=-1;
+		tempAction*=-1;
 		split = "OR";
 	}
 
-	for (int i = action; i > 0; i = i/10) {
+	for (int i = tempAction; i > 0; i = i/10) {
 		len++;
 	}
 	
 	if (len == 4) {
 		looper = 2;
 				
-		first = action/1000;
-		second = (action/100)%10;
-		third = (action/10)%10;
-		fourth = action%10;
+		first = tempAction/1000;
+		second = (tempAction/100)%10;
+		third = (tempAction/10)%10;
+		fourth = tempAction%10;
 		
 		
 	}
 	else if (len == 2) {
-		first = action/10;
-		second = action%10;
+		first = tempAction/10;
+		second = tempAction%10;
 	}
 	else {
-		first = action;
+		first = tempAction;
 	}
 	
 	for (int i = 0; i < looper; i++) {

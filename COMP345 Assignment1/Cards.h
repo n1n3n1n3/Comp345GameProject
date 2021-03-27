@@ -38,9 +38,9 @@ public:
 	int getGood();
 	int getCost();
 	
-	std::string getTypeString(int t);
-	std::string getGoodString();
-	std::string getActionString();
+	std::string getTypeString(int t) const;
+	std::string getGoodString() const;
+	std::string getActionString() const;
 };
 
 class Hand {
