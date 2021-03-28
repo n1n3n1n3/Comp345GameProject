@@ -309,11 +309,27 @@ vector<int> Continent::getListOfRegionId(){
 	return listOfRegionIds;
 }
 
-string Continent::getOwner() {
+string Continent::getOwner(Map* m) {
 	string owner = "";
+	int bestScore = 0;
+	int compareScore = 0;
 	
+	vector<Player*> p = m->getPlayers();
 	
-	
+	for (int i = 0; i < p.size(); i++) {
+		compareScore = 0;
+		for (int j = 0; j < regions.size(); j++) {
+			if (p.at(i)->getName()==regions.at(j)->getOwner())
+				compareScore++;
+		}
+		if (compareScore > bestScore) {
+			bestScore = compareScore;
+			owner = p.at(i)->getName();
+		}
+		else if (compareScore == bestScore)
+			owner = "none";
+	}
+	return owner;
 	
 }
 
@@ -468,6 +484,10 @@ void Map::addContinent(Continent& c){
 
 int Map::getNbContinents() const{
 	return this->continents.size();
+}
+
+vector<Player*> Map::getPlayers() {
+	return this->players;
 }
 
 Continent* Map::getRegionContinent(Region* r){
@@ -710,6 +730,9 @@ Player* Map::getImmunePlayer() {
 
 void Map::loadPlayers(vector<Player*> listPlayers){
 	//run through each region in each territory and add the list of players
+	for(Player* p: listPlayers) {
+		players.push_back(p);
+	}
 	for (Continent* c: this->continents){
 		for (Region* r: c->getRegions()){
 			r->setPlayers(listPlayers);

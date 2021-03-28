@@ -34,6 +34,7 @@ public:
 	//Accessors
 	std::string getName();
 	char getType();
+	char getType(int t) const;
 	int getAction();
 	int getGood();
 	int getCost();

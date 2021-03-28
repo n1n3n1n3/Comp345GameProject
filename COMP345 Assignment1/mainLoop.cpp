@@ -209,7 +209,10 @@ void MainLoop::playGame() {
 	}
 	
 	cout << "\nCard limit reached! Time to tally the score...\n";
+	Player* theWinner = determineWinner();
+	cout << "\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n";
 	
+	cout << "\n\n...............\n.......Goodbye for now.......\n...............";
 }
 
 Player* MainLoop::determineWinner() {
@@ -223,10 +226,13 @@ Player* MainLoop::determineWinner() {
 			winner = players.at(i);
 		}
 		else if (compareScore == winningScore) {
-			//HANDLE TIE
+			if (winner->getCoins() < players.at(i)->getCoins())
+				winner = players.at(i);
+			else if (winner->getOwned() < players.at(i)->getOwned())
+				winner = players.at(i);
 		}
 	}
-
+	
 	return winner;
 }
 

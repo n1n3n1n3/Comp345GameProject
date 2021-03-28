@@ -63,6 +63,7 @@ private:
 	int id;
 	string name;
 	vector<Region*> regions;
+	
 	vector<int> connectedContinents;
 	
 	friend std::ostream& operator<<(std::ostream&, const Continent&);
@@ -80,7 +81,7 @@ public:
 	void setRegions(vector<Region*> regions);
 	void setConnectedContinents(vector<int> connectedContinents);
 
-	string getOwner();
+	string getOwner(Map* m);
 	
 	int getId();
 	string getName();
@@ -108,6 +109,7 @@ private:
 	Region* startingRegion;
 	vector<Continent*> continents;
 	vector<vector<int>> borders;
+	vector<Player*> players;
 	
 	Player* immunePlayer;
 	friend std::ostream& operator<<(std::ostream&, const Map&);	
@@ -147,6 +149,8 @@ public:
 	
 	void setImmunePlayer(Player* p);
 	Player* getImmunePlayer();
+	
+	vector<Player*> getPlayers();
 	
 	//extra Border functions
 	int getNbBorders();

@@ -22,12 +22,14 @@ protected:
 
 private:
 	//give a name and an id to the player
-	//Pointers to bjects of territory on Map, hand of Cards, and Bid obkject
-	void* ownedTerritory;
+	//Pointers to objects of territory on Map, hand of Cards, and Bid object
+	
 	vector<Card*> playerCards;
+	vector<pair<Card*, int>> scoringCards;
 	void* bidding;
 	
 	//Attributes
+	int regionsOwned;
 	int coin;
 	int elixir;
 	int army;
@@ -54,6 +56,9 @@ public:
 	void setCity(int c);
 	int getArmy();
 	int getCity();
+	void setOwned(int o);
+	int getOwned();
+	
 	
 	//setters and getters
 	void setName(std::string name);
@@ -64,6 +69,8 @@ public:
 	int getId();
 	int getCoins();
 	vector<Card*> getPlayerCards();
+	int getElixir();
+	
 	
 	Bid* getBid();
 	
@@ -87,6 +94,8 @@ public:
 	bool exchange(Deck* d, Card* c);
 	
 	int computeScore(Map* m);
+	int cardScore(Card* c, int q);
+	
 };
 
 Player* getPlayerById(int id, vector<Player*> playerList);

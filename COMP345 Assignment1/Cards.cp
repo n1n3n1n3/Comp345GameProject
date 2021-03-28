@@ -110,6 +110,38 @@ Goods:
 9 - Immune to Attack
 
 */
+char Card::getType(int t) const{ 
+	switch (t) {
+		case 1:
+			return 'a';
+		break;
+		case 2:
+			return 'r';
+		break;
+		case 3:
+			return 'c';
+		break;
+		case 4:
+			return 'd';
+		break;
+		case 5:
+			return 'f';
+		break;
+		case 6:
+			return 'm';
+		break;
+		case 7:
+			return 'n';
+		break;
+		case 8:
+			return 'o';
+		break;
+		default:
+			return ' ';
+	}
+	
+}
+
 string Card::getTypeString(int t) const{
 	switch (t) {
 		case 1:
@@ -357,7 +389,7 @@ void Hand::placeCardAtIndex(Card* c, int index){
 }
 
 void Hand::setCardsCosts(int cardCostCard[6]){
-	for (int i = 0; i < 6; i++){
+	for (int i = 0; i < this->cards.size(); i++){
 		this->cards.at(i)->setCost(cardCostCard[i]);
 	}
 }
@@ -519,7 +551,9 @@ void Deck::slideCardInHand(Card* c){
 	
 	if (this->deckSize > 0)
 		deckHand->placeCardAtIndex(draw(), 5);
-		
+	else {
+		deckHand->getCards().pop_back();
+	}
 	//adjust card costs
 	this->setCardCosts();
 	//if (this->deckSize == 0)

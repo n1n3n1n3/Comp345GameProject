@@ -109,6 +109,14 @@ int Player::getCoins(){
 	return this->coin;
 }
 
+void Player::setOwned(int o) {
+	this->regionsOwned = o;
+}
+
+int Player::getOwned() {
+	return this->regionsOwned;
+}
+
 std::string Player::getName(){
 	return this->name;
 }
@@ -116,6 +124,10 @@ std::string Player::getName(){
 
 int Player::getId(){
 	return this->id;
+}
+
+int Player::getElixir() {
+	return this->elixir;
 }
 
 
@@ -268,7 +280,6 @@ void Player::MoveArmies(int a, Map* m) {
 			else 
 				cout << "\nInvalid Region, must be adjacent to " << starting->getName() << "...\n";
 		}
-		
 		
 	}
 }
@@ -438,7 +449,8 @@ bool Player::exchange(Deck* d, Card* c){
 					cout << "\nAdding " << second << " Coins...";
 					addCoin(second);
 				}
-					
+				else if ((first == 6)||(first == 7)||(first == 8))
+					scoringCards.push_back({c, good});
 			}
 		}
 		
@@ -470,6 +482,88 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 	//return empty player
 	return new Player();
 }
+
+		
+		
+int Player::cardScore(Card *c, int q) {
+	cout << "\n***Checking...***\n" << *c << endl;
+	int score = 0;
+	int len = 0;
+	int first = 0;
+	int second = 0;
+	int third = 0;
+	int fourth = 0;
+	char desiredType;
+	int desiredSet;
+	for (int i = q; i > 0; i = i/10) {
+		len++;
+	}
+	if (len == 4) {
+		first = q/1000;
+		second = (q/100)%10;
+		third = (q/10)%10;
+		fourth = q%10;
+	}
+	else if (len == 2) {
+		first = q/10;
+		second = q%10;
+	}
+	switch (first) {
+		case 6:
+			cout << "\n\nT^^^This card gives you 1 VP per " << c->getTypeString(second) << "...\n";
+			desiredType = c->getType(second);
+			for (int i = 0; i < playerCards.size(); i++) {
+				if (playerCards.at(i)->getType() == desiredType) {
+					cout << "\n+1 VP for Card " << playerCards.at(i)->getName() << "...\n";
+					score ++;
+				}
+			}
+			break;
+		case 7:
+			if (second == 3) {
+				desiredType = 'm';
+				desiredSet = 2;
+			}
+			else if (second == 4) {
+				desiredType = 'o';
+				desiredSet = 3;
+			}
+			
+			for (int i = 0; i < playerCards.size(); i++) {
+				if (playerCards.at(i)->getType() == desiredType)
+					desiredSet--;
+			}
+			
+			if (desiredSet == 0) {
+				cout << "\n+" << second << " VPs for a set of " << third << " " << c->getTypeString(fourth) << "...\n";
+				score = second;
+			}
+			else {
+				cout << "\nDesired set not achieved...\n";
+			}
+			break;
+		case 8:
+			if (second == 1) {
+				score = this->coin/3;
+				cout << "\n+" << score << " VPs per 3 Coins...\n";
+			}
+			else if (second == 2) {
+				for (Card* c : playerCards) {
+					if (c->getGood() == 3)
+						score++;
+				}
+				cout << "\n+" << score << " for all Flyings...\n";
+			}
+			break;
+		default:
+			cout << "Unexpected invalid input!";
+			
+	}
+
+
+	
+	return score;
+}		
 		
 		
 int Player::computeScore(Map* m) {
@@ -477,8 +571,73 @@ int Player::computeScore(Map* m) {
 	
 	cout << "\n\nCOMPUTING SCORE FOR " << this->getName() <<"...\n";
 	
+	//REGION SCORE
+	vector<Continent*> continents = m->getContinents();
+	for (int i = 0; i < continents.size(); i++) {
+		vector<Region*> regions = continents.at(i)->getRegions();
+		for (int j = 0; j < regions.size(); j++) {
+			if ((regions.at(j)->getOwner()) == this->name) {
+				cout << "\n+1 VP for Region " << regions.at(j)->getName() << "...\n";
+				score++;
+			}
+		}
+	}
+	cout << "Region score: " << score;
 	
 	
+	//CONTINENT SCORE
+	int cScore = 0;
+	for (int i = 0; i < continents.size(); i++) {
+		if ((continents.at(i)->getOwner(m)) == this->name) {
+			cout << "\n=1 VP for Continent " << continents.at(i)->getName() << "...\n";
+			cScore+=1;
+		}
+	}
+	
+	cout << "Continent score: " << cScore;
+	score+=cScore;
+	
+	//CARDS SCORE
+	cScore = 0;
+	for (int i = 0; i < scoringCards.size(); i++) {
+		int thisCard = cardScore(scoringCards.at(i).first, scoringCards.at(i).second);
+		cScore += thisCard;
+	}
+	cout <<"Total card score: " << cScore;
+	score += cScore;
+	
+	//ELIXIR SCORE
+	vector <Player*> p = m->getPlayers();
+	bool most = true;
+	bool tie = false;
+	for (int i = 0; i < p.size(); i++) {
+		if (p.at(i) != this) {
+			if (p.at(i)->getElixir() > this->elixir) {
+				most = false;
+				tie = false;
+				break;
+			}
+			else if (p.at(i)->getElixir() == this->elixir) {
+				most = false;
+				tie = true;
+			}
+		}
+	}
+	if (most) {
+		cout << "\n+2 VPs for having the most Elixir...\n";
+		score += 2;
+	}
+	
+	else if (tie) {
+		cout << "\n+1 VP for tying for most Elixir...\n";
+		score += 1;
+	}
+	
+	else {
+		cout << "\nNo VP bonus for Elixir...\n";
+	}
+	
+	cout << "\nTotal score: " << score << endl;
 	
 	return score;
 }
