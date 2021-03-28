@@ -163,6 +163,10 @@ Deck* GameStart::setDeck(){
 	return deck;
 }
 
+int GameStart::getNbPlayers(){
+	return nbPlayers;
+}
+
 //vector<Player*> GameStart::getPlayers(){
 //	return players;
 //}

@@ -23,6 +23,10 @@ int main(int argc, char *argv[]) {
 	//part one
 	GameStartUp::shuffleDeck(deck);
 	GameStartUp::setCardCost(deck);
+	
+	GameStartUp::chooseStartingRegion(map);
+	GameStartUp::placeInitialPieces(players, map);
 
-	GameStartUp::makeBids();
+	
+//	GameStartUp::makeBids();
 }
