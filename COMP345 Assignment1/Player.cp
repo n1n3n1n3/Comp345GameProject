@@ -348,18 +348,30 @@ void Player::DestroyArmy(Map* m) {
 					}
 				}
 			}
-			cout << "\nThis Region has no opponent armies on it...\n";
+			if (!valid)
+				cout << "\nThis Region has no opponent armies on it...\n";
 		}
 		valid = false;
 		
 		while (!valid) {
 			int choice = 0;
-			cout << r << "\n\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
+			cout << *r << "\n\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
 			cin >> choice;
 			if (choice == 0)
 				break;
 			choice -= 1;
 			
+			if ((choice < 0)||(choice >= players.size()))
+				cout << "\nInvalid...\n";
+			else if (players.at(choice).first == this)
+				cout << "\nYou can't destroy yourself, silly!!\n";
+			else if (players.at(choice).first == m->getImmunePlayer())
+				cout << "\n" << players.at(choice).first->getName() << " has immunity! You can't destroy their armies...";
+			else {
+				cout << "\nDestroying one army of " << players.at(choice).first->getName() << " from Region " << r->getName() << ".\n";
+				r->removeArmies(players.at(choice).first, 1);
+				return;
+			}
 		}
 	
 	}
