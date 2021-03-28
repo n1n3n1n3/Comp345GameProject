@@ -139,6 +139,7 @@ MapLoader::MapLoader(string path)
 			cout << "--- the Map format valid, but the map is invalid ---" <<endl;
 		}
 	}
+	this->map->determineStartingRegion();
 }	
 
 std::ostream& operator<<(std::ostream &strm, const MapLoader &ml) {

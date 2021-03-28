@@ -639,7 +639,7 @@ void Map :: loadRegions(vector<vector<string>> listRegions){
 }
 
 void Map::determineStartingRegion(){
-	cout << "determining starting region" << endl;
+	cout << "\n+++ determining starting region +++" << endl;
 	//	get the continent that is connected to more than one region
 	Region* r;
 	for(Continent* c: continents){
@@ -649,14 +649,13 @@ void Map::determineStartingRegion(){
 				int select = rand() % c->getNbRegions();
 				vector<int> listOfRegionIds = c->getListOfRegionId();
 				r = c->getRegionById(listOfRegionIds.at(select));
-				cout << connectedToOtherContinent(r) << endl;
 				while (!connectedToOtherContinent(r)){
 					srand(time(0));
 					int select = rand() % c->getNbRegions();
 					vector<int> listOfRegionIds = c->getListOfRegionId();
 					r = c->getRegionById(listOfRegionIds.at(select));
 				}
-				cout << "starting region is " << r->getName() << "!" << endl;
+				cout << "    starting region is " << r->getName() << "!\n++++++++++++++++++++++++++++++++++" << endl;
 				setStartingRegion(r);
 			}
 		}

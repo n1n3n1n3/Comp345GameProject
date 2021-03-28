@@ -45,7 +45,7 @@ Map* GameStart::selectMap(){
 	
 	//set the path, load the map and validate (already does it in the mapload constructor
 	mapLoader = new MapLoader(path);
-	
+	//determine starting region
 	//return generated map
 	return mapLoader->getMap();
 }
