@@ -17,14 +17,12 @@ int main(int argc, char *argv[]) {
 // each player has a bidding facility
 */
 	//	vector<Player*> players= GameStart::setPlayers();
-//	vector<Player*> players;
-//	players.push_back(new Player("anna"));
-//	players.push_back(new Player("paul"));
-//	GameStart::setPlayers(players);
+	vector<Player*> players;
+	players.push_back(new Player("anna"));
+	players.push_back(new Player("paul"));
+	GameStart::setPlayers(players);
 	
 // PART 1.2.E:: Create a deck of cards for the number of players (2)
-//	Deck* deck = GameStart::setDeck();
-	
-//	map->determineStartingRegion();
+	Deck* deck = GameStart::setDeck();
 
 }

@@ -812,3 +812,27 @@ void Map::printMap(){
 	}
 	cout << "---------------------------" << endl;
 }
+
+
+void Map::printContinents(){
+	cout << "\n+++ continents +++\n";
+	for(Continent* c: continents){
+		cout << "[" << c->getName() << "]";
+	}
+}
+
+void Map::printRegions(){
+	cout << "\n +++ regions +++\n";
+	for(Continent* c: continents){
+		cout << "[" << c->getName() << "]\n";;
+		for(Region* r: c->getRegions()){
+			if (r == this->getStartingRegion()){
+				cout << "(" << r->getId() << ")" << r->getName() << " (s)"<< endl;
+			}
+			else {
+				cout << "(" << r->getId() << ")" << r->getName() << endl;
+			}
+		}
+		cout << "\n" << endl;
+	}
+}
