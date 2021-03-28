@@ -15,16 +15,16 @@ int main(int argc, char *argv[]) {
 	players.push_back(new Player("anna"));
 	players.push_back(new Player("paul"));
 	//part two is already done in gameStart
-	GameStart::setPlayers(players);
-
+	players = GameStart::setPlayers(players);
+	cout << players.at(2)->getName() << endl;
 	
 	
-	Deck* deck = GameStart::setDeck();
+//	Deck* deck = GameStart::setDeck();
 	//part one
-	GameStartUp::shuffleDeck(deck);
-	GameStartUp::setCardCost(deck);
+//	GameStartUp::shuffleDeck(deck);
+//	GameStartUp::setCardCost(deck);
 	
 	
-//	GameStartUp::placeInitialPieces(players, map);
+	GameStartUp::placeInitialPieces(players, map);
 //	GameStartUp::makeBids();
 }

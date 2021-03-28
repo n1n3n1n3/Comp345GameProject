@@ -20,9 +20,9 @@ int main(int argc, char *argv[]) {
 	vector<Player*> players;
 	players.push_back(new Player("anna"));
 	players.push_back(new Player("paul"));
-	GameStart::setPlayers(players);
-	
+	players = GameStart::setPlayers(players);
+
 // PART 1.2.E:: Create a deck of cards for the number of players (2)
-	Deck* deck = GameStart::setDeck();
+//	Deck* deck = GameStart::setDeck();
 
 }

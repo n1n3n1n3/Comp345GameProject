@@ -102,7 +102,7 @@ vector<pair<Player*, int>> Region::getPlayerArmies(){
 
 void Region::addArmies(Player* p, int nb){
 	cout << p->getName() << " is adding " << nb << " armies to " << this->name << endl;
-	cout << playerArmies.size() << endl;
+//	cout << playerArmies.size() << endl;
 	
 	for (int i = 0; i < playerArmies.size(); i++){
 		if (playerArmies.at(i).first == p){

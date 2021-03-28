@@ -123,7 +123,7 @@ vector<Player*> GameStart::setPlayers(){
 	return players;
 }
 
-void GameStart::setPlayers(vector<Player*> playerList){
+vector<Player*> GameStart::setPlayers(vector<Player*> playerList){
 	//	int nbPlayers;
 	nbPlayers = playerList.size();	
 	int startCoins;
@@ -148,12 +148,11 @@ void GameStart::setPlayers(vector<Player*> playerList){
 	//add neutral player if there are only two players
 	if (nbPlayers == 2){
 		cout << "+++ A neutral player is participating in the game!" << endl;
-		players.push_back(new Player(0, "neutral"));
+		playerList.push_back(new Player(0, "neutral"));
 	}
 	
 	cout << "-------------------------------------------------\n" << endl;
-	players = playerList;
-	
+	return playerList;
 }
 
 Deck* GameStart::setDeck(){
