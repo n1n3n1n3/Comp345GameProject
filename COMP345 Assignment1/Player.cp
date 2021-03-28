@@ -328,7 +328,53 @@ void Player::BuildCity(Map* m) {
 }
 
 void Player::DestroyArmy(Map* m) {
-	cout << "\nDestroyArmy() will let a Player choose an army on the board to remove.";
+	bool valid = false;
+	Region* r;
+	vector<pair<Player*, int>> players;
+	while (true) {
+		while (!valid) {
+			int choice = 0;
+			cout << "\nEnter the Region ID where you would like to destroy an opponent's army (or 0 to skip) ->";
+			cin >> choice;
+			if (choice == 0)
+				return;
+			r = m->getRegionById(choice);
+			players = r->getPlayerArmies();
+			for (int i = 0; i < players.size(); i++) {
+				if (players.at(i).first != this) {
+					if (players.at(i).second > 0) {
+						valid = true;
+						break;
+					}
+				}
+			}
+			if (!valid)
+				cout << "\nThis Region has no opponent armies on it...\n";
+		}
+		valid = false;
+		
+		while (!valid) {
+			int choice = 0;
+			cout << *r << "\n\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
+			cin >> choice;
+			if (choice == 0)
+				break;
+			choice -= 1;
+			
+			if ((choice < 0)||(choice >= players.size()))
+				cout << "\nInvalid...\n";
+			else if (players.at(choice).first == this)
+				cout << "\nYou can't destroy yourself, silly!!\n";
+			else if (players.at(choice).first == m->getImmunePlayer())
+				cout << "\n" << players.at(choice).first->getName() << " has immunity! You can't destroy their armies...";
+			else {
+				cout << "\nDestroying one army of " << players.at(choice).first->getName() << " from Region " << r->getName() << ".\n";
+				r->removeArmies(players.at(choice).first, 1);
+				return;
+			}
+		}
+	
+	}
 }
 
 void Player::AndOrAction() {
@@ -411,3 +457,4 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 	//return empty player
 	return new Player();
 }
+		

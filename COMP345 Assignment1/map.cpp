@@ -690,6 +690,15 @@ void Map::loadPlayers(vector<Player*> listPlayers){
 	}
 }
 
+void Map::setImmunePlayer(Player* p) {
+	this->immunePlayer = p;
+}
+
+Player* Map::getImmunePlayer() {
+	return immunePlayer;
+}
+
+
 
 
 //

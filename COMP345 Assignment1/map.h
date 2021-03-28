@@ -100,6 +100,7 @@ class Map {
 private:
 	string name;
 	Region* startingRegion;
+	Player* immunePlayer;
 	vector<Continent*> continents;
 	vector<vector<int>> borders;
 	friend std::ostream& operator<<(std::ostream&, const Map&);	
@@ -124,6 +125,10 @@ public:
 	void setBorders(vector<vector<int>> borders);
 	void setNbPlayersIntoMap(vector<Player*>);
 	void setStartingRegion(Region* r);
+	
+	void setImmunePlayer(Player* p);
+	Player* getImmunePlayer();
+	
 	const string getName()const;
 	vector<Continent*> getContinents();
 	vector<vector<int>> getBorders();
