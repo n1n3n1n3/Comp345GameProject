@@ -510,7 +510,7 @@ int Player::cardScore(Card *c, int q) {
 	}
 	switch (first) {
 		case 6:
-			cout << "\n\nT^^^This card gives you 1 VP per " << c->getTypeString(second) << "...\n";
+			cout << "\n^^^This card gives you 1 VP per " << c->getTypeString(second) << "...\n";
 			desiredType = c->getType(second);
 			for (int i = 0; i < playerCards.size(); i++) {
 				if (playerCards.at(i)->getType() == desiredType) {
@@ -589,7 +589,7 @@ int Player::computeScore(Map* m) {
 	int cScore = 0;
 	for (int i = 0; i < continents.size(); i++) {
 		if ((continents.at(i)->getOwner(m)) == this->name) {
-			cout << "\n=1 VP for Continent " << continents.at(i)->getName() << "...\n";
+			cout << "\n+1 VP for Continent " << continents.at(i)->getName() << "...\n";
 			cScore+=1;
 		}
 	}

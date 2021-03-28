@@ -154,7 +154,12 @@ void MainLoop::singleTurn(Player *p) {
 	
 	//Display the Map & Hand
 	showBoard();
-	
+	//Show the player all their cards, end turn
+	cout << "\n\n**************************\nHere are all your cards: \n";
+	for (Card* c : p->getPlayerCards()) {
+		cout << *c;
+	}
+
 	//Player chooses the card they want from the hand
 	Card* theCard;
 	bool valid = false;
@@ -182,12 +187,7 @@ void MainLoop::singleTurn(Player *p) {
 	//Player takes the action of the Card
 	takeAction(p, theCard);
 	
-	//Show the player all their cards, end turn
-	cout << "\n\n**************************\nHere are all your cards: \n";
-	for (Card* c : p->getPlayerCards()) {
-		cout << *c;
-	}
-	cout << "\n**************************\n...Turn Over...\n\n";
+		cout << "\n**************************\n...Turn Over...\n\n";
 }
 
 void MainLoop::playGame() {
