@@ -390,6 +390,10 @@ void Hand::printCardNames() {
 Deck::Deck(){
 }
 
+int Hand::getSize() {
+	return cards.size();
+}
+
 
 Deck::Deck(int nbPlayers){
 	cout << "generating deck for " << nbPlayers << " players." << endl;
@@ -513,11 +517,13 @@ void Deck::slideCardInHand(Card* c){
 	
 	deckHand->slideCards(c);
 	
-	
-	deckHand->placeCardAtIndex(draw(), 5);
+	if (this->deckSize > 0)
+		deckHand->placeCardAtIndex(draw(), 5);
 		
 	//adjust card costs
 	this->setCardCosts();
+	//if (this->deckSize == 0)
+	//	deckHand->getCards().pop_back();
 }
 
 void Deck::setCardCosts(){

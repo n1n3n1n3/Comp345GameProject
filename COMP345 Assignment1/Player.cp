@@ -276,6 +276,10 @@ int Player::MoveOverLand(int a, Region* start, Region* move) {
 	bool valid = false;
 	int choice = 0;
 	int maxMoves = a;
+	
+	if ((start->getNbArmiesByName(this->getName())) < maxMoves)
+		maxMoves = start->getNbArmiesByName(this->getName());
+	
 	while (!valid) {
 		
 		cout << "Enter the number of armies you'd like to move (max " << maxMoves << ") ->";
@@ -296,6 +300,7 @@ int Player::MoveOverWater(int a, Region* start, Region* move) {
 	bool valid = false;
 	int choice = 0;
 	int maxMoves = a/(this->checkFlying());
+	
 	if ((start->getNbArmiesByName(this->getName())) < maxMoves)
 		maxMoves = start->getNbArmiesByName(this->getName());
 	
@@ -397,10 +402,10 @@ void Player::makeBid(int bid){
 	}
 }
 
-void Player::exchange(Deck* d, Card* c){
+bool Player::exchange(Deck* d, Card* c){
 	if (this->getCoins() < c->getCost()){
-		cout << "player has insufficient funds: " << this->getName() << "only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
-		return;
+		cout << "player has insufficient funds: " << this->getName() << " only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
+		return false;
 	}
 	else {
 		cout << this->getName() << " is purchasing card [" << c->getName() << "] for " << c->getCost() << " coins." << endl;
@@ -438,6 +443,7 @@ void Player::exchange(Deck* d, Card* c){
 		}
 		
 		d->slideCardInHand(c);
+		return true;
 	}
 }
 

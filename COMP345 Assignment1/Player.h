@@ -35,6 +35,9 @@ private:
 	string name;
 	int id;
 	Bid* bid;
+	
+	int VPs;
+	
 
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Player&);
@@ -82,7 +85,7 @@ public:
 	void DestroyArmy(Map* m);
 	void AndOrAction();
 	void makeBid(int bid);
-	void exchange(Deck* d, Card* c);
+	bool exchange(Deck* d, Card* c);
 };
 
 Player* getPlayerById(int id, vector<Player*> playerList);
