@@ -25,8 +25,27 @@ void GameStartUp::chooseStartingRegion(Map* m){
 
 void GameStartUp::makeBids(){
 	Bid::makeBids();
+	Bid::compareBids();
 }
 
 void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){
-	cout << "adding 4 armies to the starting region" << endl;
+	cout << "adding 4 armies to the starting region for each player" << endl;
+	for(int i = 0; i < pl.size(); i++){
+		if (pl.at(i)->getName().compare("neutral") != 0){
+			m->getStartingRegion()->addArmies(pl.at(i), 4);
+		}
+	}
+	
+	// if its a 2 player game
+	int currPlayer = 0;
+	if (GameStart::getNbPlayers() == 2){
+		for (int i = 0; i < 10; i++){
+			m->printRegions();
+			cout << pl.at(currPlayer)->getName() << " place neutral army on map  (enter index)" << endl;
+			int index;
+			cin >> index;
+			m->getRegionById(index)->addArmies(pl.at(2), 1);
+			currPlayer = (currPlayer + 1)% 2;
+		}
+	}
 }

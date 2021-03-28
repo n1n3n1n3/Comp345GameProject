@@ -174,6 +174,8 @@ public:
 //	other functions
 	bool isNumber(string s);
 	void printMap();
+	void printRegions();
+	void printContinents();
 	bool validate(); 
 };
 
