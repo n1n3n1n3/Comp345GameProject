@@ -653,6 +653,17 @@ bool Map::connectedToOtherContinent(Region* r){
 	return false;
 }
 
+bool Map::borderIsWater(Region* r1, Region* r2){
+	for (vector<int> border: this->borders){
+		if ((border.at(1) == r1->getId() && border.at(2) == r1->getId()) || (border.at(1) == r1->getId() && border.at(2) == r1->getId())){
+			if (border.at(0) == 1){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 //function to load borders to map from file
 void Map :: loadBorders(vector<vector<string>> listBorders){
 		vector<int> tempV;
@@ -688,15 +699,6 @@ void Map::loadPlayers(vector<Player*> listPlayers){
 		}
 	}
 }
-
-void Map::setImmunePlayer(Player* p) {
-	this->immunePlayer = p;
-}
-
-Player* Map::getImmunePlayer() {
-	return immunePlayer;
-}
-
 
 
 
