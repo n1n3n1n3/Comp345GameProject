@@ -1,6 +1,7 @@
 #include <iostream>
 #include "gameStart.h"
-#include "GameStartup.h"
+#include "GameStartUp.h"
+//#include "Ca"
 
 
 void GameStartUp::setCardCost(Deck* d){
@@ -26,3 +27,6 @@ void GameStartUp::makeBids(){
 	Bid::makeBids();
 }
 
+void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){
+	cout << "adding 4 armies to the starting region" << endl;
+}

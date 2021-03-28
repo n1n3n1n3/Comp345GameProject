@@ -17,6 +17,7 @@ public:
 	static void setPlayerPieces(vector<Player*> pl);
 	static void chooseStartingRegion(Map* m);
 	static void makeBids();
+	static void placeInitialPieces(vector<Player*> pl, Map* m);
 };
 
 #endif

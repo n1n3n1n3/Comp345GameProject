@@ -11,6 +11,7 @@ Region::Region() {
 //	this->continentId = 0;
 	this->continent = "";
 	this->owner = "none";
+	
 	//this->startingRegion = false;
 	//create an empty pair list for players and number of armies
 	this->playerArmies = vector<pair<Player*, int>>();
@@ -30,7 +31,6 @@ Region::Region(const Region& region){
 	this->owner = region.owner;
 	this->playerArmies = region.playerArmies;
 	this->playerCity = region.playerCity;
-	//this->startingRegion = region.startingRegion;
 }
 
 //parameter constructor
@@ -504,12 +504,12 @@ void Map::addBorder(vector<int> border){
 // Continent connection borders only have two elements
 	for (Continent* c1: this->continents){
 		//if a continent has the first region but not the second
-		if (c1->hasRegion(border.at(0)) && !c1->hasRegion(border.at(1))){
+		if (c1->hasRegion(border.at(1)) && !c1->hasRegion(border.at(2))){
 			//find the continent that contains the second region and add to both the respective connected continent
 			for(Continent* c2: this->continents){
-				if(c2->hasRegion(border.at(1))){
-					c1->addConnectedContinent(border.at(1));
-					c2->addConnectedContinent(border.at(0));
+				if(c2->hasRegion(border.at(2))){
+					c1->addConnectedContinent(border.at(2));
+					c2->addConnectedContinent(border.at(1));
 				}
 			}
 		}
@@ -622,7 +622,7 @@ void Map::determineStartingRegion(){
 				int select = rand() % c->getNbRegions();
 				vector<int> listOfRegionIds = c->getListOfRegionId();
 				r = c->getRegionById(listOfRegionIds.at(select));
-				
+				cout << connectedToOtherContinent(r) << endl;
 				while (!connectedToOtherContinent(r)){
 					srand(time(0));
 					int select = rand() % c->getNbRegions();
@@ -638,14 +638,14 @@ void Map::determineStartingRegion(){
 
 bool Map::connectedToOtherContinent(Region* r){
 	for (vector<int> border: this->borders){
-		if (border.at(0) == r->getId()){
-			if (r->getContinent() != getRegionById(border.at(1))->getContinent()){
+		if (border.at(1) == r->getId()){
+			if (r->getContinent() != getRegionById(border.at(2))->getContinent()){
 				return true;
 			}
 		}
 		
-		if(border.at(1) == r->getId()){
-			if (r->getContinent() != getRegionById(border.at(0))->getContinent()){
+		if(border.at(2) == r->getId()){
+			if (r->getContinent() != getRegionById(border.at(1))->getContinent()){
 				return true;
 			}
 		}

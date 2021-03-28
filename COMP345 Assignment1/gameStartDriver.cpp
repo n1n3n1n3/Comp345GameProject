@@ -21,6 +21,8 @@ int main(int argc, char *argv[]) {
 	Deck* deck = GameStart::setDeck();
 	
 	map->determineStartingRegion();
+	
+//	cout << c->getNbConnectedContinents() << endl;
 //	
 //	Region* r1 =map->getRegionById(16);
 //	

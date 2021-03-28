@@ -142,7 +142,7 @@ MapLoader::MapLoader(string path)
 }	
 
 std::ostream& operator<<(std::ostream &strm, const MapLoader &ml) {
-	return strm << "\n--------------------\nMap File:: " << ml.path << "\n--------------------\n";
+	return strm << "\n----------------------------------\nMap File:: " << ml.path << "\n----------------------------------\n";
 }
 string MapLoader::getPath(){
 	return this->path;
@@ -285,7 +285,6 @@ void MapLoader::loadBorder(string temp, int position){
 	string b = "";
 	while(index != -1){
 		b = temp.substr(0, index);
-		//		cout << b << endl;
 		temp.erase(0, index+1);
 		index = temp.find(" ");
 		listBorders[position].push_back(b);

@@ -113,7 +113,13 @@ vector<Player*> GameStart::setPlayers(){
 		cin >> playerName;
 		players.push_back(new Player(startCoins, playerName));
 	}
-		
+	
+	//add neutral player if there are only two players
+	if (nbPlayers == 2){
+		cout << "+++ A neutral player is participating in the game!" << endl;
+		players.push_back(new Player(0, "neutral"));
+	}
+	
 	return players;
 }
 
@@ -138,6 +144,13 @@ void GameStart::setPlayers(vector<Player*> playerList){
 		cout << "+++ Player " << p->getName() << " is participating in the game!" << endl;
 		p->setCoin(startCoins);
 	}
+	
+	//add neutral player if there are only two players
+	if (nbPlayers == 2){
+		cout << "+++ A neutral player is participating in the game!" << endl;
+		players.push_back(new Player(0, "neutral"));
+	}
+	
 	cout << "-------------------------------------------------\n" << endl;
 	players = playerList;
 	

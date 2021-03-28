@@ -362,6 +362,7 @@ void Hand::setCardsCosts(int cardCostCard[6]){
 	}
 }
 
+
 const string Hand::handToString() const{
 	string handString = "";
 	
@@ -516,6 +517,11 @@ void Deck::slideCardInHand(Card* c){
 	deckHand->placeCardAtIndex(draw(), 5);
 		
 	//adjust card costs
+	this->setCardCosts();
+}
+
+void Deck::setCardCosts(){
+	cout << "\n++++++++++++ setting cards cost ++++++++++++" << endl;
 	deckHand->setCardsCosts(this->cardCostCard);
 }
 
