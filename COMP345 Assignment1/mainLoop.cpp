@@ -37,7 +37,7 @@ Player* MainLoop::whoseTurn() const{
 
 //Display Map&Hand
 void MainLoop::showBoard() {
-	cout << "**************************\n"; 
+	cout << "\n***************************************\n"; 
 	map->printMap();
 	cout << *deck;
 	
@@ -92,7 +92,7 @@ void MainLoop::takeAction(Player* p, Card *c) {
 		if (orAction) {
 			int choice = 0;
 			cout << *c << endl;
-			cout << "Which action would you like to take? (0 or 1, anything else for skip.) ->";
+			cout << "\n***************************************\nWhich action would you like to take? (0 or 1, anything else for skip.) ->";
 			cin >> choice;
 		
 			if (choice == 1) {
@@ -107,7 +107,7 @@ void MainLoop::takeAction(Player* p, Card *c) {
 		if (i == 1) {
 			int choice = 0;
 			cout << *c <<endl;
-			cout << "Would you like to take the second action? (0 for No, 1 for Yes) ->";
+			cout << "\n***************************************\nWould you like to take the second action? (0 for No, 1 for Yes) ->";
 			cin >> choice;
 			if (choice == 1) {
 				first = third;
@@ -121,29 +121,29 @@ void MainLoop::takeAction(Player* p, Card *c) {
 			case 1:
 				bonus = p->checkPlacementBonus();
 				num = second + bonus;
-				cout << "Placing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
+				cout << "\n***************************************\nPlacing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
 				
 				p->PlaceNewArmies(num, map);
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();
 				num = second + bonus;
-				cout << "Moving " << second << " armies with a bonus of " << bonus << " for a total of " << num << ".\nMoving over water costs " << p->checkFlying() << " per Army.";
+				cout << "\n***************************************\nMoving " << second << " armies with a bonus of " << bonus << " for a total of " << num << ".\nMoving over water costs " << p->checkFlying() << " per Army.";
 				
 				p->MoveArmies(num, map);
 				break;
 			case 3:
-				cout << "Destroying an army...";
+				cout << "\n***************************************\nDestroying an army...";
 				
 				p->DestroyArmy(map);
 				break;
 			case 4:
-				cout << "Building a city...";
+				cout << "\n***************************************\nBuilding a city...";
 				
 				p->BuildCity(map);
 				break;
 			default:
-				ret+= "Invalid...";
+				ret+= "\n***************************************\nInvalid...";
 		}
 	}
 	
@@ -159,17 +159,17 @@ void MainLoop::singleTurn(Player *p) {
 	for (Card* c : p->getPlayerCards()) {
 		cout << *c;
 	}
-
+	
 	//Player chooses the card they want from the hand
 	Card* theCard;
 	bool valid = false;
 	while (!valid) {
 		int cardChoice;
-		cout << p->getName() <<"\n... Enter the card selection # that you would like to choose: ";
+		cout << p->getName() <<"\n***************************************\n... Enter the card selection # that you would like to choose: ";
 		cin >> cardChoice;
 		
 		if ((cardChoice >= deck->getHand()->getSize())||(cardChoice < 0)) {
-			cout << "\nInvalid input...\n";
+			cout << "\n***************************************\nInvalid input...\n";
 		}
 		else {	
 			//Find and display the card;
@@ -187,13 +187,13 @@ void MainLoop::singleTurn(Player *p) {
 	//Player takes the action of the Card
 	takeAction(p, theCard);
 	
-		cout << "\n**************************\n...Turn Over...\n\n";
+		cout << "\n***************************************\n...Turn Over...\n***************************************\n\n";
 }
 
 void MainLoop::playGame() {
 	
 	//Welcome message
-	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n";
+	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	
 	//Fixed # of turns per game to manage the mainloop
 	while (turnsRemaining > 0) {
@@ -210,7 +210,7 @@ void MainLoop::playGame() {
 	
 	cout << "\nCard limit reached! Time to tally the score...\n";
 	Player* theWinner = determineWinner();
-	cout << "\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n";
+	cout << "\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	
 	cout << "\n\n...............\n.......Goodbye for now.......\n...............";
 }

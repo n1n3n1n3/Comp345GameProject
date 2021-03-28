@@ -177,11 +177,11 @@ void Player::payCoin(int amount) {
 
 	int res = coin - amount;
 	if (res < 0) {
-		cout << this->getName() << " has insufficient funds with only " << this->coin << " coins." << endl;
+		cout << "\n***************************************\n" << this->getName() << " has insufficient funds with only " << this->coin << " coins.\n***************************************" << endl;
 	}
 	else {
 		this->setCoin(res);
-		cout << this->name << " paid " << amount << " and now has " << this->getCoins() << " coins" << endl;
+		cout << "\n***************************************\n" << this->name << " paid " << amount << " and now has " << this->getCoins() << " coins\n***************************************" << endl;
 	}
 }
 
@@ -198,7 +198,7 @@ void Player::PlaceNewArmies(int a, Map* m) {
 		bool valid = false;
 		while (!valid) {
 			int choice = 0;
-			cout << "\nEnter the Region ID that you would like to place on ->";
+			cout << "\n***************************************\nEnter the Region ID that you would like to place on ->";
 			cin >> choice;
 			Region* r = m->getRegionById(choice);
 			if (checkPlacementValidity(m, r)) {
@@ -206,10 +206,10 @@ void Player::PlaceNewArmies(int a, Map* m) {
 				bool val = false;
 				while (!val) {
 					int arms = 0;
-					cout << "Enter # of armies to place (max " << a << ") ->";
+					cout << "\n***************************************\nEnter # of armies to place (max " << a << ") ->";
 					cin >> arms;
 					if (arms > a)
-						cout << "\nInvalid, try again...\n";
+						cout << "\n***************************************\nInvalid, try again...\n";
 					else {
 						val = true;
 						r->addArmies(this, arms);
@@ -218,10 +218,10 @@ void Player::PlaceNewArmies(int a, Map* m) {
 				}
 			}
 			else 
-				cout << "\nInvalid Region, must be the Starting Region or a region where you own a city...\n";
+				cout << "\n***************************************\nInvalid Region, must be the Starting Region or a region where you own a city...\n";
 		}
 	}
-	cout << "\nDone placing Armies!";
+	cout << "\n***************************************\nDone placing Armies!";
 }
 
 
@@ -231,10 +231,10 @@ void Player::MoveArmies(int a, Map* m) {
 		bool valid = false;
 		Region* starting;
 		Region* moving;
-		cout << "\nYou have " << a << " movement points...\n";
+		cout << "\n***************************************\nYou have " << a << " movement points...\n";
 		while (!valid) {
 			int choice = 0;
-			cout << "\nEnter the Region ID that you would like to move armies from (0 to skip) ->";
+			cout << "\n***************************************\nEnter the Region ID that you would like to move armies from (0 to skip) ->";
 			cin >> choice;
 			if (choice == 0) {
 				return;
@@ -247,7 +247,7 @@ void Player::MoveArmies(int a, Map* m) {
 						valid = true;
 					}
 					else {
-						cout << "\nInvalid Region, no armies to move...\n";
+						cout << "\n***************************************\nInvalid Region, no armies to move...\n";
 					}
 				}
 			}
@@ -256,14 +256,14 @@ void Player::MoveArmies(int a, Map* m) {
 		valid = false;
 		while (!valid) {
 			int choice = 0;
-			cout << "\nEnter the Region ID that you would like to move to (consult the borders displayed above) ->";
+			cout << "\n***************************************\nEnter the Region ID that you would like to move to (consult the borders displayed above) ->";
 			cin >> choice;
 			moving = m->getRegionById(choice);
 			if (m->areAdjacent(starting, moving)) {
 				int moves = a;
 				if ((m->getRegionContinent(starting)) != (m->getRegionContinent(moving))) {
 					if (a < this->checkFlying()) {
-						cout << "\nRegions are adjacent, but you need at least " << this->checkFlying() << " movements to move over water...\n";
+						cout << "\n***************************************\nRegions are adjacent, but you need at least " << this->checkFlying() << " movements to move over water...\n";
 					}
 					//MOVE OVER WATER
 					else {
@@ -278,7 +278,7 @@ void Player::MoveArmies(int a, Map* m) {
 				}
 			}
 			else 
-				cout << "\nInvalid Region, must be adjacent to " << starting->getName() << "...\n";
+				cout << "\n***************************************\nInvalid Region, must be adjacent to " << starting->getName() << "...\n";
 		}
 		
 	}
@@ -293,10 +293,10 @@ int Player::MoveOverLand(int a, Region* start, Region* move) {
 	
 	while (!valid) {
 		
-		cout << "Enter the number of armies you'd like to move (max " << maxMoves << ") ->";
+		cout << "\n***************************************\nEnter the number of armies you'd like to move (max " << maxMoves << ") ->";
 		cin >> choice;
 		if ((choice > maxMoves)||(choice < 1))
-			cout << "\nInvalid, try again...\n";
+			cout << "\n***************************************\nInvalid, try again...\n";
 		else {
 			start->removeArmies(this, choice);
 			move->addArmies(this, choice);
@@ -317,10 +317,10 @@ int Player::MoveOverWater(int a, Region* start, Region* move) {
 	
 	while (!valid) {
 		
-		cout << "Enter the number of armies you'd like to move (max " << maxMoves << ") ->";
+		cout << "\n***************************************\nEnter the number of armies you'd like to move (max " << maxMoves << ") ->";
 		cin >> choice;
 		if ((choice > maxMoves)||(choice < 1))
-			cout << "\nInvalid, try again...\n";
+			cout << "\n***************************************\nInvalid, try again...\n";
 		else {
 			start->removeArmies(this, choice);
 			move->addArmies(this, choice);
@@ -335,7 +335,7 @@ void Player::BuildCity(Map* m) {
 	bool valid = false;
 	while (!valid) {
 		int choice = 0;
-		cout << "\nEnter the Region ID that you would like to build a city on ->";
+		cout << "\n***************************************\nEnter the Region ID that you would like to build a city on ->";
 		cin >> choice;
 		Region* r = m->getRegionById(choice);
 		if (r->addCity(this))
@@ -352,7 +352,7 @@ void Player::DestroyArmy(Map* m) {
 			bool hasOp = false;
 			bool hasSelf = false;
 			int choice = 0;
-			cout << "\nEnter the Region ID where you would like to destroy an opponent's army (or 0 to skip) ->";
+			cout << "\n***************************************\nEnter the Region ID where you would like to destroy an opponent's army (or 0 to skip) ->";
 			cin >> choice;
 			if (choice == 0)
 				return;
@@ -372,26 +372,26 @@ void Player::DestroyArmy(Map* m) {
 			if ((hasOp)&&(hasSelf))
 				valid = true;
 			else 
-				cout << "\nThis Region either has no opponent armies on it or you don't have an army on it...\n";
+				cout << "\n***************************************\nThis Region either has no opponent armies on it or you don't have an army on it...\n";
 		}
 		valid = false;
 		
 		while (!valid) {
 			int choice = 0;
-			cout << *r << "\n\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
+			cout << *r << "\n***************************************\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
 			cin >> choice;
 			if (choice == 0)
 				break;
 			choice -= 1;
 			
 			if ((choice < 0)||(choice >= players.size()))
-				cout << "\nInvalid...\n";
+				cout << "\n***************************************\nInvalid...\n";
 			else if (players.at(choice).first == this)
-				cout << "\nYou can't destroy yourself, silly!!\n";
+				cout << "\n***************************************\nYou can't destroy yourself, silly!!\n";
 			else if (players.at(choice).first == m->getImmunePlayer())
-				cout << "\n" << players.at(choice).first->getName() << " has immunity! You can't destroy their armies...";
+				cout << "\n***************************************\n" << players.at(choice).first->getName() << " has immunity! You can't destroy their armies...";
 			else {
-				cout << "\nDestroying one army of " << players.at(choice).first->getName() << " from Region " << r->getName() << ".\n";
+				cout << "\n***************************************\nDestroying one army of " << players.at(choice).first->getName() << " from Region " << r->getName() << ".\n";
 				r->removeArmies(players.at(choice).first, 1);
 				return;
 			}
@@ -406,7 +406,7 @@ void Player::AndOrAction() {
 
 void Player::makeBid(int bid){
 	if (bid > this->coin){
-		cout << "cannot make bid greater than the number of coins" << endl;
+		cout << "\n***************************************\ncannot make bid greater than the number of coins" << endl;
 	}
 	else {
 		this->bid->betCoins(bid);
@@ -415,11 +415,11 @@ void Player::makeBid(int bid){
 
 bool Player::exchange(Deck* d, Card* c){
 	if (this->getCoins() < c->getCost()){
-		cout << "player has insufficient funds: " << this->getName() << " only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
+		cout << "\n***************************************\nplayer has insufficient funds: " << this->getName() << " only has " << this->getCoins() << " coins, card costs " << c->getCost() << " coins" << endl;
 		return false;
 	}
 	else {
-		cout << this->getName() << " is purchasing card [" << c->getName() << "] for " << c->getCost() << " coins." << endl;
+		cout << "\n***************************************\n" << this->getName() << " is purchasing card [" << c->getName() << "] for " << c->getCost() << " coins." << endl;
 		// pay the cost
 		this->payCoin(c->getCost());
 		// add card to the players list
@@ -442,11 +442,11 @@ bool Player::exchange(Deck* d, Card* c){
 				first = good/10;
 				second = good%10;
 				if (first == 4) {
-					cout << "\nAdding " << second << " Elixir...";
+					cout << "\n***************************************\nAdding " << second << " Elixir...";
 					addElixir(second);
 				}
 				else if (first == 5) {
-					cout << "\nAdding " << second << " Coins...";
+					cout << "\n***************************************\nAdding " << second << " Coins...";
 					addCoin(second);
 				}
 				else if ((first == 6)||(first == 7)||(first == 8))
@@ -486,7 +486,7 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 		
 		
 int Player::cardScore(Card *c, int q) {
-	cout << "\n***Checking...***\n" << *c << endl;
+	cout << "\n***************************************\n***Checking...***\n" << *c << endl;
 	int score = 0;
 	int len = 0;
 	int first = 0;

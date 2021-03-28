@@ -359,7 +359,7 @@ void Hand::slideCards(Card* c){
 	//shift the cards and draw a new one
 	
 	if (index != 5){
-		cout << "sliding cards in handx" << endl;
+		cout << "\n***************************************\nPART 5: Sliding Cards in the Hand...\n***************************************\n" << endl;
 		for (int i = index + 1; i < 6; i++){
 				cards.at(i - 1) = cards.at(i);
 		}
@@ -397,13 +397,14 @@ void Hand::setCardsCosts(int cardCostCard[6]){
 
 const string Hand::handToString() const{
 	string handString = "";
-	
+	int i = 0;
 	for (Card* c : cards){
 		handString += "\n--------------------\n" + c->getName();
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nGood: " + c->getGoodString();
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nAction: " + c->getActionString();
 		handString += "\n~~~~~~~~~~~~~~~~~~~~\nCost: " + to_string(c->getCost());
-		handString += "\n--------------------\n\n";
+		handString += "\n--------------------\nSelection #" + to_string(i) + "\n";
+		i++;
 	}
 	
 	return handString;
@@ -411,7 +412,7 @@ const string Hand::handToString() const{
 
 
 void Hand::printCardNames() {
-	cout << "\n+++  cards in deck  +++" << endl;
+	cout << "\n***************************************\n+++  cards in deck  +++\n***************************************" << endl;
 	for (Card* c : cards){
 		cout << c->getName() << endl;
 	}
@@ -514,7 +515,7 @@ Deck::Deck(const Deck &d){
 
 ////Output
 std::ostream& operator<<(std::ostream &strm, const Deck &d) {
-	return strm << "++++++++++++ D E C K +++++++++++++\n" << d.deckToString() << "++++++++++++++++++++++++++++++++\n" << endl;
+	return strm << "\n***************************************\n++++++++++++ D E C K +++++++++++++\n" << d.deckToString() << "++++++++++++++++++++++++++++++++\n***************************************\n" << endl;
 }
 
 Card* Deck::draw(){
@@ -561,12 +562,12 @@ void Deck::slideCardInHand(Card* c){
 }
 
 void Deck::setCardCosts(){
-	cout << "\n++++++++++++ setting cards cost ++++++++++++" << endl;
+	cout << "\n***************************************\n++++++++++++ setting cards cost ++++++++++++\n***************************************\n" << endl;
 	deckHand->setCardsCosts(this->cardCostCard);
 }
 
 void Deck::shuffle(){
-	cout << "\n++++++++++++ shuffling deck ++++++++++++" << endl;
+	cout << "\n***************************************\n++++++++++++ shuffling deck ++++++++++++\n***************************************\n" << endl;
 	std::random_device rd;
 	std::mt19937 g(rd());
 	std::shuffle(cardDeck.begin(), cardDeck.end(), g);
@@ -575,6 +576,6 @@ void Deck::shuffle(){
 const string Deck::deckToString() const{
 	string temp = "\n+++++++ H A N D +++++++";
 	temp += deckHand->handToString();
-	temp += "\ndeck has " + to_string(deckSize) + " remaining cards\n";
+	temp += "\n***************************************\ndeck has " + to_string(deckSize) + " remaining cards\n***************************************\n***************************************\n";
 	return temp;
 }
