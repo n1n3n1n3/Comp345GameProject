@@ -37,10 +37,15 @@ void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){
 	}
 	
 	// if its a 2 player game
+	int currPlayer = 0;
 	if (GameStart::getNbPlayers() == 2){
 		for (int i = 0; i < 10; i++){
-			cout << "+++ place neutral army on map  +++" << endl;
 			m->printRegions();
+			cout << pl.at(currPlayer)->getName() << " place neutral army on map  (enter index)" << endl;
+			int index;
+			cin >> index;
+			m->getRegionById(index)->addArmies(pl.at(2), 1);
+			currPlayer = (currPlayer + 1)% 2;
 		}
 	}
 }

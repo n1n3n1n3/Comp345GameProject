@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	GameStartUp::setCardCost(deck);
 	
 	GameStartUp::chooseStartingRegion(map);
-	GameStartUp::placeInitialPieces(players, map);
+//	GameStartUp::placeInitialPieces(players, map);
 
 	
 //	GameStartUp::makeBids();
