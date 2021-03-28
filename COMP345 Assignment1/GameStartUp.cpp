@@ -25,6 +25,7 @@ void GameStartUp::chooseStartingRegion(Map* m){
 
 void GameStartUp::makeBids(){
 	Bid::makeBids();
+	Bid::compareBids();
 }
 
 void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){

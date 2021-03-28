@@ -115,20 +115,19 @@ void Bid::makeBids(){
 	
 	for (int i = 0; i <nbBids; i++){
 		Bid* bidder = allBids.at(i);
-		cout << bidder->getName() << endl;
-		
+		if(bidder->getName() != "neutral"){
 		int bid = 0;
 		bool valid = false;
 		
 		while (!valid) {
-			cout << bidder->getName() << ", enter your bid (maximum of " << Bid::maxBid << ") -> ";
-			cin >> bid;
-			if ((bid > Bid::maxBid)||(bid < 0)) {
-				cout << "\nInvalid input.\n\n";
-			}
-			else {
-				valid = true;
-			}
+				cout << bidder->getName() << ", enter your bid (maximum of " << Bid::maxBid << ") -> ";
+				cin >> bid;
+				if ((bid > Bid::maxBid)||(bid < 0)) {
+					cout << "\nInvalid input.\n\n";
+				}
+				else {
+					valid = true;
+				}
 		}
 		bidder->betCoins(bid);
 		
@@ -143,6 +142,7 @@ void Bid::makeBids(){
 		
 		else {
 			cout << "\n\nDon't scroll up or you're a cheater!\n\n";
+		}
 		}
 	}
 }
@@ -174,7 +174,7 @@ Bid* Bid::compareBids(){
 		int firstNameIndex = 0;
 		//compare name strings
 		for (int i = 0; i < maxBidders.size(); i++){
-			if (allBids.at(firstNameIndex)->getName() > allBids.at(i)->getName()){
+			if (allBids.at(firstNameIndex)->getName() > allBids.at(i)->getName() && allBids.at(i)->getName() != "neutral"){
 				firstNameIndex = i;
 			}
 		}
