@@ -333,6 +333,8 @@ void Player::DestroyArmy(Map* m) {
 	vector<pair<Player*, int>> players;
 	while (true) {
 		while (!valid) {
+			bool hasOp = false;
+			bool hasSelf = false;
 			int choice = 0;
 			cout << "\nEnter the Region ID where you would like to destroy an opponent's army (or 0 to skip) ->";
 			cin >> choice;
@@ -343,13 +345,18 @@ void Player::DestroyArmy(Map* m) {
 			for (int i = 0; i < players.size(); i++) {
 				if (players.at(i).first != this) {
 					if (players.at(i).second > 0) {
-						valid = true;
-						break;
+						hasOp = true;
 					}
 				}
+				else if (players.at(i).first == this) {
+					if (players.at(i).second > 0)
+						hasSelf = true;
+				}
 			}
-			if (!valid)
-				cout << "\nThis Region has no opponent armies on it...\n";
+			if ((hasOp)&&(hasSelf))
+				valid = true;
+			else 
+				cout << "\nThis Region either has no opponent armies on it or you don't have an army on it...\n";
 		}
 		valid = false;
 		

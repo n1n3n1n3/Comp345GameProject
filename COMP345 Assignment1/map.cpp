@@ -149,10 +149,9 @@ bool Region::checkCity(Player *p) {
 }
 
 void Region::setArmies(Player *p, int nb){
-	for(pair<Player*, int> pair: playerArmies){
-		if(pair.first == p){
-			pair.second = nb;
-			cout << pair.second << endl;
+	for (int i = 0; i < playerArmies.size(); i++){
+		if (playerArmies.at(i).first == p){
+			playerArmies.at(i).second = nb;
 		}
 	}
 	this->determineOwner();

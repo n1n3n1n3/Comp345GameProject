@@ -23,6 +23,8 @@ int main() {
 	//COPY FROM GAMESTART FOR TESTING
 	//*******************************
 	map->setStartingRegion(map->getRegionById(5));
+	map->getStartingRegion()->setArmies(pl.at(0), 4);
+	map->getStartingRegion()->setArmies(pl.at(1), 4);
 	
 	MainLoop ml = MainLoop(pl, deck, map);
 	
