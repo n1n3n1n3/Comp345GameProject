@@ -36,7 +36,6 @@ private:
 	int id;
 	Bid* bid;
 	
-	int VPs;
 	
 
 	//Output
@@ -86,6 +85,8 @@ public:
 	void AndOrAction();
 	void makeBid(int bid);
 	bool exchange(Deck* d, Card* c);
+	
+	int computeScore(Map* m);
 };
 
 Player* getPlayerById(int id, vector<Player*> playerList);

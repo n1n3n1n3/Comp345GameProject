@@ -37,6 +37,7 @@ public:
 	
 	void playGame();
 	
+	Player* determineWinner();
 	
 	
 };

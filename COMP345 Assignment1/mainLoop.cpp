@@ -212,3 +212,22 @@ void MainLoop::playGame() {
 	
 }
 
+Player* MainLoop::determineWinner() {
+	Player* winner = players.at(0);
+	int winningScore = players.at(0)->computeScore(this->map);
+	
+	for (int i = 1; i < numPlayers; i++) {
+		int compareScore = players.at(i)->computeScore(this->map);
+		if (compareScore > winningScore) {
+			winningScore = compareScore;
+			winner = players.at(i);
+		}
+		else if (compareScore == winningScore) {
+			//HANDLE TIE
+		}
+	}
+
+	return winner;
+}
+
+

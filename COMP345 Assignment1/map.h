@@ -79,13 +79,15 @@ public:
 	void setName(string name);
 	void setRegions(vector<Region*> regions);
 	void setConnectedContinents(vector<int> connectedContinents);
+
+	string getOwner();
 	
 	int getId();
 	string getName();
 	vector<Region*> getRegions();
 	vector<int> getConnectedContinents();
 	
-
+	
 	//extra functions for region management
 	int getNbRegions();
 	Region* addRegion(int id, string name);

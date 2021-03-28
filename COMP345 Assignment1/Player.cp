@@ -471,3 +471,14 @@ Player* getPlayerByName(string name, vector<Player*> playerList){
 	return new Player();
 }
 		
+		
+int Player::computeScore(Map* m) {
+	int score = 0;
+	
+	cout << "\n\nCOMPUTING SCORE FOR " << this->getName() <<"...\n";
+	
+	
+	
+	
+	return score;
+}
