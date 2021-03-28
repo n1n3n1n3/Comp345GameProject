@@ -691,6 +691,15 @@ bool Map::isNumber(string s)
 	return true;
 }
 
+
+void Map::setImmunePlayer(Player* p) {
+	this->immunePlayer = p;
+}
+
+Player* Map::getImmunePlayer() {
+	return immunePlayer;
+}
+
 void Map::loadPlayers(vector<Player*> listPlayers){
 	//run through each region in each territory and add the list of players
 	for (Continent* c: this->continents){

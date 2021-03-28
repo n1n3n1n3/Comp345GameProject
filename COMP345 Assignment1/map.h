@@ -15,6 +15,8 @@ private:
 	int continentId;
 	string continent;
 	string owner;
+	
+	
 //	int nbArmies;
 	vector<pair<Player*, int>> playerArmies;
 	vector<pair<Player*, bool>> playerCity;
@@ -43,6 +45,8 @@ public:
 	void setOwnerByName(string name);
 	void setContinent(string continent);
 	void setContinentId(int id);
+	
+	
 	
 	int getId();
 	string getName();
@@ -102,6 +106,8 @@ private:
 	Region* startingRegion;
 	vector<Continent*> continents;
 	vector<vector<int>> borders;
+	
+	Player* immunePlayer;
 	friend std::ostream& operator<<(std::ostream&, const Map&);	
 	
 public:
@@ -136,7 +142,10 @@ public:
 	int getNbContinents() const;
 	Continent* getContinentById(int id);
 	bool areAdjacent(Continent* c1, Continent* c2);
-
+	
+	void setImmunePlayer(Player* p);
+	Player* getImmunePlayer();
+	
 	//extra Border functions
 	int getNbBorders();
 	void addBorder(vector<int> border);
