@@ -12,11 +12,15 @@ void GameStartUp::shuffleDeck(Deck* d){
 	d->shuffle();
 }
 
-void GameStartUp::setPlayerPieces(vector<Player*> pl){
+void GameStartUp::setPlayerPieces(vector<Player*> pl, Map* m){
+	cout << "\n+++++++++++ setting player pieces ++++++++++" << endl;
+	cout << "       each player has 18 armies and 3 cities" << endl;
 	for (Player* p :pl){
 		p->setArmy(18);
 		p->setCity(3);
 	}
+	m->loadPlayers(pl);
+	cout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
 
 void GameStartUp::chooseStartingRegion(Map* m){
@@ -29,24 +33,69 @@ void GameStartUp::makeBids(){
 }
 
 void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){
-	cout << "adding 4 armies to the starting region for each player" << endl;
+	cout << "\n+++++++++++ Placing initial Armies ++++++++++" << endl;
 	for(int i = 0; i < pl.size(); i++){
 		if (pl.at(i)->getName().compare("neutral") != 0){
+			cout << "\n";
 			m->getStartingRegion()->addArmies(pl.at(i), 4);
 		}
 	}
+	cout << endl;
 //	
-//	// if its a 2 player game
-//	int currPlayer = 0;
-//	if (GameStart::getNbPlayers() == 2){
-//		for (int i = 0; i < 10; i++){
-//			m->printRegions();
-//			cout << pl.at(currPlayer)->getName() << " place neutral army on map  (enter index)" << endl;
-//			int index;
-//			cin >> index;
-//			cout << pl.at(2)->getName() << endl;
-////			m->getRegionById(index)->addArmies(pl.at(2), 1);
-//			currPlayer = (currPlayer + 1)% 2;
-//		}
-//	}
+	// if its a 2 player game
+	int currPlayer = 0;
+	if (GameStart::getNbPlayers() == 2){
+		int neutralArmyIndexes[10];
+		cout << "--- adding neutral armies to the board---" << endl;
+		m->printRegions();
+		for (int i = 0; i < 10; i++){
+			cout << "[" << i << "] " << pl.at(currPlayer)->getName() << " place 1 neutral army on map  (enter index): ";
+			int index;
+			cin >> neutralArmyIndexes[i];
+			
+			//while the player is entering an invalid id
+			while(!m->hasRegionById(neutralArmyIndexes[i])){
+				cout << neutralArmyIndexes[i] << " is an invalid region id please enter an index (integer): ";
+				cin >> neutralArmyIndexes[i];
+			}
+			
+			m->getRegionById(neutralArmyIndexes[i])->addArmies(pl.at(2), 1);
+			currPlayer = (currPlayer + 1)% 2;
+		}
+		cout << "Neutral armies were added to regions";
+		for (int i = 0; i < 10; i++){
+			cout << " " << neutralArmyIndexes[i] << " ";
+		}
+		cout << endl;
+	}
+}
+
+void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m, int indexes[10]){
+	cout << "\n+++++++++++ Placing initial Armies ++++++++++" << endl;
+	for(int i = 0; i < pl.size(); i++){
+		if (pl.at(i)->getName().compare("neutral") != 0){
+			cout << "\n";
+			m->getStartingRegion()->addArmies(pl.at(i), 4);
+		}
+	}
+	cout << endl;
+	//	
+	// if its a 2 player game
+	int currPlayer = 0;
+	if (GameStart::getNbPlayers() == 2){
+		int neutralArmyIndexes[10];
+		cout << "--- adding neutral armies to the board---" << endl;
+		m->printRegions();
+		for (int i = 0; i < 10; i++){
+			cout << "[" << i << "] " << pl.at(currPlayer)->getName() << " place 1 neutral army on map  (enter index): " << indexes[i] << endl;
+			
+			m->getRegionById(neutralArmyIndexes[i])->addArmies(pl.at(2), 1);
+			currPlayer = (currPlayer + 1)% 2;
+		}
+		cout << "Neutral armies were added to regions";
+		for (int i = 0; i < 10; i++){
+			cout << " " << neutralArmyIndexes[i] << " ";
+		}
+		cout << endl;
+	}
 }

@@ -16,8 +16,9 @@ int main(int argc, char *argv[]) {
 	players.push_back(new Player("paul"));
 	//part two is already done in gameStart
 	players = GameStart::setPlayers(players);
-	cout << players.at(2)->getName() << endl;
+
 	
+	GameStartUp::setPlayerPieces(players, map);
 	
 //	Deck* deck = GameStart::setDeck();
 	//part one
@@ -27,4 +28,7 @@ int main(int argc, char *argv[]) {
 	
 	GameStartUp::placeInitialPieces(players, map);
 //	GameStartUp::makeBids();
+//	int index;
+//	cin >> index;
+//	cout << *(map->getRegionById(index)) << endl;
 }

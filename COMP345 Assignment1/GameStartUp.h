@@ -14,10 +14,11 @@ class GameStartUp {
 public:
 	static void setCardCost(Deck* d);
 	static void shuffleDeck(Deck* d);
-	static void setPlayerPieces(vector<Player*> pl);
+	static void setPlayerPieces(vector<Player*> pl, Map *m);
 	static void chooseStartingRegion(Map* m);
 	static void makeBids();
 	static void placeInitialPieces(vector<Player*> pl, Map* m);
+	static void placeInitialPieces(vector<Player*> pl, Map* m, int indexes[10]);
 };
 
 #endif

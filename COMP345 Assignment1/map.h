@@ -161,6 +161,7 @@ public:
 	//region methods
 	int getNbRegions() const;
 	Region* getRegionById(int id);
+	bool hasRegionById(int id);
 	bool areAdjacent(Region* r1, Region* r2);
 	bool borderIsWater(Region* r1, Region* r2);
 	

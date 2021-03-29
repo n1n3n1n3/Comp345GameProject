@@ -102,7 +102,6 @@ vector<pair<Player*, int>> Region::getPlayerArmies(){
 
 void Region::addArmies(Player* p, int nb){
 	cout << p->getName() << " is adding " << nb << " armies to " << this->name << endl;
-//	cout << playerArmies.size() << endl;
 	
 	for (int i = 0; i < playerArmies.size(); i++){
 		if (playerArmies.at(i).first == p){
@@ -211,12 +210,10 @@ int Region::getContinentId(){
 void Region::determineOwner(){
 	string currOwner = "";
 	int currentMax = 0; 
-	
 	for(int i = 0; i < playerArmies.size(); i++){
 		if (playerArmies.at(i).second > currentMax && playerArmies.at(i).second > 0) {
 			currentMax = playerArmies.at(i).second;
 			currOwner = playerArmies.at(i).first->getName();
-			cout << currOwner << endl;
 		}
 		
 		//if two players have the same number of armies set owner to none
@@ -372,6 +369,8 @@ Region* Continent::getRegionById(int id){
 	cout << "no such region in continent" << endl;
 	return new Region();
 }
+
+
 
 //adds the id of a connected continent
 void Continent::addConnectedContinent(int id){
@@ -564,6 +563,14 @@ Region* Map::getRegionById(int id){
 	//if no such region was found, let the user know
 	cout << "no such region in Map" << endl;
 	return new Region();
+}
+
+bool Map::hasRegionById(int id){
+	Region* r = getRegionById(id);
+	if (r->getId() == 0){
+		return false;
+	}
+	return true;
 }
 
 bool Map::areAdjacent(Region* r1, Region* r2){
