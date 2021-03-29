@@ -210,7 +210,7 @@ void MainLoop::playGame() {
 	
 	cout << "\nCard limit reached! Time to tally the score...\n";
 	Player* theWinner = determineWinner();
-	cout << "\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
+	cout << "\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	
 	cout << "\n\n...............\n.......Goodbye for now.......\n...............";
 }
@@ -226,10 +226,19 @@ Player* MainLoop::determineWinner() {
 			winner = players.at(i);
 		}
 		else if (compareScore == winningScore) {
-			if (winner->getCoins() < players.at(i)->getCoins())
+			if (winner->getCoins() < players.at(i)->getCoins()) {
 				winner = players.at(i);
-			else if (winner->getOwned() < players.at(i)->getOwned())
+				cout << "\nTIE! But " << winner->getName() << " has more coins, so they are the winner!\n";
+			}
+			else if (winner->getCoins() > players.at(i)->getCoins()) {
+				cout << "\nTIE! But " << winner->getName() << " has more coins, so they are the winner!\n";
+			}
+			else if (winner->getOwned() < players.at(i)->getOwned()) {
 				winner = players.at(i);
+				cout << "\nTIE! Even with coins! But " << winner->getName() << " has more regions, so they are the winner!\n";
+			}
+			else
+				cout << "\nTIE! Even with coins! But " << winner->getName() << " has more regions, so they are the winner!\n";
 		}
 	}
 	
