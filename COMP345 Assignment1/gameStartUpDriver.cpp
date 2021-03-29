@@ -32,4 +32,6 @@ int main(int argc, char *argv[]) {
 	
 	
 	Player* startingPlayer = GameStartUp::makeBids(players);
+	
+//	map->printMap();
 }

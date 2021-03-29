@@ -21,8 +21,8 @@ int main(int argc, char *argv[]) {
 	players.push_back(new Player("anna"));
 	players.push_back(new Player("paul"));
 	players = GameStart::setPlayers(players);
-
+	
 // PART 1.2.E:: Create a deck of cards for the number of players (2)
 //	Deck* deck = GameStart::setDeck();
-
+	
 }
