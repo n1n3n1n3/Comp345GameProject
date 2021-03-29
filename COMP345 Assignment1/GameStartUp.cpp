@@ -16,6 +16,7 @@ void GameStartUp::setPlayerPieces(vector<Player*> pl, Map* m){
 	cout << "\n+++++++++++ setting player pieces ++++++++++" << endl;
 	cout << "       each player has 18 armies and 3 cities" << endl;
 	for (Player* p :pl){
+		p->setCoin(14);
 		p->setArmy(18);
 		p->setCity(3);
 	}
@@ -27,9 +28,17 @@ void GameStartUp::chooseStartingRegion(Map* m){
 	m->determineStartingRegion();
 }
 
-void GameStartUp::makeBids(){
+Player* GameStartUp::makeBids(vector<Player*> pl){
 	Bid::makeBids();
-	Bid::compareBids();
+	Bid* winningBid = Bid::compareBids();
+	for (Player* p: pl){
+		if (p->getName().compare(winningBid->getName()) == 0 && p->getName() != "neutral"){
+			cout << "++++++++++++++++++++++++++++++++++++" << endl;
+			return p;
+		}
+	}
+	cout << "error :: nobody won the bid" << endl;
+	return new Player();
 }
 
 void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){
@@ -62,7 +71,7 @@ void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m){
 			m->getRegionById(neutralArmyIndexes[i])->addArmies(pl.at(2), 1);
 			currPlayer = (currPlayer + 1)% 2;
 		}
-		cout << "Neutral armies were added to regions";
+		cout << "\nNeutral armies were added to regions";
 		for (int i = 0; i < 10; i++){
 			cout << " " << neutralArmyIndexes[i] << " ";
 		}
@@ -89,12 +98,12 @@ void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m, int indexes[10]
 		for (int i = 0; i < 10; i++){
 			cout << "[" << i << "] " << pl.at(currPlayer)->getName() << " place 1 neutral army on map  (enter index): " << indexes[i] << endl;
 			
-			m->getRegionById(neutralArmyIndexes[i])->addArmies(pl.at(2), 1);
+			m->getRegionById(indexes[i])->addArmies(pl.at(2), 1);
 			currPlayer = (currPlayer + 1)% 2;
 		}
-		cout << "Neutral armies were added to regions";
+		cout << "\nNeutral armies were added to regions";
 		for (int i = 0; i < 10; i++){
-			cout << " " << neutralArmyIndexes[i] << " ";
+			cout << " " << indexes[i] << " ";
 		}
 		cout << endl;
 	}

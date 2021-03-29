@@ -105,7 +105,7 @@ void Bid::makeBids(){
 			break;
 		case 3:
 			cout << "max coin bid is 11\n";
-			maxBid = 11;
+			maxBid = 14;
 			break;
 		case 4:
 			cout << "max coin bid is 9\n";
@@ -148,15 +148,8 @@ void Bid::makeBids(){
 }
 
 Bid* Bid::compareBids(){
-//	Bid* highestBid = new Bid();
-//	for (int i = 0; i <= nbBids; i++) {
-//		cout << "\n" << *allBids.at(i);
-//	}
+	cout << "++++++++   comparing bids   ++++++" << endl;
 	vector<int> bids = getAllBids();
-	//input
-//	for(int b : bids){
-//		cout << b << endl;
-//	}
 	int maxBidIndex = std::max_element(bids.begin(),bids.end()) - bids.begin();
 	
 	vector<Bid*> maxBidders;
@@ -181,6 +174,6 @@ Bid* Bid::compareBids(){
 		maxBidIndex = firstNameIndex;
 	}
 	
-	cout << allBids.at(maxBidIndex)->getName() << " won the bet" << endl;
+	cout << "+++ " << allBids.at(maxBidIndex)->getName() << " won the bet +++" << endl;
 	return allBids.at(maxBidIndex);
 }

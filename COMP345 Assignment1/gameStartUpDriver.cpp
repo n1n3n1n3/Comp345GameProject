@@ -20,15 +20,16 @@ int main(int argc, char *argv[]) {
 	
 	GameStartUp::setPlayerPieces(players, map);
 	
-//	Deck* deck = GameStart::setDeck();
+	Deck* deck = GameStart::setDeck();
 	//part one
-//	GameStartUp::shuffleDeck(deck);
-//	GameStartUp::setCardCost(deck);
+	GameStartUp::shuffleDeck(deck);
+	GameStartUp::setCardCost(deck);
 	
 	
-	GameStartUp::placeInitialPieces(players, map);
-//	GameStartUp::makeBids();
-//	int index;
-//	cin >> index;
-//	cout << *(map->getRegionById(index)) << endl;
+//	GameStartUp::placeInitialPieces(players, map);
+	int index[10] = {13,9,4,8,8,7,3,15,14,11};
+	GameStartUp::placeInitialPieces(players, map, index);
+	
+	
+	Player* startingPlayer = GameStartUp::makeBids(players);
 }
