@@ -96,7 +96,7 @@ void GameStartUp::placeInitialPieces(vector<Player*> pl, Map* m, int indexes[10]
 		cout << "--- adding neutral armies to the board---" << endl;
 		m->printRegions();
 		for (int i = 0; i < 10; i++){
-			cout << "[" << i << "] " << pl.at(currPlayer)->getName() << " place 1 neutral army on map  (enter index): " << indexes[i] << endl;
+			cout << "[" << i << "] " << pl.at(currPlayer)->getName() << " placed 1 neutral army on region " << indexes[i] << endl;
 			
 			m->getRegionById(indexes[i])->addArmies(pl.at(2), 1);
 			currPlayer = (currPlayer + 1)% 2;

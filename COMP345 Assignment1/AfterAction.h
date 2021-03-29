@@ -6,7 +6,8 @@
 using namespace std;
 
 class AfterAction{
-	
+public:
+	static void slideCardsInDeck(Deck* d);
 };
 
 #endif

@@ -23,6 +23,6 @@ int main(int argc, char *argv[]) {
 	players = GameStart::setPlayers(players);
 	
 // PART 1.2.E:: Create a deck of cards for the number of players (2)
-//	Deck* deck = GameStart::setDeck();
+	Deck* deck = GameStart::setDeck();
 	
 }

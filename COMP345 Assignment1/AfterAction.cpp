@@ -1,6 +1,6 @@
 #include <iostream>
+#include "AfterAction.h"
 
-using namespace std;
-int main(int argc, char *argv[]) {
+void AfterAction::slideCardsInDeck(Deck* d){
 	
 }
