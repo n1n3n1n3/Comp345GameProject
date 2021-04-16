@@ -14,6 +14,7 @@ private:
 	int action;
 	int good;
 	int cost;
+	bool isandor;
 	
 	friend std::ostream& operator<<(std::ostream&, const Card&);
 	

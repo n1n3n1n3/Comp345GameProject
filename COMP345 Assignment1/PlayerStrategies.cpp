@@ -210,9 +210,11 @@ Agro takes expensive ties, Chill takes cheap ties.
 
 */
 
-int agroPlayer::getPriority(Card *c) {
+int agroPlayer::getPriority(Player* p, Card *c, Map* m) {
 	string a = c->getActionString();
-	if (((a.find("Destroy")) != string::npos)||((a.find("Build")) != string::npos))
+	if (((a.find("Destroy")) != string::npos)&&(m->canDestroy(p)))
+		return (0 + c->getCost());
+	else if (a.find("Build") != string::npos)
 		return (0 + c->getCost());
 	else
 		return (2 + c->getCost());
@@ -223,15 +225,17 @@ Card* agroPlayer::chooseCard(Player *p, Map* m, Deck *d) {
 	
 	Hand* h = d->getHand();
 	Card* theCard = h->getCardByIndex(0);
-	int priority = this->getPriority(h->getCardByIndex(0));
+	int priority = this->getPriority(p, h->getCardByIndex(0), m);
 	int handSize = d->getHand()->getSize();
 
 	for (int i = 1; i < handSize; i++) {
 		
-		if ((this->getPriority(h->getCardByIndex(i))) >= priority) {
+		if (this->getPriority(p, h->getCardByIndex(i), m) >= priority) {
 			if ((h->getCardByIndex(i)->getCost()) <= p->getCoins()) {
-				priority = this->getPriority(h->getCardByIndex(i));
+				
+				priority = this->getPriority(p, h->getCardByIndex(i), m);
 				theCard = h->getCardByIndex(i);
+				
 			}
 		}
 	}
@@ -273,3 +277,73 @@ Card* chillPlayer::chooseCard(Player *p, Map* m, Deck *d) {
 
 
 ///////TAKING ACTIONS///////
+
+void agroPlayer::PlaceNewArmies(Player* p, int a, Map* m) {}
+
+void agroPlayer::MoveArmies(Player* p, int a, Map* m) {}
+
+void agroPlayer::BuildCity(Player* p, Map* m) {
+	Region* toBuild = NULL;
+	int most = 0;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			int temp = 0;
+			for (pair<Player*, int> o : r->getPlayerArmies()) {
+				if (o.first != p)
+					temp += o.second;
+			}
+			if ((temp > most)&&!(r->checkCity(p))) {
+				most = temp;
+				toBuild = r;
+			}
+				
+		}
+	}
+	if (toBuild == NULL) {
+		for (Continent* c : m->getContinents()) {
+			for (Region* r : c->getRegions()) {
+				if (!r->checkCity(p)) {
+					r->addCity(p);
+					return;
+				}
+			}
+		}
+	}
+	else 
+		toBuild->addCity(p);
+	
+}
+
+void agroPlayer::DestroyArmy(Player* p, Map* m) {
+	Region* toAttack = NULL;
+	Player* target;
+	int least = 100;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			if (r->canDestroy(p)) {
+				if (toAttack == NULL) {
+					toAttack = r;
+					for (pair<Player*, int> o : r->getPlayerArmies()) {
+						if ((o.first != p)&&(o.second > 0)&&(o.second < least))
+							target = o.first;
+					}
+				}
+				else {
+					for (pair<Player*, int> o : r->getPlayerArmies()) {
+						if ((o.first != p)&&(o.second > 0)&&(o.second < least)) {
+							target = o.first;
+							toAttack = r;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	toAttack->removeArmies(target, 1);
+	
+}
+
+			
+	
+	

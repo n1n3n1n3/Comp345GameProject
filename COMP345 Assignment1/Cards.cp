@@ -253,8 +253,9 @@ string Card::getActionString() const{
 	string ret = "";
 	int looper = 1;
 	int tempAction = action;
-	if (tempAction > 0)
+	if (tempAction > 0) {
 		split = "AND";
+	}
 	else {
 		tempAction*=-1;
 		split = "OR";

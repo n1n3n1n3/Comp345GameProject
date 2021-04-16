@@ -40,6 +40,7 @@ class agroPlayer : public Strategy {
 public:
 	Card* chooseCard(Player* p, Map* m, Deck* d);
 	int getPriority(Card* c);
+	int getPriority(Player* p, Card* c, Map* m);
 	void PlaceNewArmies(Player* p, int a, Map* m);
 	void MoveArmies(Player* p, int a, Map* m);
 	void BuildCity(Player* p, Map* m);

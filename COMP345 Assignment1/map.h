@@ -47,7 +47,7 @@ public:
 	void setContinentId(int id);
 	
 	
-	
+	bool canDestroy(Player* p);
 	int getId();
 	string getName();
 	int getNbArmiesByName(string name);
@@ -179,6 +179,7 @@ public:
 //	returns I
 	
 //	other functions
+	bool canDestroy(Player* p);
 	bool isNumber(string s);
 	void printMap();
 	void printRegions();

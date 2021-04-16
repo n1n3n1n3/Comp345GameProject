@@ -112,6 +112,20 @@ void Region::addArmies(Player* p, int nb){
 	this->determineOwner();
 }
 
+bool Region::canDestroy(Player* p) {
+	int x = 0;
+	for (pair<Player*,int> o : this->getPlayerArmies()) {
+		if (((o.second) > 0)&&(o.first != p))
+			x++;
+	}
+	if (x > 0)
+		return true;
+	else
+		return false;
+}
+
+
+
 bool Region::addCity(Player *p) {
 	cout << p->getName() << " is adding a city to " << this->name << endl;
 	for (int i = 0; i < playerCity.size(); i++){
@@ -723,6 +737,22 @@ bool Map::isNumber(string s)
 		return false;
 	
 	return true;
+}
+
+bool Map::canDestroy(Player* p) {
+	bool can = true;
+	for (Continent* c: this->continents){
+		for (Region* r: c->getRegions()){
+			int x = 0;
+			for (pair<Player*,int> o : r->getPlayerArmies()) {
+				if (((o.second) > 0)&&(o.first != p))
+					x++;
+			}
+			if (x > 0)
+				return true;
+		}
+	}
+	return false;
 }
 
 
