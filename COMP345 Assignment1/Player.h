@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 
@@ -6,6 +7,7 @@
 
 #ifndef PLAYER_H
 #define PLAYER_H
+
 
 #include "Bid.h"
 #include "Cards.h"
@@ -17,6 +19,7 @@ class Map;
 class Continent;
 class Region;
 class Strategy;
+
 
 class Player {
 
@@ -40,8 +43,8 @@ private:
 	string name;
 	int id;
 	Bid* bid;
-	
 	Strategy* strat;
+	
 
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Player&);

@@ -1,4 +1,5 @@
 #include <iostream>
+#pragma once
 #include <string>
 #include <vector>
 #include "Player.h"
@@ -122,6 +123,11 @@ std::string Player::getName(){
 	return this->name;
 }
 
+void Player::setStrat(int s) {
+	//if (s == 0)
+		// = new agroPlayer();
+}
+
 
 int Player::getId(){
 	return this->id;
@@ -203,95 +209,15 @@ bool Player::checkPlacementValidity(Map* m, Region *r) {
 }
 
 void Player::PlaceNewArmies(int a, Map* m) {
-	while (a > 0) {
-		bool valid = false;
-		while (!valid) {
-			int choice = 0;
-			cout << "\n***************************************\nEnter the Region ID that you would like to place on ->";
-			cin >> choice;
-			Region* r = m->getRegionById(choice);
-			if (checkPlacementValidity(m, r)) {
-				valid = true;
-				bool val = false;
-				while (!val) {
-					int arms = 0;
-					cout << "\n***************************************\nEnter # of armies to place (max " << a << ") ->";
-					cin >> arms;
-					if (arms > a)
-						cout << "\n***************************************\nInvalid, try again...\n";
-					else {
-						val = true;
-						r->addArmies(this, arms);
-						a -= arms;
-					}
-				}
-			}
-			else 
-				cout << "\n***************************************\nInvalid Region, must be the Starting Region or a region where you own a city...\n";
-		}
-	}
-	cout << "\n***************************************\nDone placing Armies!";
+	strat->PlaceNewArmies(this, a, m);
 }
 
 
 
 void Player::MoveArmies(int a, Map* m) {
-	while (a > 0) {
-		bool valid = false;
-		Region* starting;
-		Region* moving;
-		cout << "\n***************************************\nYou have " << a << " movement points...\n";
-		while (!valid) {
-			int choice = 0;
-			cout << "\n***************************************\nEnter the Region ID that you would like to move armies from (0 to skip) ->";
-			cin >> choice;
-			if (choice == 0) {
-				return;
-			}
-			starting = m->getRegionById(choice);
-			vector<pair<Player*, int>> players = starting->getPlayerArmies();
-			for (int i = 0; i < players.size(); i++){
-				if (players.at(i).first == this) {
-					if (players.at(i).second > 0) {
-						valid = true;
-					}
-					else {
-						cout << "\n***************************************\nInvalid Region, no armies to move...\n";
-					}
-				}
-			}
-		}
-		
-		valid = false;
-		while (!valid) {
-			int choice = 0;
-			cout << "\n***************************************\nEnter the Region ID that you would like to move to (consult the borders displayed above) ->";
-			cin >> choice;
-			moving = m->getRegionById(choice);
-			if (m->areAdjacent(starting, moving)) {
-				int moves = a;
-				if ((m->getRegionContinent(starting)) != (m->getRegionContinent(moving))) {
-					if (a < this->checkFlying()) {
-						cout << "\n***************************************\nRegions are adjacent, but you need at least " << this->checkFlying() << " movements to move over water...\n";
-					}
-					//MOVE OVER WATER
-					else {
-						a -= MoveOverWater(moves, starting, moving);
-						valid = true;
-					}
-				}
-				//MOVE OVER LAND
-				else {
-					a -= MoveOverLand(moves, starting, moving);
-					valid = true;
-				}
-			}
-			else 
-				cout << "\n***************************************\nInvalid Region, must be adjacent to " << starting->getName() << "...\n";
-		}
-		
-	}
+	strat->MoveArmies(this, a, m);
 }
+
 int Player::MoveOverLand(int a, Region* start, Region* move) {
 	bool valid = false;
 	int choice = 0;
@@ -341,72 +267,11 @@ int Player::MoveOverWater(int a, Region* start, Region* move) {
 }
 
 void Player::BuildCity(Map* m) {
-	bool valid = false;
-	while (!valid) {
-		int choice = 0;
-		cout << "\n***************************************\nEnter the Region ID that you would like to build a city on ->";
-		cin >> choice;
-		Region* r = m->getRegionById(choice);
-		if (r->addCity(this))
-			valid = true;
-	}
+	strat->BuildCity(this, m);
 }
 
 void Player::DestroyArmy(Map* m) {
-	bool valid = false;
-	Region* r;
-	vector<pair<Player*, int>> players;
-	while (true) {
-		while (!valid) {
-			bool hasOp = false;
-			bool hasSelf = false;
-			int choice = 0;
-			cout << "\n***************************************\nEnter the Region ID where you would like to destroy an opponent's army (or 0 to skip) ->";
-			cin >> choice;
-			if (choice == 0)
-				return;
-			r = m->getRegionById(choice);
-			players = r->getPlayerArmies();
-			for (int i = 0; i < players.size(); i++) {
-				if (players.at(i).first != this) {
-					if (players.at(i).second > 0) {
-						hasOp = true;
-					}
-				}
-				else if (players.at(i).first == this) {
-					if (players.at(i).second > 0)
-						hasSelf = true;
-				}
-			}
-			if ((hasOp)&&(hasSelf))
-				valid = true;
-			else 
-				cout << "\n***************************************\nThis Region either has no opponent armies on it or you don't have an army on it...\n";
-		}
-		valid = false;
-		
-		while (!valid) {
-			int choice = 0;
-			cout << *r << "\n***************************************\nEnter the # of the Player whose army you want to destroy (top = 1, 0 to go back) ->";
-			cin >> choice;
-			if (choice == 0)
-				break;
-			choice -= 1;
-			
-			if ((choice < 0)||(choice >= players.size()))
-				cout << "\n***************************************\nInvalid...\n";
-			else if (players.at(choice).first == this)
-				cout << "\n***************************************\nYou can't destroy yourself, silly!!\n";
-			else if (players.at(choice).first == m->getImmunePlayer())
-				cout << "\n***************************************\n" << players.at(choice).first->getName() << " has immunity! You can't destroy their armies...";
-			else {
-				cout << "\n***************************************\nDestroying one army of " << players.at(choice).first->getName() << " from Region " << r->getName() << ".\n";
-				r->removeArmies(players.at(choice).first, 1);
-				return;
-			}
-		}
-	
-	}
+	strat->DestroyArmy(this, m);
 }
 
 void Player::AndOrAction() {
