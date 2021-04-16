@@ -161,26 +161,9 @@ void MainLoop::singleTurn(Player *p) {
 	}
 	
 	//Player chooses the card they want from the hand
-	Card* theCard;
-	bool valid = false;
-	while (!valid) {
-		int cardChoice;
-		cout << p->getName() <<"\n***************************************\n... Enter the card selection # that you would like to choose: ";
-		cin >> cardChoice;
-		
-		if ((cardChoice >= deck->getHand()->getSize())||(cardChoice < 0)) {
-			cout << "\n***************************************\nInvalid input...\n";
-		}
-		else {	
-			//Find and display the card;
-			theCard = deck->getHand()->getCardByIndex(cardChoice);
-			cout << *theCard << endl;
-			
-			//Player takes the card from the hand, hand is updated
-			if (p->exchange(deck, theCard))
-				valid = true;
-		}
-	}
+	Card* theCard = p->selectCard(this->map, this->deck);
+	
+	//check Immune card
 	if (theCard->getGood() == 9)
 		map->setImmunePlayer(p);
 	

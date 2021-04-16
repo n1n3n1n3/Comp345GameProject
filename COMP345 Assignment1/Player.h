@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
 
-#include "Bid.h"
-#include "Cards.h"
+
 
 
 #ifndef PLAYER_H
 #define PLAYER_H
+
+#include "Bid.h"
+#include "Cards.h"
 
 
 using namespace std;
@@ -14,6 +16,7 @@ using namespace std;
 class Map;
 class Continent;
 class Region;
+class Strategy;
 
 class Player {
 
@@ -38,7 +41,7 @@ private:
 	int id;
 	Bid* bid;
 	
-	
+	Strategy* strat;
 
 	//Output
 	friend std::ostream& operator<<(std::ostream&, const Player&);
@@ -70,7 +73,8 @@ public:
 	int getCoins();
 	vector<Card*> getPlayerCards();
 	int getElixir();
-	
+	void setStrat(int s);
+	Strategy* getStrat();
 	
 	Bid* getBid();
 	
@@ -92,6 +96,8 @@ public:
 	void AndOrAction();
 	void makeBid(int bid);
 	bool exchange(Deck* d, Card* c);
+	
+	Card* selectCard(Map* m, Deck* d);
 	
 	int computeScore(Map* m);
 	int cardScore(Card* c, int q);

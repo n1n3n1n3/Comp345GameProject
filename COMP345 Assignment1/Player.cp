@@ -3,6 +3,7 @@
 #include <vector>
 #include "Player.h"
 #include "map.h"
+#include "PlayerStrategies.h"
 //#include "Cards.h"
 
 using namespace std;
@@ -169,6 +170,14 @@ int Player::checkFlying() {
 	else
 		return 1;
 }
+
+//STRATEGY TIME
+
+Card* Player::selectCard(Map* m, Deck* d) {
+	return this->strat->chooseCard(this, m, d);
+}
+
+
 
 
 
