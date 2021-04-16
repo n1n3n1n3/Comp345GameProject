@@ -146,6 +146,7 @@ bool Region::addCity(Player *p) {
 }
 
 bool Region::checkCity(Player *p) {
+	
 	for (int i = 0; i < playerCity.size(); i++){
 		if (playerCity.at(i).first == p){
 			if (playerCity.at(i).second == true) {

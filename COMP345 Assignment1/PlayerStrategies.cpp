@@ -244,43 +244,155 @@ Card* agroPlayer::chooseCard(Player *p, Map* m, Deck *d) {
 
 }
 
-int chillPlayer::getPriority(Card *c) {
-	string a = c->getActionString();
-	if (((a.find("Place")) != string::npos)||((a.find("Move")) != string::npos))
-		return (0 + c->getCost());
-	else
-		return (2 + c->getCost());
-	
+int agroPlayer::safelyOwned(Player *p, Region *r) {
+	int owner = 0;
+	int challenger = 0;
+	if (r->getOwner() != p->getName())
+		return 0;
+	else {
+		for (pair<Player*, int> o : r->getPlayerArmies()) {
+			if (o.first == p)
+				owner = o.second;
+			else if (o.second > challenger)
+				challenger = o.second;
+		}
+		return (owner - challenger)-1;
+	}
 }
 
-Card* chillPlayer::chooseCard(Player *p, Map* m, Deck *d) {
-	
-	Hand* h = d->getHand();
-	Card* theCard = h->getCardByIndex(0);
-	int priority = this->getPriority(h->getCardByIndex(0));
-	int handSize = d->getHand()->getSize();
-	
-	for (int i = 1; i < handSize; i++) {
-		
-		if ((this->getPriority(h->getCardByIndex(i))) > priority) {
-			if ((h->getCardByIndex(i)->getCost()) <= p->getCoins()) {
-				priority = this->getPriority(h->getCardByIndex(i));
-				theCard = h->getCardByIndex(i);
+
+Region* agroPlayer::findTarget(Player* p, Map *m) {
+	Region* target = NULL;
+	int biggestThreat = 0;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			if (p->getName() != r->getOwner()) {
+				int temp = 0;
+				for (pair<Player*, int> o : r->getPlayerArmies()) {
+					if (o.first != p)
+						temp += o.second;
+				}
+				if (temp > biggestThreat) {
+					biggestThreat = temp;
+					target = r;
+				}
 			}
+			else if (target == NULL)
+				target = r;
+		}
+	}
+	return target;
+}
+
+vector<Region*> agroPlayer::findPath(Player* p, Map* m, Region* r) {
+	vector<Region*> visited;
+	for (Continent* c : m->getContinents()) {
+		for (Region* q : c->getRegions()) {
+			if ((m->areAdjacent(q, r))&&(safelyOwned(p, q) > 0))
+				return {q, r};
+			else if (m->areAdjacent(q, r))
+				visited.push_back(q);
 		}
 	}
 	
-	return theCard;
 	
+	while (true) {
+	for (Region* q : visited) {
+		for (Continent* c : m->getContinents()) {
+			for (Region* s : c->getRegions()) {
+				if (find(visited.begin(), visited.end(), s) == visited.end()) {
+					if ((m->areAdjacent(q, s))&&(safelyOwned(p, q) > 0)) 
+						return {s, q};
+					else if (m->areAdjacent(s, q))
+						visited.push_back(s);
+					}
+				}	
+			}
+		}
+		if (visited.size() >= m->getNbRegions())
+			return {NULL, NULL};
+	}
 }
-
 
 
 ///////TAKING ACTIONS///////
 
-void agroPlayer::PlaceNewArmies(Player* p, int a, Map* m) {}
+void agroPlayer::PlaceNewArmies(Player* p, int a, Map* m) {
+	Region* target = NULL;
+	int biggestThreat = 0;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			if ((p->getName() != r->getOwner())&&((r->checkCity(p))||r->checkStartingRegion(m))) {
+				int temp = 0;
+				for (pair<Player*, int> o : r->getPlayerArmies()) {
+					if (o.first != p)
+						temp += o.second;
+				}
+				if (temp > biggestThreat) {
+					biggestThreat = temp;
+					target = r;
+				}
+			}
+		}
+	}
+	if (target != NULL) {
+		cout << "Adding " << a << " armies to " << target->getName() << endl; 
+		target->addArmies(p, a);
+	}
+	else {
+		for (Continent* c : m->getContinents()) {
+			for (Region* r : c->getRegions()) {
+				if ((r->checkCity(p))||(r->checkStartingRegion(m))) {
+					int temp = 0;
+					for (pair<Player*, int> o : r->getPlayerArmies()) {
+						if (o.first != p)
+							temp += o.second;
+					}
+					if (temp > biggestThreat) {
+						biggestThreat = temp;
+						target = r;
+					}
+				}
+				
+			}
+		}
+		target->addArmies(p, a);
+	}
 
-void agroPlayer::MoveArmies(Player* p, int a, Map* m) {}
+	
+	
+}
+
+
+void agroPlayer::MoveArmies(Player* p, int a, Map* m) {
+	vector<Region*> start_and_move;
+	Region* target = findTarget(p, m);
+	int toMove = 0;
+	while (a > 0) {
+		start_and_move = findPath(p, m, target);
+		Region* start = start_and_move.at(0);
+		Region* move = start_and_move.at(1);
+		if (start == NULL)
+			cout << "\nPlayer does not have any armies available to move.\n" << endl;
+		else {
+			toMove = safelyOwned(p, start);
+			if (m->borderIsWater(start, move))
+				toMove = toMove/p->checkFlying();
+			
+			if (toMove > a) 
+				toMove = a;
+				
+			start->removeArmies(p, toMove);
+			move->addArmies(p, toMove);
+			cout << "\nMoving " << toMove << " armies from " << start->getName() << " to " << move->getName() << "...\n" << endl;
+			
+			a-=toMove;
+			
+		}
+		
+	}
+	
+}
 
 void agroPlayer::BuildCity(Player* p, Map* m) {
 	Region* toBuild = NULL;
@@ -345,5 +457,41 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 }
 
 			
+	
+	
+	
+	
+	
+	
+	int chillPlayer::getPriority(Card *c) {
+		string a = c->getActionString();
+		if (((a.find("Place")) != string::npos)||((a.find("Move")) != string::npos))
+			return (0 + c->getCost());
+		else
+			return (2 + c->getCost());
+		
+	}
+	
+	Card* chillPlayer::chooseCard(Player *p, Map* m, Deck *d) {
+		
+		Hand* h = d->getHand();
+		Card* theCard = h->getCardByIndex(0);
+		int priority = this->getPriority(h->getCardByIndex(0));
+		int handSize = d->getHand()->getSize();
+		
+		for (int i = 1; i < handSize; i++) {
+			
+			if ((this->getPriority(h->getCardByIndex(i))) > priority) {
+				if ((h->getCardByIndex(i)->getCost()) <= p->getCoins()) {
+					priority = this->getPriority(h->getCardByIndex(i));
+					theCard = h->getCardByIndex(i);
+				}
+			}
+		}
+		
+		return theCard;
+		
+	}
+	
 	
 	
