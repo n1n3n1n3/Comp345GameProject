@@ -39,12 +39,15 @@ void Subject::Notify(){
 
 GameObserver::GameObserver(){};
 
+GameObserver::GameObserver(MainLoop* ml){
+	this->ml = ml;
+}
 
 void GameObserver::Update(){
 	showTurn();
 }
 
 void GameObserver::showTurn(){
-	cout << "**************************" << endl;
-	cout << currPlayer->getName() + "'s turn  "<< endl; 
+	cout << "*************DISPLAY TURN ****************" << endl;
+	cout << ml->whoseTurn()->getName() << endl;
 }

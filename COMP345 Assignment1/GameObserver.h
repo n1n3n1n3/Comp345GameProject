@@ -2,11 +2,13 @@
 #include <vector>
 #include <list>
 #include "Player.h"
+#include "mainLoop.h"
 
 class Observer {
 public:
 	~Observer();
 	virtual void Update() = 0;
+
 protected:
 	Observer();
 };
@@ -25,10 +27,9 @@ private:
 class GameObserver : public Observer{
 	public:
 		GameObserver();
-		GameObserver(list<Player*> players);
+		GameObserver(MainLoop* ml);
 		void Update();
 		void showTurn();
 	private:
-		Player* currPlayer;
-		list<Player*> players;		
+		MainLoop* ml;
 };
