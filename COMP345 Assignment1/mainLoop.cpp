@@ -1,11 +1,15 @@
 #include <iostream>
 #include <string>
 #include "mainLoop.h"
+#include "gameStart.h"
+#include "GameStartUp.h"
+
 using namespace std;
 
 int MainLoop::numPlayers = 0;
 int MainLoop::turnsRemaining = 0;
 
+MainLoop::MainLoop(){}
 //Constructor that currently can only handle a 2 player game
 MainLoop::MainLoop(vector<Player*> players, Deck* deck, Map* map) {
 	this->players = players;
@@ -265,6 +269,46 @@ Player* MainLoop::determineWinner() {
 	}
 	
 	return winner;
+}
+
+void MainLoop::autoSetup(){
+	map = GameStart::selectMap("./maps/BirdsL.map");
+	
+	vector<Player*> pl;
+	pl.push_back(new Player("anna"));
+	pl.push_back(new Player("paul"));
+	pl = GameStart::setPlayers(pl);
+	
+	players = pl;
+	
+	GameStartUp::setPlayerPieces(pl, map);
+	deck = GameStart::setDeck();
+	GameStartUp::setPlayerPieces(pl, map);
+	GameStartUp::shuffleDeck(deck);
+	GameStartUp::setCardCost(deck);
+	
+	int index[10] = {13,9,4,8,8,7,3,15,14,11};
+	GameStartUp::placeInitialPieces(players, map, index);
+	pl.erase(pl.begin()+2);
+	
+	//too lay to make this fully manual
+	Player* startingPlayer = GameStartUp::makeBids(players);
+}
+
+void MainLoop::manualSetup(){
+	map = GameStart::selectMap();
+	
+	players = GameStart::setPlayers();
+	
+	GameStartUp::setPlayerPieces(players, map);
+	Deck* deck = GameStart::setDeck();
+	GameStartUp::setPlayerPieces(players, map);
+	GameStartUp::shuffleDeck(deck);
+	GameStartUp::setCardCost(deck);
+	
+	players.erase(players.begin()+2);
+	
+	Player* startingPlayer = GameStartUp::makeBids(players);
 }
 
 

@@ -34,6 +34,7 @@ Player* GameStartUp::makeBids(vector<Player*> pl){
 	for (Player* p: pl){
 		if (p->getName().compare(winningBid->getName()) == 0 && p->getName() != "neutral"){
 			cout << "++++++++++++++++++++++++++++++++++++" << endl;
+			p->payCoin(p->getBid()->getBid());
 			return p;
 		}
 	}

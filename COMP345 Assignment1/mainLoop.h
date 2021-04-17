@@ -1,10 +1,13 @@
 #ifndef MAIN_LOOP
 #define MAIN_LOOP
 #include "map.h"
+#include "gameStart.h"
+#include "GameStartUp.h"
+#include "GameObserver.h"
 
 
 
-class MainLoop {
+class MainLoop : public Subject{
 	
 private:
 	
@@ -20,7 +23,7 @@ private:
 	friend std::ostream& operator<<(std::ostream&, const MainLoop&);
 	
 public:
-	
+	MainLoop();
 	MainLoop(vector<Player*> players, Deck* deck, Map* map);
 	MainLoop& operator = (const MainLoop &m);
 	
@@ -39,7 +42,10 @@ public:
 	
 	Player* determineWinner();
 	
+	//creating two functions to set the game up without calling assignment 2 stuff (cleaner)
+	void autoSetup();
 	
+	void manualSetup();
 };
 
 
