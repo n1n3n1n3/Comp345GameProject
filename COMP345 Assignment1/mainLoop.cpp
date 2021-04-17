@@ -9,13 +9,16 @@ using namespace std;
 int MainLoop::numPlayers = 0;
 int MainLoop::turnsRemaining = 0;
 
-MainLoop::MainLoop(){}
+MainLoop::MainLoop(){
+	state = initiated;
+}
 //Constructor that currently can only handle a 2 player game
 MainLoop::MainLoop(vector<Player*> players, Deck* deck, Map* map) {
 	this->players = players;
 	this->deck = deck;
 	this->map = map;
 	this->numPlayers = players.size();
+	state = initiated;
 	if (numPlayers == 2)
 		this->turnsRemaining = 26;
 	else {
@@ -31,6 +34,18 @@ std::ostream& operator<<(std::ostream& strm, const MainLoop& m) {
 	return strm << "It is " << turn->getName() << "'s turn. " << m.turnsRemaining << " turns remaining in the game.";
 }
 
+void MainLoop::setState(State newState) {
+	state = newState;
+	Notify();
+}
+
+State MainLoop::getState(){
+	return state;
+}
+
+vector<Player*> MainLoop::getPlayers(){
+	return players;
+}
 
 //Check whose turn it is
 Player* MainLoop::whoseTurn() const{
@@ -43,6 +58,7 @@ Player* MainLoop::whoseTurn() const{
 void MainLoop::showBoard() {
 	cout << "\n***************************************\n"; 
 	map->printMap();
+	
 	cout << *deck;
 	
 }
@@ -144,8 +160,9 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				p->PlaceNewArmies(num, map);
 				
 				//subject state elements
-				currSubjectState = "place";
-				currSubjectNbArmiesAdded = num;
+				currAction = "place";
+				actionNbArmiesPlaced = num;
+				
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();
@@ -155,15 +172,15 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				p->MoveArmies(num, map);
 				
 				//subject state elements
-				currSubjectState = "move";
-				currSubjectNbArmiesMoved = num;
+				currAction = "move";
+				actionNbArmiesMoved = num;
 				break;
 			case 3:
 				cout << "\n***************************************\nDestroying an army...";
 				p->DestroyArmy(map);
 				
 				//subject state elements
-				currSubjectState = "destroy";
+				currAction = "destroy";
 				
 				break;
 			case 4:
@@ -172,7 +189,7 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				p->BuildCity(map);
 				
 				//subject state elements
-				currSubjectState = "build";
+				currAction = "build";
 				
 				break;
 			default:
@@ -220,23 +237,22 @@ void MainLoop::singleTurn(Player *p) {
 	
 	//Player chooses the card they want from the hand
 	Card* theCard = p->selectCard(this->map, this->deck);
-	currSubjectCard = theCard;
-	currSubjectCost = theCard->getCost();
+	currentCard = theCard;
 	//check Immune card
 	if (theCard->getGood() == 9)
 		map->setImmunePlayer(p);
 	
 	//Player takes the action of the Card
 	takeAction(p, theCard);
-	
-		cout << "\n***************************************\n...Turn Over...\n***************************************\n\n";
+//	Notify();
+//		cout << "\n***************************************\n...Turn Over...\n***************************************\n\n";
 }
 
 Player* MainLoop::playGame() {
 	
 	//Welcome message
 	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
-	
+	setState(playing);
 	//Fixed # of turns per game to manage the mainloop
 	while (turnsRemaining > 0) {
 		
@@ -250,11 +266,16 @@ Player* MainLoop::playGame() {
 		turnsRemaining--;
 	}
 	
+	setState(marking);
+	
 	cout << "\nCard limit reached! Time to tally the score...\n";
 	Player* theWinner = determineWinner();
+	
 	cout << "\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	
+	setState(done);
 	cout << "\n\n...............\n.......Goodbye for now.......\n...............";
+	
 	return theWinner;
 }
 
@@ -310,6 +331,21 @@ void MainLoop::autoSetup(){
 	
 	//too lay to make this fully manual
 	Player* startingPlayer = GameStartUp::makeBids(players);
+	
+//	if (players.at(0) != startingPlayer){
+	for (int i = 0; i < players.size(); i++){
+		if (players.at(i) == startingPlayer){
+			cout << "***" << startingPlayer->getName() << endl;
+			players.erase(players.begin() + i);
+			players.insert(players.begin(), startingPlayer);
+		}
+	}
+//	}
+	
+	setState(bidding);
+
+	//setting game state for the observer
+	setState(ready);
 }
 
 void MainLoop::manualSetup(){
@@ -326,6 +362,9 @@ void MainLoop::manualSetup(){
 	players.erase(players.begin()+2);
 	
 	Player* startingPlayer = GameStartUp::makeBids(players);
+	
+	//setting game state for the observer
+	setState(ready);
 }
 
 

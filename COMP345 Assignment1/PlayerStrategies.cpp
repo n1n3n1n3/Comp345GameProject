@@ -488,7 +488,6 @@ void agroPlayer::BuildCity(Player* p, Map* m) {
 	}
 	else 
 		toBuild->addCity(p);
-	
 }
 
 void agroPlayer::DestroyArmy(Player* p, Map* m) {

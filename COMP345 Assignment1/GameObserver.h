@@ -12,6 +12,7 @@ class GameObserver : public Observer{
 		GameObserver(MainLoop* ml);
 		void Update();
 		void showTurn();
+		void displayGame();
 		void userDisplay();
 	private:
 		Player* currPlayer;

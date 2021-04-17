@@ -6,6 +6,7 @@
 #include "Subject.h"
 
 
+enum State {initiated, bidding, ready, playing, marking, done};
 
 class MainLoop : public Subject{
 	
@@ -23,10 +24,12 @@ private:
 	friend std::ostream& operator<<(std::ostream&, const MainLoop&);
 	
 	//subject stuff
-	string currSubjectState;
-	Card* currSubjectCard;
-	int currSubjectNbArmiesAdded;
-	int currSubjectNbArmiesMoved;
+	State state;
+	string currAction;
+	Card* currentCard;
+	int actionNbArmiesPlaced;
+	int actionNbArmiesMoved;
+	int action;
 	pair<Player*, Region*> currSubjectDestroyedArmies;
 	Region* currCityBuild;
 	int currSubjectCost;
@@ -38,6 +41,7 @@ public:
 	
 	//Check whose turn it is
 	Player* whoseTurn() const;
+	vector<Player*> getPlayers();
 	
 	//Display Map & Hand
 	void showBoard();
@@ -55,6 +59,12 @@ public:
 	void autoSetup();
 	
 	void manualSetup();
+	
+	//Observer stuff
+	State getState();
+	void setState(State newState);
+	
+	string getCurrAction();
 };
 
 

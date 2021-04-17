@@ -12,10 +12,8 @@ class Subject {
 	virtual void Attach(Observer* o);
 	virtual void Detach(Observer* o);
 	virtual void Notify();
-	string getState();
 	Subject();
 	~Subject();
   private:
 	list<Observer*> *_observers;
-	string state;
 };

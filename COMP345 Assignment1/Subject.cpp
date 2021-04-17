@@ -26,7 +26,3 @@ void Subject::Notify(){
 		(*i)->Update();
 	}
 }
-
-string Subject::getState(){
-	return state;
-}
