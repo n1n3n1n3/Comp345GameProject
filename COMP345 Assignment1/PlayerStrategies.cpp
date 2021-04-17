@@ -290,7 +290,7 @@ int agroPlayer::safelyOwned(Player *p, Region *r) {
 	else
 		ret = mover;
 	return ret;
-	}
+}
 	
 	
 
@@ -410,7 +410,11 @@ void agroPlayer::MoveArmies(Player* p, int a, Map* m) {
 	vector<Region*> start_and_move;
 	Region* target = findTarget(p, m);
 	int toMove = 0;
+	int maxMoves = 0;
+	bool tswitch = false;
 	while (a > 0) {
+		if (!tswitch)
+			target = findTarget(p, m);
 		start_and_move = findPath(p, m, target);
 		Region* start = start_and_move.at(0);
 		Region* move = start_and_move.at(1);
@@ -424,11 +428,16 @@ void agroPlayer::MoveArmies(Player* p, int a, Map* m) {
 				toMove = a;
 			
 			if (m->borderIsWater(start, move)) {
-				toMove = toMove/p->checkFlying();
-				cout << "\nBorder between " << start->getId() << " and " << move->getId() << " is water, movement costs " << p->checkFlying() << " giving the player " << toMove << endl;
+				maxMoves = toMove/p->checkFlying();
+				toMove = (p->checkFlying()*maxMoves);
+				cout << "\nBorder between " << start->getId() << " and " << move->getId() << " is water, movement costs " << p->checkFlying() << " giving the player " << maxMoves << endl;
 			}
+			else 
+				maxMoves = toMove;
 			
-			if (toMove == 0) {
+			
+			if (maxMoves == 0) {
+				tswitch = true;
 				target = m->getRegionById((target->getId()+1)%m->getNbRegions());
 				cout << "New target is Region #" << target->getId() << endl;
 			}
@@ -436,8 +445,8 @@ void agroPlayer::MoveArmies(Player* p, int a, Map* m) {
 			else {
 				
 				
-				start->removeArmies(p, toMove);
-				move->addArmies(p, toMove);
+				start->removeArmies(p, maxMoves);
+				move->addArmies(p, maxMoves);
 				cout << "\nMoving " << toMove << " armies from " << start->getName() << " to " << move->getName() << "...\n" << endl;
 				
 				a-=toMove;
@@ -520,8 +529,10 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 	
 	int chillPlayer::getPriority(Card *c) {
 		string a = c->getActionString();
-		if (((a.find("Place")) != string::npos)||((a.find("Move")) != string::npos))
+		if (a.find("Place") != string::npos)
 			return (0 + c->getCost());
+		else if (a.find("Move") != string::npos)
+			return (1 + c->getCost());
 		else
 			return (2 + c->getCost());
 		
@@ -543,19 +554,255 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 				}
 			}
 		}
-		
+		cout << "\n***************************************\nSELECTING THE FOLLOWING CARD: \n" << *theCard;
+		p->exchange(d, theCard);
 		return theCard;
 		
 	}
+
+void chillPlayer::PlaceNewArmies(Player* p, int a, Map* m) {
+	Region* target = NULL;
+	int biggestThreat = 0;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			if ((p->getName() != r->getOwner())&&((r->checkCity(p))||r->checkStartingRegion(m))) {
+				int temp = 0;
+				for (pair<Player*, int> o : r->getPlayerArmies()) {
+					if (o.first != p)
+						temp += o.second;
+				}
+				if (temp > biggestThreat) {
+					biggestThreat = temp;
+					target = r;
+				}
+			}
+		}
+	}
+	if (target != NULL) {
+		
+		target->addArmies(p, a);
+	}
+	else {
+		for (Continent* c : m->getContinents()) {
+			for (Region* r : c->getRegions()) {
+				if ((r->checkCity(p))||(r->checkStartingRegion(m))) {
+					int temp = 0;
+					for (pair<Player*, int> o : r->getPlayerArmies()) {
+						if (o.first != p)
+							temp += o.second;
+					}
+					if (temp > biggestThreat) {
+						biggestThreat = temp;
+						target = r;
+					}
+				}
+				
+			}
+		}
+		target->addArmies(p, a);
+	}
+
+	
+}
 	
 	
 	
+void chillPlayer::MoveArmies(Player* p, int a, Map* m) {
 	
-void chillPlayer::MoveArmies(Player*, int, Map*) {}
-Region* chillPlayer::findTarget(Player*, Map*) {return new Region();}	
-void chillPlayer::DestroyArmy(Player*, Map*) {}
-int chillPlayer::safelyOwned(Player*, Region*) {return 0;}
-void chillPlayer::PlaceNewArmies(Player*, int, Map*) {}
-vector<Region*> chillPlayer::findPath(Player*, Map*, Region*) {return {};}
-void chillPlayer::BuildCity(Player*, Map*) {}
+	vector<Region*> start_and_move;
+	Region* target = findTarget(p, m);
+	int toMove = 0;
+	int maxMoves = 0;
+	bool tswitch = false;
+	while (a > 0) {
+		if (!tswitch)
+			target = findTarget(p, m);
+		start_and_move = findPath(p, m, target);
+		Region* start = start_and_move.at(0);
+		Region* move = start_and_move.at(1);
+		if ((start == NULL)||(safelyOwned(p, start) == 0)) {
+			cout << "\nPlayer does not have any armies available to move.\n" << endl;
+			a = 0;
+		}
+		 
+		else {
+			toMove = safelyOwned(p, start);
+			if (toMove > a) 
+				toMove = a;
+			
+			if (m->borderIsWater(start, move)) {
+				maxMoves = toMove/p->checkFlying();
+				toMove = (p->checkFlying()*maxMoves);
+				cout << "\nBorder between " << start->getId() << " and " << move->getId() << " is water, movement costs " << p->checkFlying() << " giving the player " << maxMoves << endl;
+			}
+			else 
+				maxMoves = toMove;
+			
+			
+			if (maxMoves == 0) {
+				tswitch = true;
+				target = m->getRegionById((target->getId()+1)%m->getNbRegions());
+				cout << "New target is Region #" << target->getId() << endl;
+			}
+			
+			else {
+				
+				
+				start->removeArmies(p, maxMoves);
+				move->addArmies(p, maxMoves);
+				cout << "\nMoving " << toMove << " armies from " << start->getName() << " to " << move->getName() << "...\n" << endl;
+				
+				a-=toMove;
+			}
+			
+		}
+		
+	}
+
+	
+}
+
+Region* chillPlayer::findTarget(Player* p, Map* m) {	
+	Region* target = NULL;
+	int weakestRegion = 100;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			if (p->getName() != r->getOwner()) {
+				int temp = 0;
+				for (pair<Player*, int> o : r->getPlayerArmies()) {
+					if (o.first != p)
+						temp += o.second;
+					else
+						temp -= o.second;
+				}
+				if (temp <= weakestRegion) {
+					weakestRegion = temp;
+					target = r;
+				}
+			}
+			else if (target == NULL)
+				target = r;
+		}
+	}
+	cout << "\n**************************************\nTarget Region is #" << target->getId() << endl;
+	return target;
+}	
+
+vector<Region*> chillPlayer::findPath(Player* p, Map* m, Region* r) {
+	
+	vector<Region*> visited;
+	list<vector<Region*>> tbv;
+	visited.push_back(r);
+	for (Continent* c : m->getContinents()) {
+		for (Region* q : c->getRegions()) {
+			if (m->areAdjacent(r, q))
+				tbv.push_back({q,r});
+		}
+	}
+	
+	while (!tbv.empty()) {
+		if ((safelyOwned(p, tbv.front().front())) > 0)
+			return tbv.front();
+		else {
+			for (Continent* c : m->getContinents()) {
+				for (Region* q : c->getRegions()) {
+					if (find(visited.begin(), visited.end(), q) == visited.end()) {
+						if (m->areAdjacent(tbv.front().front(), q))
+							tbv.push_back({q,tbv.front().front()});
+					}
+				}
+			}
+			visited.push_back(tbv.front().front());
+			tbv.pop_front();
+		}
+		
+		
+	}
+	cout << "\nNo valid armies to move, returning NULL" << endl;
+	return {NULL, NULL};
+
+}
+
+int chillPlayer::safelyOwned(Player* p, Region* r) {
+	int mover = 0;
+	int challenger = 0;
+	int ret = 0;
+	for (pair<Player*, int> o : r->getPlayerArmies()) {
+		if (o.first == p)
+			mover = o.second;
+		else if (o.second > challenger)
+			challenger = o.second;
+	}
+	if ((mover-challenger)>0)	
+		ret = mover-challenger;
+	else
+		ret = 0;
+	return ret;
+	
+}
+
+void chillPlayer::DestroyArmy(Player* p, Map* m) {
+	Region* toAttack = NULL;
+	Player* target;
+	int least = 100;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			if (r->canDestroy(p)) {
+				if (toAttack == NULL) {
+					toAttack = r;
+					for (pair<Player*, int> o : r->getPlayerArmies()) {
+						if ((o.first != p)&&(o.second > 0)&&(o.second < least))
+							target = o.first;
+					}
+				}
+				else {
+					for (pair<Player*, int> o : r->getPlayerArmies()) {
+						if ((o.first != p)&&(o.second > 0)&&(o.second < least)) {
+							target = o.first;
+							toAttack = r;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	toAttack->removeArmies(target, 1);
+
+}
+
+
+
+void chillPlayer::BuildCity(Player* p, Map* m) {
+	Region* toBuild = NULL;
+	int most = 0;
+	for (Continent* c : m->getContinents()) {
+		for (Region* r : c->getRegions()) {
+			int temp = 0;
+			for (pair<Player*, int> o : r->getPlayerArmies()) {
+				if (o.first != p)
+					temp += o.second;
+			}
+			if ((temp > most)&&!(r->checkCity(p))&&!(r->checkStartingRegion(m))) {
+				most = temp;
+				toBuild = r;
+			}
+			
+		}
+	}
+	if (toBuild == NULL) {
+		for (Continent* c : m->getContinents()) {
+			for (Region* r : c->getRegions()) {
+				if ((!r->checkCity(p))&&!(r->checkStartingRegion(m))) {
+					r->addCity(p);
+					return;
+				}
+			}
+		}
+	}
+	else 
+		toBuild->addCity(p);
+
+	
+}
 	

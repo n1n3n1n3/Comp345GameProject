@@ -90,31 +90,45 @@ void MainLoop::takeAction(Player* p, Card *c) {
 	for (int i = 0; i < looper; i++) {
 
 		if (orAction) {
-			int choice = 0;
-			cout << *c << endl;
-			cout << "\n***************************************\nWhich action would you like to take? (0 or 1, anything else for skip.) ->";
-			cin >> choice;
-		
-			if (choice == 1) {
-				first = third;
-				second = fourth;
+			if (p->getStrat() == "HUMAN") {
+				int choice = 0;
+				cout << *c << endl;
+				cout << "\n***************************************\nWhich action would you like to take? (0 or 1, anything else for skip.) ->";
+				cin >> choice;
+				
+				if (choice == 1) {
+					first = third;
+					second = fourth;
+				}
 			}
-		}
-		else {
+			else if (p->getStrat() == "AGRO") {
+				if ((third == 3)||(third == 2)) {
+					first = third;
+					second = fourth;
+				}
+				
+			}
 			
 		}
 		
+		
 		if (i == 1) {
-			int choice = 0;
-			cout << *c <<endl;
-			cout << "\n***************************************\nWould you like to take the second action? (0 for No, 1 for Yes) ->";
-			cin >> choice;
-			if (choice == 1) {
+			if (p->getStrat() == "HUMAN") {
+				int choice = 0;
+				cout << *c <<endl;
+				cout << "\n***************************************\nWould you like to take the second action? (0 for No, 1 for Yes) ->";
+				cin >> choice;
+				if (choice == 1) {
+					first = third;
+					second = fourth;
+				}
+				else
+					break;
+			}
+			else {
 				first = third;
 				second = fourth;
 			}
-			else
-				break;
 		}
 		map->printMap();
 		switch (first) {
@@ -160,7 +174,7 @@ void MainLoop::singleTurn(Player *p) {
 		cout << *c;
 	}
 	
-
+	cout << *deck;
 	
 	int St;
 	cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";

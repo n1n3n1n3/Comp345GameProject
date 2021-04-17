@@ -467,7 +467,7 @@ Deck::Deck(int nbPlayers){
 	if (nbPlayers >= 3) {
 		this->deckSize = 32;
 		cardDeck.push_back(new Card("Arcane Manticore", 'r', 1430, 2));
-		cardDeck.push_back(new Card("Arcane Sphinx", 'r', 1324, 3));
+		cardDeck.push_back(new Card("Arcane Sphinx", 'r', -1324, 3));
 		cardDeck.push_back(new Card("Arcane Temple", 'r', 23, 62));
 		cardDeck.push_back(new Card("Mountain Dwarf", 'm', 1230, 7326));
 		cardDeck.push_back(new Card("Mountain Treasury", 'm', 23, 4152));
@@ -475,7 +475,7 @@ Deck::Deck(int nbPlayers){
 	
 	if (nbPlayers == 4) {
 		this->deckSize = 34;
-		cardDeck.push_back(new Card("Castle", 'q', 1340, 41));
+		cardDeck.push_back(new Card("Castle", 'q', -1340, 41));
 		cardDeck.push_back(new Card("Castle 2", 'q', 2340, 41));
 	}
 	
