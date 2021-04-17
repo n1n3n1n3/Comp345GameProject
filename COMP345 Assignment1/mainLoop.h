@@ -22,6 +22,11 @@ private:
 	
 	friend std::ostream& operator<<(std::ostream&, const MainLoop&);
 	
+	//subject stuff
+	Card* currSubjectCard;
+	int currSubjectNbArmies;
+	int currSubjectCost;
+	
 public:
 	MainLoop();
 	MainLoop(vector<Player*> players, Deck* deck, Map* map);

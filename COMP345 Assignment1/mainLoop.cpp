@@ -142,6 +142,7 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				cout << "\n***************************************\nPlacing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
 				
 				p->PlaceNewArmies(num, map);
+				Notify();
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();

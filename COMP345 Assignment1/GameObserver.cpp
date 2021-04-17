@@ -47,7 +47,12 @@ void GameObserver::Update(){
 	showTurn();
 }
 
+//this function gives the user the option to display extra Information if desired
+
+void GameObserver::userDisplay(){
+	cout << currPlayer->getName() << " coins : " << currPlayer->getCoins() << " armies: " << currPlayer->getArmy()<< " cities: " << currPlayer->getCity() << endl;
+}
 void GameObserver::showTurn(){
+	currPlayer = ml->whoseTurn();
 	cout << "*************DISPLAY TURN ****************" << endl;
-	cout << ml->whoseTurn()->getName() << endl;
 }
