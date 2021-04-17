@@ -142,7 +142,10 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				cout << "\n***************************************\nPlacing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
 				
 				p->PlaceNewArmies(num, map);
-				Notify();
+				
+				//subject state elements
+				currSubjectState = "place";
+				currSubjectNbArmiesAdded = num;
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();
@@ -150,20 +153,32 @@ void MainLoop::takeAction(Player* p, Card *c) {
 				cout << "\n***************************************\nMoving " << second << " armies with a bonus of " << bonus << " for a total of " << num << ".\nMoving over water costs " << p->checkFlying() << " per Army.";
 				
 				p->MoveArmies(num, map);
+				
+				//subject state elements
+				currSubjectState = "move";
+				currSubjectNbArmiesMoved = num;
 				break;
 			case 3:
 				cout << "\n***************************************\nDestroying an army...";
-				
 				p->DestroyArmy(map);
+				
+				//subject state elements
+				currSubjectState = "destroy";
+				
 				break;
 			case 4:
 				cout << "\n***************************************\nBuilding a city...";
 				
 				p->BuildCity(map);
+				
+				//subject state elements
+				currSubjectState = "build";
+				
 				break;
 			default:
 				ret+= "\n***************************************\nInvalid...";
 		}
+//		Notify();
 	}
 	
 }
@@ -205,7 +220,8 @@ void MainLoop::singleTurn(Player *p) {
 	
 	//Player chooses the card they want from the hand
 	Card* theCard = p->selectCard(this->map, this->deck);
-	
+	currSubjectCard = theCard;
+	currSubjectCost = theCard->getCost();
 	//check Immune card
 	if (theCard->getGood() == 9)
 		map->setImmunePlayer(p);

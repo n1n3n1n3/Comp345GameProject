@@ -3,7 +3,7 @@
 #include "map.h"
 #include "gameStart.h"
 #include "GameStartUp.h"
-#include "GameObserver.h"
+#include "Subject.h"
 
 
 
@@ -23,8 +23,12 @@ private:
 	friend std::ostream& operator<<(std::ostream&, const MainLoop&);
 	
 	//subject stuff
+	string currSubjectState;
 	Card* currSubjectCard;
-	int currSubjectNbArmies;
+	int currSubjectNbArmiesAdded;
+	int currSubjectNbArmiesMoved;
+	pair<Player*, Region*> currSubjectDestroyedArmies;
+	Region* currCityBuild;
 	int currSubjectCost;
 	
 public:
