@@ -153,7 +153,7 @@ bool Region::checkCity(Player *p) {
 				return true;
 			}
 			else {
-				cout << "\nNo city for this player at this region";
+				//cout << "\nNo city for this player at this region" << endl;
 				return false;
 			}
 		}
@@ -181,6 +181,7 @@ void Region::removeArmies(Player* p, int nb){
 			}
 			else {
 				playerArmies.at(i).second = playerArmies.at(i).second - nb;
+				cout << "Removing " << nb << " armies from " << playerArmies.at(i).first->getName() << "..." << endl;
 			}
 		}
 	}

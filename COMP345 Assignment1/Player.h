@@ -77,7 +77,7 @@ public:
 	vector<Card*> getPlayerCards();
 	int getElixir();
 	void setStrat(int s);
-	Strategy* getStrat();
+	string getStrat();
 	
 	Bid* getBid();
 	

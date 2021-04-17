@@ -1,5 +1,5 @@
 #include <iostream>
-#pragma once
+
 #include <string>
 #include "PlayerStrategies.h"
 
@@ -63,6 +63,7 @@ void humanPlayer::PlaceNewArmies(Player* p, int a, Map* m) {
 	}
 	cout << "\n***************************************\nDone placing Armies!";
 }
+
 void humanPlayer::MoveArmies(Player* p, int a, Map* m) {
 	while (a > 0) {
 		bool valid = false;
@@ -187,9 +188,14 @@ void humanPlayer::DestroyArmy(Player* p, Map* m) {
 			}
 		}
 		
-	}
-	
+	}	
 }
+
+//HUMAN GARBAGE
+int humanPlayer::getPriority(Card* c) {return 0;}
+int humanPlayer::safelyOwned(Player* p, Region* r) {return 0;}
+Region* humanPlayer::findTarget(Player* p, Map* m) {return new Region();}
+vector<Region*> humanPlayer::findPath(Player*, Map* m, Region* r) {return {};}
 
 //PRIORITY SYSTEM//
 /*
@@ -207,8 +213,31 @@ Destroy Army & Build City - 2.
 
 Agro takes expensive ties, Chill takes cheap ties.
 
-
 */
+Strategy::Strategy() {
+	name = "NONE";
+}
+
+humanPlayer::humanPlayer() {
+	name = "HUMAN";
+}
+
+agroPlayer::agroPlayer() {
+	name = "AGRO";
+}
+
+chillPlayer::chillPlayer() {
+	name = "CHILL";
+}
+
+int agroPlayer::getPriority(Card *c) {
+	string a = c->getActionString();
+	if (((a.find("Place")) != string::npos)||((a.find("Move")) != string::npos))
+		return (2 + c->getCost());
+	else
+		return (0 + c->getCost());
+	
+}
 
 int agroPlayer::getPriority(Player* p, Card *c, Map* m) {
 	string a = c->getActionString();
@@ -230,7 +259,7 @@ Card* agroPlayer::chooseCard(Player *p, Map* m, Deck *d) {
 
 	for (int i = 1; i < handSize; i++) {
 		
-		if (this->getPriority(p, h->getCardByIndex(i), m) >= priority) {
+		if (this->getPriority(p, h->getCardByIndex(i), m) <= priority) {
 			if ((h->getCardByIndex(i)->getCost()) <= p->getCoins()) {
 				
 				priority = this->getPriority(p, h->getCardByIndex(i), m);
@@ -239,7 +268,8 @@ Card* agroPlayer::chooseCard(Player *p, Map* m, Deck *d) {
 			}
 		}
 	}
-			
+	cout << "\n***************************************\nSELECTING THE FOLLOWING CARD: \n" << *theCard;
+	p->exchange(d, theCard);
 	return theCard;
 
 }
@@ -286,10 +316,15 @@ Region* agroPlayer::findTarget(Player* p, Map *m) {
 
 vector<Region*> agroPlayer::findPath(Player* p, Map* m, Region* r) {
 	vector<Region*> visited;
+	vector<Region*> ret;
 	for (Continent* c : m->getContinents()) {
 		for (Region* q : c->getRegions()) {
-			if ((m->areAdjacent(q, r))&&(safelyOwned(p, q) > 0))
-				return {q, r};
+			if ((m->areAdjacent(q, r))&&(safelyOwned(p, q) > 0)) {
+				ret.push_back(q);
+				ret.push_back(r);
+				return ret;
+			}
+				
 			else if (m->areAdjacent(q, r))
 				visited.push_back(q);
 		}
@@ -301,16 +336,26 @@ vector<Region*> agroPlayer::findPath(Player* p, Map* m, Region* r) {
 		for (Continent* c : m->getContinents()) {
 			for (Region* s : c->getRegions()) {
 				if (find(visited.begin(), visited.end(), s) == visited.end()) {
-					if ((m->areAdjacent(q, s))&&(safelyOwned(p, q) > 0)) 
-						return {s, q};
+					if ((m->areAdjacent(q, s))&&(safelyOwned(p, q) > 0)) {
+						ret.push_back(q);
+						ret.push_back(s);
+						cout << "\nReturning a path.";
+						return ret;
+					}
 					else if (m->areAdjacent(s, q))
+						cout << "\nAdding to visited, visited size is " << visited.size();
 						visited.push_back(s);
 					}
 				}	
 			}
 		}
-		if (visited.size() >= m->getNbRegions())
-			return {NULL, NULL};
+		if (visited.size() >= m->getNbRegions()) {
+			ret.push_back(NULL);
+			ret.push_back(NULL);
+			cout << "\nReturning NULL path.";
+			return ret;
+		}
+			
 	}
 }
 
@@ -336,7 +381,7 @@ void agroPlayer::PlaceNewArmies(Player* p, int a, Map* m) {
 		}
 	}
 	if (target != NULL) {
-		cout << "Adding " << a << " armies to " << target->getName() << endl; 
+		 
 		target->addArmies(p, a);
 	}
 	else {
@@ -404,7 +449,7 @@ void agroPlayer::BuildCity(Player* p, Map* m) {
 				if (o.first != p)
 					temp += o.second;
 			}
-			if ((temp > most)&&!(r->checkCity(p))) {
+			if ((temp > most)&&!(r->checkCity(p))&&!(r->checkStartingRegion(m))) {
 				most = temp;
 				toBuild = r;
 			}
@@ -414,7 +459,7 @@ void agroPlayer::BuildCity(Player* p, Map* m) {
 	if (toBuild == NULL) {
 		for (Continent* c : m->getContinents()) {
 			for (Region* r : c->getRegions()) {
-				if (!r->checkCity(p)) {
+				if ((!r->checkCity(p))&&!(r->checkStartingRegion(m))) {
 					r->addCity(p);
 					return;
 				}
@@ -481,7 +526,7 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 		
 		for (int i = 1; i < handSize; i++) {
 			
-			if ((this->getPriority(h->getCardByIndex(i))) > priority) {
+			if ((this->getPriority(h->getCardByIndex(i))) < priority) {
 				if ((h->getCardByIndex(i)->getCost()) <= p->getCoins()) {
 					priority = this->getPriority(h->getCardByIndex(i));
 					theCard = h->getCardByIndex(i);
@@ -494,4 +539,13 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 	}
 	
 	
+	
+	
+void chillPlayer::MoveArmies(Player*, int, Map*) {}
+Region* chillPlayer::findTarget(Player*, Map*) {return new Region();}	
+void chillPlayer::DestroyArmy(Player*, Map*) {}
+int chillPlayer::safelyOwned(Player*, Region*) {return 0;}
+void chillPlayer::PlaceNewArmies(Player*, int, Map*) {}
+vector<Region*> chillPlayer::findPath(Player*, Map*, Region*) {return {};}
+void chillPlayer::BuildCity(Player*, Map*) {}
 	

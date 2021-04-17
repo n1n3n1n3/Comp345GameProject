@@ -1,5 +1,4 @@
 #include <iostream>
-#pragma once
 #include <string>
 #include <vector>
 #include "Player.h"
@@ -28,6 +27,7 @@ Player::Player(string name){
 	this->id = ++nextID;
 	this->name = name;
 	this->bid = new Bid(name);
+	setStrat(0);
 }
 
 Player::Player(int c, string name){
@@ -124,8 +124,18 @@ std::string Player::getName(){
 }
 
 void Player::setStrat(int s) {
-	//if (s == 0)
-		// = new agroPlayer();
+	
+	
+	if (s == 0)
+		this->strat = new humanPlayer();
+	else if (s == 1)
+		this->strat = new agroPlayer();
+	else
+		this->strat = new chillPlayer();
+}
+
+string Player::getStrat() {
+	return this->strat->name;
 }
 
 
