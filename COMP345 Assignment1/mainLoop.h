@@ -35,7 +35,7 @@ public:
 	
 	void singleTurn(Player* p);
 	
-	void playGame();
+	Player* playGame();
 	
 	Player* determineWinner();
 	

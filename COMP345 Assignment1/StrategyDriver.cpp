@@ -14,9 +14,9 @@ int main() {
 	//	vector<Player*> players= GameStart::setPlayers();
 	
 	vector<Player*> players;
-	players.push_back(new Player("MAËLLE"));
-	players.push_back(new Player("SIMON"));
-	//part two is already done in gameStart
+	players.push_back(new Player("KIPPER"));
+	players.push_back(new Player("FERRIS"));
+
 	players = GameStart::setPlayers(players);
 	
 	

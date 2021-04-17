@@ -178,7 +178,7 @@ void MainLoop::singleTurn(Player *p) {
 	
 	int St;
 	cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";
-	cin >> St;
+	//cin >> St;
 	
 	
 	
@@ -211,7 +211,7 @@ void MainLoop::singleTurn(Player *p) {
 		cout << "\n***************************************\n...Turn Over...\n***************************************\n\n";
 }
 
-void MainLoop::playGame() {
+Player* MainLoop::playGame() {
 	
 	//Welcome message
 	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
@@ -234,6 +234,7 @@ void MainLoop::playGame() {
 	cout << "\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	
 	cout << "\n\n...............\n.......Goodbye for now.......\n...............";
+	return theWinner;
 }
 
 Player* MainLoop::determineWinner() {

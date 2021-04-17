@@ -247,7 +247,7 @@ int agroPlayer::getPriority(Player* p, Card *c, Map* m) {
 	else if (a.find("Build") != string::npos)
 		return (0 + c->getCost());
 	else
-		return (2 + c->getCost());
+		return (1 + c->getCost());
 	
 }
 
@@ -285,10 +285,11 @@ int agroPlayer::safelyOwned(Player *p, Region *r) {
 		else if (o.second > challenger)
 			challenger = o.second;
 		}
-	if ((mover-challenger)>0)	
+	/*if ((mover-challenger)>0)	
 		ret = mover-challenger;
 	else
-		ret = mover;
+		ret = 0;*/
+	ret = mover;
 	return ret;
 }
 	
@@ -306,8 +307,8 @@ Region* agroPlayer::findTarget(Player* p, Map *m) {
 				for (pair<Player*, int> o : r->getPlayerArmies()) {
 					if (o.first != p)
 						temp += o.second;
-					else
-						temp -= o.second;
+					//else
+						//temp -= o.second;
 				}
 				if (temp <= weakestRegion) {
 					weakestRegion = temp;
@@ -563,9 +564,11 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 void chillPlayer::PlaceNewArmies(Player* p, int a, Map* m) {
 	Region* target = NULL;
 	int biggestThreat = 0;
+	cout << "\nPlacing " << a << " armies..." << endl;
 	for (Continent* c : m->getContinents()) {
 		for (Region* r : c->getRegions()) {
 			if ((p->getName() != r->getOwner())&&((r->checkCity(p))||r->checkStartingRegion(m))) {
+				cout << "\n" << p->getName() << " has a city on Region #" << r->getId() << endl;
 				int temp = 0;
 				for (pair<Player*, int> o : r->getPlayerArmies()) {
 					if (o.first != p)
@@ -579,22 +582,23 @@ void chillPlayer::PlaceNewArmies(Player* p, int a, Map* m) {
 		}
 	}
 	if (target != NULL) {
-		
 		target->addArmies(p, a);
 	}
 	else {
+		cout << "\nNo initial target..." << endl;
 		for (Continent* c : m->getContinents()) {
 			for (Region* r : c->getRegions()) {
 				if ((r->checkCity(p))||(r->checkStartingRegion(m))) {
+					cout << "\n" << p->getName() << " can place on Region #" << r->getId() << endl;
 					int temp = 0;
-					for (pair<Player*, int> o : r->getPlayerArmies()) {
+					/*for (pair<Player*, int> o : r->getPlayerArmies()) {
 						if (o.first != p)
 							temp += o.second;
 					}
 					if (temp > biggestThreat) {
-						biggestThreat = temp;
+						biggestThreat = temp;*/
 						target = r;
-					}
+					//}
 				}
 				
 			}
@@ -621,7 +625,7 @@ void chillPlayer::MoveArmies(Player* p, int a, Map* m) {
 		Region* start = start_and_move.at(0);
 		Region* move = start_and_move.at(1);
 		if ((start == NULL)||(safelyOwned(p, start) == 0)) {
-			cout << "\nPlayer does not have any armies available to move.\n" << endl;
+		//	cout << "\nPlayer does not have any armies available to move.\n" << endl;
 			a = 0;
 		}
 		 
@@ -633,7 +637,7 @@ void chillPlayer::MoveArmies(Player* p, int a, Map* m) {
 			if (m->borderIsWater(start, move)) {
 				maxMoves = toMove/p->checkFlying();
 				toMove = (p->checkFlying()*maxMoves);
-				cout << "\nBorder between " << start->getId() << " and " << move->getId() << " is water, movement costs " << p->checkFlying() << " giving the player " << maxMoves << endl;
+				//cout << "\nBorder between " << start->getId() << " and " << move->getId() << " is water, movement costs " << p->checkFlying() << " giving the player " << maxMoves << endl;
 			}
 			else 
 				maxMoves = toMove;
@@ -642,7 +646,7 @@ void chillPlayer::MoveArmies(Player* p, int a, Map* m) {
 			if (maxMoves == 0) {
 				tswitch = true;
 				target = m->getRegionById((target->getId()+1)%m->getNbRegions());
-				cout << "New target is Region #" << target->getId() << endl;
+			//	cout << "New target is Region #" << target->getId() << endl;
 			}
 			
 			else {
