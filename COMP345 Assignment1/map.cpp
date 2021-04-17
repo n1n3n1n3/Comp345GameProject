@@ -595,7 +595,7 @@ bool Map::areAdjacent(Region* r1, Region* r2){
 
 	//search amoungst the borders if a border contains both elements
 	for(vector<int> b: this->borders){
-		if (std::find(b.begin(), b.end(), id1) != b.end() && std::find(b.begin(), b.end(), id2) != b.end()){
+		if (std::find(b.begin()+1, b.end(), id1) != b.end() && std::find(b.begin()+1, b.end(), id2) != b.end()){
 			return true;
 		}
 	}
@@ -663,26 +663,50 @@ void Map :: loadRegions(vector<vector<string>> listRegions){
 
 void Map::determineStartingRegion(){
 	cout << "\n+++ determining starting region +++" << endl;
-	//	get the continent that is connected to more than one region
-	Region* r;
+	//	find regions that have a water connection
+	vector<Region*> possibleRegions;
+	vector<Region*> finale;
 	for(Continent* c: continents){
-		if (c->getNbConnectedContinents() > 1){
-			{
-				srand(time(0));
-				int select = rand() % c->getNbRegions();
-				vector<int> listOfRegionIds = c->getListOfRegionId();
-				r = c->getRegionById(listOfRegionIds.at(select));
-				while (!connectedToOtherContinent(r)){
-					srand(time(0));
-					int select = rand() % c->getNbRegions();
-					vector<int> listOfRegionIds = c->getListOfRegionId();
-					r = c->getRegionById(listOfRegionIds.at(select));
+		for (Region* r: c->getRegions()) {
+			for(Continent* b: continents){
+				for (Region* q: b->getRegions()) {
+					if (borderIsWater(r, q)) {
+						if (find(possibleRegions.begin(), possibleRegions.end(), r) == possibleRegions.end()) {
+							possibleRegions.push_back(r);
+						}
+						if (find(possibleRegions.begin(), possibleRegions.end(), q) == possibleRegions.end()) {
+							possibleRegions.push_back(q);
+						}
+					}
 				}
-				cout << "    starting region is " << r->getName() << "!\n++++++++++++++++++++++++++++++++++" << endl;
-				setStartingRegion(r);
+				
 			}
 		}
 	}
+	
+	for (Region* r: possibleRegions) {
+		for(Continent* b: continents) {
+			for (Region* q: b->getRegions()) {
+				if (areAdjacent(r, q)) {
+					for(Continent* c: continents) {
+						for (Region* s: c->getRegions()) {
+							if ((s != r)&&(borderIsWater(q, s)))
+								finale.push_back(r);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+			
+	srand(time(0));
+	int select = rand() % finale.size();
+	
+	setStartingRegion(finale.at(select));
+			
+		
+	
 }
 
 bool Map::connectedToOtherContinent(Region* r){
@@ -704,14 +728,18 @@ bool Map::connectedToOtherContinent(Region* r){
 }
 
 bool Map::borderIsWater(Region* r1, Region* r2){
-	for (vector<int> border: this->borders){
-		if ((border.at(1) == r1->getId() && border.at(2) == r1->getId()) || (border.at(1) == r1->getId() && border.at(2) == r1->getId())){
-			if (border.at(0) == 1){
+	int id1 = r1->getId();
+	int id2 = r2->getId();
+	
+	//search amoungst the borders if a border contains both elements
+	for(vector<int> b: this->borders){
+		if (std::find(b.begin()+1, b.end(), id1) != b.end() && std::find(b.begin()+1, b.end(), id2) != b.end()){
+			if (b.front() == 1)
 				return true;
-			}
 		}
 	}
 	return false;
+	
 }
 
 //function to load borders to map from file

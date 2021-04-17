@@ -160,9 +160,13 @@ void MainLoop::singleTurn(Player *p) {
 		cout << *c;
 	}
 	
+
+	
 	int St;
 	cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";
 	cin >> St;
+	
+	
 	
 	if (St == 0) {
 		while (true) {

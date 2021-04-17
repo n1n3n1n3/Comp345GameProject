@@ -1,20 +1,41 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <random>
+#include "PlayerStrategies.h"
+#include "mainLoop.h"
+#include "GameStartUp.h"
 
 using namespace std;
 int main(int argc, char *argv[]) {
 	
 	
-	vector<int> x;
-	x.assign({1,2,3,4,5});
-	for (int i : x) {
-		cout << i << endl;
+	Map* map = GameStart::selectMap("./maps/BirdsL.map");
 	
+	vector<Player*> players;
+	players.push_back(new Player("MAËLLE"));
+	players.push_back(new Player("SIMON"));
+	//part two is already done in gameStart
+	players = GameStart::setPlayers(players);
+	
+	
+	GameStartUp::setPlayerPieces(players, map);
+	
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(1, 20);
+	
+	int index[10];
+	for (int i = 0; i < 10; i++) {
+		index[i] = distr(gen);
+		cout << index[i] << endl;
 	}
 	
-	int temp = x.at(0);
-	x.at(0) = 3;
-	cout << x.size();
+	
+	GameStartUp::placeInitialPieces(players, map, index);
+	map->printMap();
+	players.at(0)->setStrat(1);
+	players.at(0)->MoveArmies(2, map);
+	
 	
 }

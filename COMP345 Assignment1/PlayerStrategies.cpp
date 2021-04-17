@@ -1,5 +1,6 @@
 #include <iostream>
-
+#include <algorithm>
+#include <list>
 #include <string>
 #include "PlayerStrategies.h"
 
@@ -275,25 +276,29 @@ Card* agroPlayer::chooseCard(Player *p, Map* m, Deck *d) {
 }
 
 int agroPlayer::safelyOwned(Player *p, Region *r) {
-	int owner = 0;
+	int mover = 0;
 	int challenger = 0;
-	if (r->getOwner() != p->getName())
-		return 0;
-	else {
-		for (pair<Player*, int> o : r->getPlayerArmies()) {
-			if (o.first == p)
-				owner = o.second;
-			else if (o.second > challenger)
-				challenger = o.second;
+	int ret = 0;
+	for (pair<Player*, int> o : r->getPlayerArmies()) {
+		if (o.first == p)
+			mover = o.second;
+		else if (o.second > challenger)
+			challenger = o.second;
 		}
-		return (owner - challenger)-1;
+	if ((mover-challenger)>0)	
+		ret = mover-challenger;
+	else
+		ret = mover;
+	return ret;
 	}
-}
+	
+	
+
 
 
 Region* agroPlayer::findTarget(Player* p, Map *m) {
 	Region* target = NULL;
-	int biggestThreat = 0;
+	int weakestRegion = 100;
 	for (Continent* c : m->getContinents()) {
 		for (Region* r : c->getRegions()) {
 			if (p->getName() != r->getOwner()) {
@@ -301,9 +306,11 @@ Region* agroPlayer::findTarget(Player* p, Map *m) {
 				for (pair<Player*, int> o : r->getPlayerArmies()) {
 					if (o.first != p)
 						temp += o.second;
+					else
+						temp -= o.second;
 				}
-				if (temp > biggestThreat) {
-					biggestThreat = temp;
+				if (temp <= weakestRegion) {
+					weakestRegion = temp;
 					target = r;
 				}
 			}
@@ -311,52 +318,42 @@ Region* agroPlayer::findTarget(Player* p, Map *m) {
 				target = r;
 		}
 	}
+	cout << "\n**************************************\nTarget Region is #" << target->getId() << endl;
 	return target;
 }
 
 vector<Region*> agroPlayer::findPath(Player* p, Map* m, Region* r) {
 	vector<Region*> visited;
-	vector<Region*> ret;
+	list<vector<Region*>> tbv;
+	visited.push_back(r);
 	for (Continent* c : m->getContinents()) {
 		for (Region* q : c->getRegions()) {
-			if ((m->areAdjacent(q, r))&&(safelyOwned(p, q) > 0)) {
-				ret.push_back(q);
-				ret.push_back(r);
-				return ret;
-			}
-				
-			else if (m->areAdjacent(q, r))
-				visited.push_back(q);
+			if (m->areAdjacent(r, q))
+				tbv.push_back({q,r});
 		}
 	}
 	
-	
-	while (true) {
-	for (Region* q : visited) {
-		for (Continent* c : m->getContinents()) {
-			for (Region* s : c->getRegions()) {
-				if (find(visited.begin(), visited.end(), s) == visited.end()) {
-					if ((m->areAdjacent(q, s))&&(safelyOwned(p, q) > 0)) {
-						ret.push_back(q);
-						ret.push_back(s);
-						cout << "\nReturning a path.";
-						return ret;
+	while (!tbv.empty()) {
+		if ((safelyOwned(p, tbv.front().front())) > 0)
+			return tbv.front();
+		else {
+			for (Continent* c : m->getContinents()) {
+				for (Region* q : c->getRegions()) {
+					if (find(visited.begin(), visited.end(), q) == visited.end()) {
+						if (m->areAdjacent(tbv.front().front(), q))
+							tbv.push_back({q,tbv.front().front()});
 					}
-					else if (m->areAdjacent(s, q))
-						cout << "\nAdding to visited, visited size is " << visited.size();
-						visited.push_back(s);
-					}
-				}	
+				}
 			}
+			visited.push_back(tbv.front().front());
+			tbv.pop_front();
 		}
-		if (visited.size() >= m->getNbRegions()) {
-			ret.push_back(NULL);
-			ret.push_back(NULL);
-			cout << "\nReturning NULL path.";
-			return ret;
-		}
-			
+		
+		
 	}
+	cout << "\nNo valid armies to move, returning NULL" << endl;
+	return {NULL, NULL};
+	
 }
 
 
@@ -417,21 +414,34 @@ void agroPlayer::MoveArmies(Player* p, int a, Map* m) {
 		start_and_move = findPath(p, m, target);
 		Region* start = start_and_move.at(0);
 		Region* move = start_and_move.at(1);
-		if (start == NULL)
+		if (start == NULL) {
 			cout << "\nPlayer does not have any armies available to move.\n" << endl;
+			a = 0;
+		}
 		else {
 			toMove = safelyOwned(p, start);
-			if (m->borderIsWater(start, move))
-				toMove = toMove/p->checkFlying();
-			
 			if (toMove > a) 
 				toMove = a;
-				
-			start->removeArmies(p, toMove);
-			move->addArmies(p, toMove);
-			cout << "\nMoving " << toMove << " armies from " << start->getName() << " to " << move->getName() << "...\n" << endl;
 			
-			a-=toMove;
+			if (m->borderIsWater(start, move)) {
+				toMove = toMove/p->checkFlying();
+				cout << "\nBorder between " << start->getId() << " and " << move->getId() << " is water, movement costs " << p->checkFlying() << " giving the player " << toMove << endl;
+			}
+			
+			if (toMove == 0) {
+				target = m->getRegionById((target->getId()+1)%m->getNbRegions());
+				cout << "New target is Region #" << target->getId() << endl;
+			}
+			
+			else {
+				
+				
+				start->removeArmies(p, toMove);
+				move->addArmies(p, toMove);
+				cout << "\nMoving " << toMove << " armies from " << start->getName() << " to " << move->getName() << "...\n" << endl;
+				
+				a-=toMove;
+			}
 			
 		}
 		

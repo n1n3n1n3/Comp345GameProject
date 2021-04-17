@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include "PlayerStrategies.h"
 #include "mainLoop.h"
 #include "GameStartUp.h"
@@ -28,7 +29,18 @@ int main() {
 	
 	
 	//	GameStartUp::placeInitialPieces(players, map);
-	int index[10] = {13,9,4,8,8,7,3,15,14,11};
+	
+	
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(1, 20);
+	
+	int index[10];
+	for (int i = 0; i < 10; i++) {
+		index[i] = distr(gen);
+		cout << index[i] << endl;
+	}
+
 	GameStartUp::placeInitialPieces(players, map, index);
 	players.erase(players.begin()+2);
 	Player* startingPlayer = GameStartUp::makeBids(players);
