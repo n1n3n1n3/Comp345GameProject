@@ -50,6 +50,7 @@ public:
 	bool canDestroy(Player* p);
 	int getId();
 	string getName();
+	int getTotalArmies();
 	int getNbArmiesByName(string name);
 	int getNbArmiesByPlayer(Player* p);
 	string getContinent() const;
@@ -191,6 +192,7 @@ public:
 	vector<Region*> getPlayersRegions(Player* p);
 	int getPlayersTotalNbRegions(Player* p);
 	int getPlayersTotalNbArmies(Player* p);
+	int getPlayerTotalCities(Player* p);
 	int getPlayersRegionsByContinent(Player* p, Continent* c);
 	int getPlayersNbOfCities(Player* p);
 	vector<Region*> getPlayerCities(Player* p);

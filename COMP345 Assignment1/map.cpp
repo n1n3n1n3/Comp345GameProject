@@ -187,6 +187,14 @@ void Region::removeArmies(Player* p, int nb){
 	this->determineOwner();
 }
 
+int Region::getTotalArmies(){
+	int nbArmies = 0;
+	for (pair<Player*, int> p: playerArmies){
+		nbArmies += p.second;
+	}
+	return nbArmies;
+}
+
 int Region::getNbArmiesByName(string name){
 	for(pair<Player*, int> p: playerArmies){
 		if((p.first->getName().compare(name)) == 0){
@@ -970,7 +978,6 @@ vector<pair<Player*, int>> Map::compareTotalNumberOfRegionsByContinent(Continent
 }
 
 vector<Region*> Map::getPlayerCities(Player* p){
-//	bool checkCity(Player* p);
 	vector<Region*> playersCities = vector<Region*>();
 	
 	for (Continent* c : continents){
@@ -982,6 +989,19 @@ vector<Region*> Map::getPlayerCities(Player* p){
 	}
 	
 	return playersCities;
+}
+
+int Map::getPlayerTotalCities(Player* p){
+	int nbCities;
+	
+	for (Continent* c : continents){
+		for (Region* r : c->getRegions()){
+			if(r->checkCity(p)){
+				nbCities++;			}
+		}
+	}
+	
+	return nbCities;
 }
 
 int Map::getPlayersTotalNbArmies(Player* p){

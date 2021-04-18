@@ -64,7 +64,7 @@ void GameObserver::displayGame(){
 					i++;
 				}
 				
-				cout << "\n ~~~ End of Hand ~~~ \n" << endl;
+				cout << "\n\n ~~~ End of Hand ~~~ \n" << endl;
 				
 				if (viewOn){
 					getUserInput();
@@ -90,7 +90,7 @@ void GameObserver::displayGame(){
 			break;
 		
 		case Destroy:
-			cout << "*** OBSERVER :: DESTROYING ARMIES ***" << endl;
+			cout << "*** ACTION :: DESTROY ARMIES ***" << endl;
 			cout << "Player:: " << *(ml->getCurrPlayer());
 			if (viewOn){
 				getUserInput();
@@ -98,8 +98,9 @@ void GameObserver::displayGame(){
 			break;
 		
 		case Build:
-			cout << "*** OBSERVER :: BUILDING CITY ***" << endl;
+			cout << "*** ACTION :: BUILD A CITY ***" << endl;
 			cout << "Player:: " << *(ml->getCurrPlayer());
+			cout << "Player gets to build a city on any given region in the map" << endl;
 			if (viewOn){
 				getUserInput();
 			}
@@ -118,17 +119,18 @@ void GameObserver::displayGame(){
 void GameObserver::viewStatistics(){
 	if (viewOn){
 	char answer;
-	cout << "would you like to view more game statistics (y) ?";
+	cout << "would you like to view more game statistics (y) (n)?";
 	cin >> answer;
 	if (answer == 'y'){
 		getUserInput();
 	}
 	}
 }
+
 void GameObserver::getUserInput(){
 	int entry = 0;
 		cout << "would you like to see any of the following :" << endl;
-		cout << "(0) global assets (current victory points, regions owned, continents, cities)" << endl;
+		cout << "(0) global assets (regions owned, continents, cities)" << endl;
 		cout << "(1) all your owned regions" << endl;
 		cout << "(2) your armies on all regions" << endl;
 		cout << "(3) your cities" << endl;
@@ -158,7 +160,9 @@ void GameObserver::getUserInput(){
 			default:
 				break;
 		}
+	if (entry != 6){
 		viewStatistics();
+	}
 }
 
 void GameObserver::displayGlobalPlayerAssets(){
@@ -229,5 +233,87 @@ void GameObserver::displayPlayerVictoryPoints(){
 }
 
 void GameObserver::displayGameStatistics(){
+	char playerSymbols[4] = {'*', 'x', 'o', '+'};
+	vector<Player*> players = ml->getPlayers();
+	
 	cout << "*** DISPLAYING ENTIRE GAME STATISTICS ***" << endl;
+	
+	//show the symbols for the graphs
+	cout << "player symbols::" << endl;
+	for (int i = 0 ; i < players.size(); i++){
+		cout << players.at(i)->getName() << " :: " << playerSymbols[i] << endl;
+	}
+	
+	cout << "]\n\n";
+	for (Player* p : players){
+		cout << p->getName() << ": " << ml->getMap()->getPlayersTotalNbArmies(p) << "    ";
+	}
+	cout << "\n";
+	
+	cout << "\nCITIES :: " << endl;
+	int nbCities;
+	cout << "[";
+	for (int i = 0; i < players.size(); i++){
+		nbCities = ml->getMap()->getPlayerTotalCities(players.at(i));
+		for (int j = 0; j < nbCities; j++){
+			cout << playerSymbols[i];
+		}
+	}
+	cout << "]\n\n";
+	
+	for (Player* p : players){
+		cout << p->getName() << ": " << ml->getMap()->getPlayerTotalCities(p) << "    ";
+	}
+	cout << "\n";
+	vector<Region*> cities = vector<Region*>();
+	for (Player* p : players){
+		vector<Region*> cities = ml->getMap()->getPlayerCities(currPlayer);		
+		if (cities.size() == 0){
+			cout << p->getName() << " has no cities" << endl;
+		}
+		else {
+			cout << p->getName() << " :";
+			for (Region* r : cities){
+				cout << r->getName() << ", " ;
+			}
+			cout << "\n";
+		}
+	}
+	
+	cout << "\nTOTAL ARMIES :: ";
+	int nbArmies;
+	cout << "[";
+	for (int i = 0; i < players.size(); i++){
+		nbArmies = ml->getMap()->getPlayersTotalNbArmies(players.at(i));
+		for (int j = 0; j < nbArmies; j++){
+			cout << playerSymbols[i];
+		}
+	}
+	
+	cout << "]\n ARMIES BY REGION :: ";
+		for (Continent* c : ml->getMap()->getContinents()){
+			for (Region* r : c->getRegions()){
+				if (r->getTotalArmies() > 0){
+				cout << r->getName() << "   [";
+				for (int i = 0; i < players.size(); i++){
+				for(int j = 0; j < r->getNbArmiesByPlayer(players.at(i)); j++){
+					cout << playerSymbols[i];
+				}
+			}
+			cout << "]   region owner: " << r->getOwner() << "\n";	
+		
+				}
+			}
+	}
+
+	cout << "\n CONTINENT CONTROL:: \n";
+	for (Continent* c : ml->getMap()->getContinents()){
+		cout << c->getName() << "[";
+		for (int i = 0; i < players.size(); i++){
+			for (int j = 0; j < ml->getMap()->getPlayersRegionsByContinent(players.at(i), c); j++){
+				cout << playerSymbols[i];
+			}
+		}
+		cout << "]" << endl;
+	}
 }
