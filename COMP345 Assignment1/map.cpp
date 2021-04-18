@@ -194,7 +194,7 @@ int Region::getNbArmiesByName(string name){
 		}
 	}
 	
-	cout << "no such player" << endl;
+	cout << "no such player in this region" << endl;
 	//return 0 if there is no such player
 	return 0;
 }
@@ -206,7 +206,7 @@ int Region::getNbArmiesByPlayer(Player* p){
 		}
 	}
 	
-	cout << "no such player" << endl;
+	cout << "no such player in this region" << endl;
 	//return 0 if there is no such player
 	return 0;
 }
@@ -969,3 +969,27 @@ vector<pair<Player*, int>> Map::compareTotalNumberOfRegionsByContinent(Continent
 	return playersTotalRegions;
 }
 
+vector<Region*> Map::getPlayerCities(Player* p){
+//	bool checkCity(Player* p);
+	vector<Region*> playersCities = vector<Region*>();
+	
+	for (Continent* c : continents){
+		for (Region* r : c->getRegions()){
+			if(r->checkCity(p)){
+				playersCities.push_back(r);
+			}
+		}
+	}
+	
+	return playersCities;
+}
+
+int Map::getPlayersTotalNbArmies(Player* p){
+	int nbArmies = 0;
+	for (Continent* c: continents){
+		for (Region* r : c->getRegions()){
+			nbArmies += r->getNbArmiesByPlayer(p);
+		}
+	}
+	return nbArmies;
+}

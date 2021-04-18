@@ -50,9 +50,9 @@ void GameObserver::displayGame(){
 		
 		case GetCard:
 			{
-				cout << "\n*** OBSERVER :: GETTING CARD ***" << endl;
+				cout << "\n\n*** OBSERVER :: GETTING CARD ***" << endl;
 				cout << "Player:: " << *(ml->getCurrPlayer());
-				cout << "~~~ Current Hand (scroll up for details) ~~~ " << endl;
+				cout << "\n~~~ Current Hand (scroll up for details) ~~~ \n" << endl;
 				int i = 0;
 				for (Card* c : ml->getCurrHand()->getCards()){
 					cout << "(" << i << ") [" << c->getName() << " | cost: " << c->getCost() << "]  ";
@@ -64,6 +64,11 @@ void GameObserver::displayGame(){
 					i++;
 				}
 				
+				cout << "\n ~~~ End of Hand ~~~ \n" << endl;
+				
+				if (viewOn){
+					getUserInput();
+				}
 				break;
 			}
 		case Place:
@@ -71,21 +76,33 @@ void GameObserver::displayGame(){
 			cout << "Player:: " << *(ml->getCurrPlayer());
 			cout << "\n***************************************\nPlacing " << ml->getActionNbArmies() << " armies with a bonus of " << ml->getActionNbArmiesBonus() << " for a total of " << ml->getActionNbArmies() + ml->getActionNbArmiesBonus() << endl;
 			cout << "Starting region: (" <<  ml->getStartingRegion()->getId() << ") " << ml->getStartingRegion()->getName()<< endl; 
+			if (viewOn){
+				getUserInput();
+			}
 			break;
 		
 		case Move:
 			cout << "*** OBSERVER :: MOVING ARMIES ***" << endl;
 			cout << "\n***************************************\nMoving " << ml->getActionNbArmies() << " armies with a bonus of " << ml->getActionNbArmiesBonus() << " for a total of " << ml->getActionNbArmies() + ml->getActionNbArmiesBonus() << endl;
+			if (viewOn){
+				getUserInput();
+			}
 			break;
 		
 		case Destroy:
 			cout << "*** OBSERVER :: DESTROYING ARMIES ***" << endl;
 			cout << "Player:: " << *(ml->getCurrPlayer());
+			if (viewOn){
+				getUserInput();
+			}
 			break;
 		
 		case Build:
 			cout << "*** OBSERVER :: BUILDING CITY ***" << endl;
 			cout << "Player:: " << *(ml->getCurrPlayer());
+			if (viewOn){
+				getUserInput();
+			}
 			break;
 		
 		case CountingScore: 
@@ -101,7 +118,7 @@ void GameObserver::displayGame(){
 void GameObserver::viewStatistics(){
 	if (viewOn){
 	char answer;
-	cout << "would you like to view game statistics (y) ?";
+	cout << "would you like to view more game statistics (y) ?";
 	cin >> answer;
 	if (answer == 'y'){
 		getUserInput();
@@ -117,7 +134,7 @@ void GameObserver::getUserInput(){
 		cout << "(3) your cities" << endl;
 		cout << "(4) your current victory points" << endl;
 		cout << "(5) global game statistics " << endl;
-		cout << "(*) enter any other character to exit" << endl;
+		cout << "(6) Nope" << endl;
 		cin >> entry;
 		
 		switch(entry){
@@ -145,36 +162,70 @@ void GameObserver::getUserInput(){
 }
 
 void GameObserver::displayGlobalPlayerAssets(){
-	cout << " *** GLOBAL [" << currPlayer->getName() << "] ASSETS" << endl;
 	currPlayer = ml->getCurrPlayer();
+	cout << " *** GLOBAL [" << currPlayer->getName() << "] ASSETS" << endl;
 	cout << "total regions: " << ml->getMap()->getPlayersTotalNbRegions(currPlayer) << endl;;
-	
+	cout << "total cities: " << ml->getMap()->getPlayerCities(currPlayer).size() << endl;
+	cout << "total cards: " << currPlayer->getPlayerCards().size() << endl; 
 }
 
 void GameObserver::displayPlayerOwnedRegions(){
 	currPlayer = ml->getCurrPlayer();
 	cout << " *** DISPLAYING [" << currPlayer->getName() << "] OWNED REGIONS" << endl;
-	for(Region* r : ml->getMap()->getPlayersRegions(currPlayer)){
-		cout << r->getName() << ", ";
+	vector<Region*> playersRegions = ml->getMap()->getPlayersRegions(currPlayer);
+	
+	if (playersRegions.size() == 0){
+		cout << currPlayer->getName() << " does not own any regions yet." << endl;
 	}
-	cout << ".\n";
+	
+	else{
+		for(Region* r : playersRegions){
+			cout << r->getName() << ", ";
+		}
+		cout << ".\n";
+	}
 }
 
+
+//gotta fix this one
 void GameObserver::displayAllPlayerArmies(){
 	currPlayer = ml->getCurrPlayer();
 	cout << " *** DISPLAYING [" << currPlayer->getName() << "] PLACED ARMIES" << endl;
-	for (Region* r: ml->getMap()->getPlayersRegions(currPlayer)){
-		cout << "region: " << r->getName() << " armies: " << r->getNbArmiesByPlayer(currPlayer) << endl;
+	if (ml->getMap()->getPlayersTotalNbArmies(currPlayer) == 0){
+		cout << " player has no armies... for some reason" << endl;
+	}
+	for (Continent* c : ml->getMap()->getContinents()){
+		for (Region* r : c->getRegions()){
+			if(r->getNbArmiesByPlayer(currPlayer) > 0){
+				cout << "region: " << r->getName() << " armies: " <<  r->getNbArmiesByPlayer(currPlayer) << endl;
+			}
+		}
 	}
 }
 
 void GameObserver::displayAllPlayerCities(){
 	currPlayer = ml->getCurrPlayer();
 	cout << "*** DISPLAYING [" << currPlayer->getName() << "] CITIES ***" << endl;
+	
+	vector<Region*> cities = ml->getMap()->getPlayerCities(currPlayer);
+	
+	if (cities.size() == 0){
+		cout << "Player has not yet built any cities" << endl;
+	}
+	
+	else {
+		for (Region* r : cities){
+			cout << r->getName() << ", " << endl;
+		}
+		cout << "\n";
+	}
 }
 
 void GameObserver::displayPlayerVictoryPoints(){
+	currPlayer = ml->getCurrPlayer();
 	cout << "*** DISPLAYING [" << currPlayer->getName() << "] VICTORY POINTS" << endl;
+	currPlayer->computeScore(ml->getMap());
+	cout << "********************" << endl;
 }
 
 void GameObserver::displayGameStatistics(){

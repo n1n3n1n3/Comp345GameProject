@@ -190,7 +190,10 @@ public:
 // observer functions
 	vector<Region*> getPlayersRegions(Player* p);
 	int getPlayersTotalNbRegions(Player* p);
+	int getPlayersTotalNbArmies(Player* p);
 	int getPlayersRegionsByContinent(Player* p, Continent* c);
+	int getPlayersNbOfCities(Player* p);
+	vector<Region*> getPlayerCities(Player* p);
 	
 	
 	vector<pair<Player*, int>> compareTotalNumberOfRegions();
