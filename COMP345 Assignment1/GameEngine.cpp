@@ -12,6 +12,7 @@ Tournament::Tournament() {
 	
 	ml = new MainLoop;
 	ml->manualSetup();
+	
 	ml->setTurnsRemaining(20);
 	ml->setTournamentMode(true);
 	ml->playGame();
@@ -29,6 +30,7 @@ SingleGame::SingleGame() {
 }
 
 int main() {
+	
 	int gameType;
 	cout << "*cool startup noise*...\n\nWelc-uhh welcome to the...the game it's time to the we're gonna it's let\'s now time to let\'s play the game right now ok?\n\n\nEnter 0 for Tournament Mode, 1 for a manual Single Game-> ";
 	cin >> gameType;

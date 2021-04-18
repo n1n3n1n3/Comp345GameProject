@@ -102,7 +102,7 @@ public:
 	
 	Card* selectCard(Map* m, Deck* d);
 	
-	int computeScore(Map* m);
+	pair<string, vector<int>> computeScore(Map* m);
 	int cardScore(Card* c, int q);
 	
 };

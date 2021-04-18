@@ -62,6 +62,8 @@ public:
 	
 	void manualSetup();
 	
+	void tourneySetup();
+	
 	//Mutation tings
 	void setTurnsRemaining(int t);
 	void setTournamentMode(bool t);

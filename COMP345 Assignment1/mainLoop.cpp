@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <random>
 #include "mainLoop.h"
@@ -297,10 +298,15 @@ Player* MainLoop::playGame() {
 
 Player* MainLoop::determineWinner() {
 	Player* winner = players.at(0);
-	int winningScore = players.at(0)->computeScore(this->map);
+	
+	vector<pair<string, vector<int>>> allScores;
+	
+	allScores.push_back(players.at(0)->computeScore(this->map));
+	int winningScore = allScores.at(0).second.at(3);
 	
 	for (int i = 1; i < numPlayers; i++) {
-		int compareScore = players.at(i)->computeScore(this->map);
+		allScores.push_back(players.at(i)->computeScore(this->map));
+		int compareScore = allScores.at(i).second.at(3);
 		if (compareScore > winningScore) {
 			winningScore = compareScore;
 			winner = players.at(i);
@@ -321,6 +327,22 @@ Player* MainLoop::determineWinner() {
 				cout << "\nTIE! Even with coins! But " << winner->getName() << " has more regions, so they are the winner!\n";
 		}
 	}
+	
+	cout << fixed << setprecision(2);
+	
+	cout << "*--------*-----------*-------*-------*-----------*\n| PLAYER | TERRITORY | CARDS | COINS | TOTAL VPs |\n";
+	
+	for (int i = 0; i < numPlayers; i++) {
+		cout << left << "*--------*-----------*-------*-------*-----------*\n" 
+		<< "| " << setw(7) << allScores.at(i).first 
+		<< "| " << setw(10) << allScores.at(i).second.at(0) 
+		<< "| " << setw(6) << allScores.at(i).second.at(1)  
+		<< "| " << setw(6) << allScores.at(i).second.at(2)  
+		<< "| " << setw(10) << allScores.at(i).second.at(3)  
+		<< "|" << endl;
+		
+	}
+	cout << "*--------*-----------*-------*-------*-----------*\n";
 	
 	return winner;
 }
@@ -409,7 +431,9 @@ void MainLoop::manualSetup(){
 	
 	
 	//setting game state for the observer
-	setState(ready);
+	//setState(ready);
 }
+
+
 
 

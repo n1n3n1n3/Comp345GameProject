@@ -450,8 +450,10 @@ int Player::cardScore(Card *c, int q) {
 }		
 		
 		
-int Player::computeScore(Map* m) {
+pair<string, vector<int>> Player::computeScore(Map* m) {
 	int score = 0;
+	pair<string, vector<int>> ret;
+	ret.first = this->getName();
 	
 	cout << "\n\nCOMPUTING SCORE FOR " << this->getName() <<"...\n";
 	
@@ -480,6 +482,7 @@ int Player::computeScore(Map* m) {
 	
 	cout << "Continent score: " << cScore;
 	score+=cScore;
+	ret.second.push_back(score);
 	
 	//CARDS SCORE
 	cScore = 0;
@@ -489,6 +492,8 @@ int Player::computeScore(Map* m) {
 	}
 	cout <<"Total card score: " << cScore;
 	score += cScore;
+	
+	
 	
 	//ELIXIR SCORE
 	vector <Player*> p = m->getPlayers();
@@ -509,19 +514,24 @@ int Player::computeScore(Map* m) {
 	}
 	if (most) {
 		cout << "\n+2 VPs for having the most Elixir...\n";
+		ret.second.push_back(cScore+2);
 		score += 2;
 	}
 	
 	else if (tie) {
 		cout << "\n+1 VP for tying for most Elixir...\n";
+		ret.second.push_back(cScore+1);
 		score += 1;
 	}
 	
 	else {
 		cout << "\nNo VP bonus for Elixir...\n";
+		ret.second.push_back(cScore);
 	}
 	
 	cout << "\nTotal score: " << score << endl;
+	ret.second.push_back(this->getCoins());
+	ret.second.push_back(score);
 	
-	return score;
+	return ret;
 }
