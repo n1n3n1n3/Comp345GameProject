@@ -126,12 +126,18 @@ std::string Player::getName(){
 void Player::setStrat(int s) {
 	
 	
-	if (s == 0)
+	if (s == 0) {
 		this->strat = new humanPlayer();
-	else if (s == 1)
+		bid->setStrat("human");
+	}
+	else if (s == 1) {
 		this->strat = new agroPlayer();
-	else
+		bid->setStrat("agro");
+	}
+	else {
 		this->strat = new chillPlayer();
+		bid->setStrat("chill");
+	}
 }
 
 string Player::getStrat() {

@@ -62,6 +62,10 @@ void Bid::betCoins(int c){
 	this->coinsBet = c;
 }
 
+void Bid::setStrat(string n) {
+	this->strat = n;
+}
+
 string Bid::getName(){
 	return this->name;
 }
@@ -72,6 +76,10 @@ int Bid::getBid(){
 
 int Bid::getNbBidders(){
 	return allBids.size();
+}
+
+string Bid:: getStrat() {
+	return this->strat;
 }
 
 vector<Bid*> Bid::getAllBidders(){
@@ -95,17 +103,18 @@ void Bid::makeBids(){
 		return;
 	}
 	
+	
 	cout << "++  Time to BID X_X  ++\nIf it is not your turn, do not peak at your opponents bid!\n";
 	
 	//adapt max bid to nb of players
 	switch (nbBids) {
 		case 2:
-			cout << "max coin bid is 12\n";
-			maxBid = 12;
+			cout << "max coin bid is 14\n";
+			maxBid = 14;
 			break;
 		case 3:
 			cout << "max coin bid is 11\n";
-			maxBid = 14;
+			maxBid = 11;
 			break;
 		case 4:
 			cout << "max coin bid is 9\n";
@@ -118,18 +127,24 @@ void Bid::makeBids(){
 		if(bidder->getName() != "neutral"){
 		int bid = 0;
 		bool valid = false;
-		
-		while (!valid) {
-				cout << bidder->getName() << ", enter your bid (maximum of " << Bid::maxBid << ") -> ";
-				cin >> bid;
-				if ((bid > Bid::maxBid)||(bid < 0)) {
-					cout << "\nInvalid input.\n\n";
+		if (bidder->strat == "agro")
+			bidder->betCoins(2);
+		else if (bidder->strat == "chill")
+			bidder->betCoins(1);
+			else {
+				
+				while (!valid) {
+					cout << bidder->getName() << ", enter your bid (maximum of " << Bid::maxBid << ") -> ";
+					cin >> bid;
+					if ((bid > Bid::maxBid)||(bid < 0)) {
+						cout << "\nInvalid input.\n\n";
+					}
+					else {
+						valid = true;
+					}
 				}
-				else {
-					valid = true;
-				}
-		}
-		bidder->betCoins(bid);
+				bidder->betCoins(bid);
+			}
 		
 		//space between bids so peekers dont peek
 		for (int j = 0; j < 100; j++) {

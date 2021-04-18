@@ -141,7 +141,7 @@ vector<Player*> GameStart::setPlayers(vector<Player*> playerList){
 	int startCoins;
 	switch(nbPlayers){
 		case 2:
-			startCoins = 12;
+			startCoins = 14;
 			break;
 		case 3:
 			startCoins = 11;

@@ -327,6 +327,7 @@ Player* MainLoop::determineWinner() {
 				cout << "\nTIE! Even with coins! But " << winner->getName() << " has more regions, so they are the winner!\n";
 		}
 	}
+	cout.ios_base::clear();
 	
 	cout << fixed << setprecision(2);
 	
@@ -434,6 +435,74 @@ void MainLoop::manualSetup(){
 	//setState(ready);
 }
 
+void MainLoop::tourneySetup(){
+	this->map = GameStart::selectMap();
+	
+	for(int i = 0; i < 2; i++){
+		cout << "enter player " << i+1 << " name: ";
+		string playerName;
+		cin >> playerName;
+		
+		int strat;
+		while (true) {
+			cout <<"\nHUMAN - 0\nAGRO - 1\nCHILL - 2\n***enter starting strategy number for " << playerName << ": ";
+			cin >> strat;
+			if ((strat < 0)||(strat > 2))
+				cout << "\n...invalid, try again..." << endl;
+			else
+				break;	
+		}
+		
+		players.push_back(new Player(14, playerName));
+		players.at(i)->setStrat(strat);
+	}
+
+	
+	cout.ios_base::setstate(ios_base::failbit);
+	this->players = GameStart::setPlayers(players);
+	
+	
+	
+	GameStartUp::setPlayerPieces(players, map);
+	this->deck = GameStart::setDeck();
+	GameStartUp::setPlayerPieces(players, map);
+	GameStartUp::shuffleDeck(deck);
+	GameStartUp::setCardCost(deck);
+	
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(1, 20);
+	
+	int index[10];
+	for (int i = 0; i < 10; i++) {
+		index[i] = distr(gen);
+		cout << index[i] << endl;
+	}
+	
+	GameStartUp::placeInitialPieces(players, map, index);
+	players.erase(players.begin()+2);
+	
+	Player* startingPlayer = GameStartUp::makeBids(players);
+	
+	if (players.size() == 2) {
+		this->turnsRemaining = 26;
+		this->numPlayers = 2;
+	}
+	
+	
+	//	if (players.at(0) != startingPlayer){
+	for (int i = 0; i < players.size(); i++){
+		if (players.at(i) == startingPlayer){
+			cout << "***" << startingPlayer->getName() << endl;
+			players.erase(players.begin() + i);
+			players.insert(players.begin(), startingPlayer);
+		}
+	}
+	
+	
+	//setting game state for the observer
+	//setState(ready);
+}
 
 
 

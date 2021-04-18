@@ -11,7 +11,7 @@ using namespace std;
 Tournament::Tournament() {
 	
 	ml = new MainLoop;
-	ml->manualSetup();
+	ml->tourneySetup();
 	
 	ml->setTurnsRemaining(20);
 	ml->setTournamentMode(true);

@@ -15,6 +15,7 @@ private:
 	static vector<Bid*> allBids;
 	//instance variables
 	string name;
+	string strat;
 	int coinsBet;
 	//friend functions
 	friend std::ostream& operator<<(std::ostream&, const Bid&);
@@ -31,10 +32,12 @@ public:
 //	setters
 	void setName(string n);
 	void betCoins(int c);
+	void setStrat(string n);
 	
 //	getters
 	string getName();
 	int getBid();
+	string getStrat();
 	
 // static functions
 	static int getNbBidders();
