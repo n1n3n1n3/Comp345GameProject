@@ -97,7 +97,7 @@ vector<Player*> GameStart::setPlayers(){
 	int startCoins;
 	switch(nbPlayers){
 		case 2:
-			startCoins = 12;
+			startCoins = 14;
 			break;
 		case 3:
 			startCoins = 11;
@@ -108,10 +108,22 @@ vector<Player*> GameStart::setPlayers(){
 	}
 	
 	for(int i = 0; i < nbPlayers; i++){
-		cout << "enter player " << i << " name: ";
+		cout << "enter player " << i+1 << " name: ";
 		string playerName;
 		cin >> playerName;
+		
+		int strat;
+		while (true) {
+			cout <<"\nHUMAN - 0\nAGRO - 1\nCHILL - 2\n***enter starting strategy number for " << playerName << ": ";
+			cin >> strat;
+			if ((strat < 0)||(strat > 2))
+				cout << "\n...invalid, try again..." << endl;
+			else
+				break;	
+		}
+		
 		players.push_back(new Player(startCoins, playerName));
+		players.at(i)->setStrat(strat);
 	}
 	
 	//add neutral player if there are only two players

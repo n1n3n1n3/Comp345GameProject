@@ -34,6 +34,8 @@ private:
 	Region* currCityBuild;
 	int currSubjectCost;
 	
+	bool tournamentMode;
+	
 public:
 	MainLoop();
 	MainLoop(vector<Player*> players, Deck* deck, Map* map);
@@ -59,6 +61,12 @@ public:
 	void autoSetup();
 	
 	void manualSetup();
+	
+	//Mutation tings
+	void setTurnsRemaining(int t);
+	void setTournamentMode(bool t);
+	bool getTournamentMode();
+	
 	
 	//Observer stuff
 	State getState();

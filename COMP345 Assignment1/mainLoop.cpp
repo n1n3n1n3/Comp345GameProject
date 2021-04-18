@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <random>
 #include "mainLoop.h"
 #include "gameStart.h"
 #include "GameStartUp.h"
@@ -52,6 +53,19 @@ Player* MainLoop::whoseTurn() const{
 	//int turn = turnsRemaining%(this->players.size());
 	return this->players.at(turnsRemaining%numPlayers);
 }
+
+void MainLoop::setTurnsRemaining(int t) {
+	this->turnsRemaining = t;
+}
+
+void MainLoop::setTournamentMode(bool t) {
+	this->tournamentMode = t;
+}
+
+bool MainLoop::getTournamentMode() {
+	return this->tournamentMode;
+}
+
 
 
 //Display Map&Hand
@@ -213,25 +227,26 @@ void MainLoop::singleTurn(Player *p) {
 	
 	cout << *deck;
 	
-	int St;
-	cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";
-	//cin >> St;
-	
-	
-	
-	if (St == 0) {
-		while (true) {
-			int s;
-			cout << "\nEnter 0 for Human, 1 for AgroCPU, 2 for ChillCPU ->";
-			cin >> s;
-			if ((s < 0)||(s > 2))
-				cout << "\nInvalid...." << endl;
-			else {
-				p->setStrat(s);
-				break;
+	if (!tournamentMode) {
+		int St;
+		cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";
+		cin >> St;
+
+		if (St == 0) {
+			while (true) {
+				int s;
+				cout << "\nEnter 0 for Human, 1 for AgroCPU, 2 for ChillCPU ->";
+				cin >> s;
+				if ((s < 0)||(s > 2))
+					cout << "\nInvalid...." << endl;
+				else {
+					p->setStrat(s);
+					break;
+				}
 			}
 		}
-	}
+
+	}	
 	
 	
 	
@@ -253,12 +268,13 @@ Player* MainLoop::playGame() {
 	//Welcome message
 	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	setState(playing);
+	//cout << "\nPast setState" << endl;
 	//Fixed # of turns per game to manage the mainloop
 	while (turnsRemaining > 0) {
-		
+		//cout << "\nIn the Loop" << endl;
 		//determine whose turn
 		Player* thePlayer = whoseTurn();
-		
+		//cout << "\nDetermined WhoseTurn" << endl;
 		//Run turn for the player
 		singleTurn(thePlayer);
 		
@@ -349,19 +365,48 @@ void MainLoop::autoSetup(){
 }
 
 void MainLoop::manualSetup(){
-	map = GameStart::selectMap();
+	this->map = GameStart::selectMap();
 	
-	players = GameStart::setPlayers();
+	this->players = GameStart::setPlayers();
+	
+	
 	
 	GameStartUp::setPlayerPieces(players, map);
-	Deck* deck = GameStart::setDeck();
+	this->deck = GameStart::setDeck();
 	GameStartUp::setPlayerPieces(players, map);
 	GameStartUp::shuffleDeck(deck);
 	GameStartUp::setCardCost(deck);
 	
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(1, 20);
+	
+	int index[10];
+	for (int i = 0; i < 10; i++) {
+		index[i] = distr(gen);
+		cout << index[i] << endl;
+	}
+	
+	GameStartUp::placeInitialPieces(players, map, index);
 	players.erase(players.begin()+2);
 	
 	Player* startingPlayer = GameStartUp::makeBids(players);
+	
+	if (players.size() == 2) {
+		this->turnsRemaining = 26;
+		this->numPlayers = 2;
+	}
+		
+	
+	//	if (players.at(0) != startingPlayer){
+	for (int i = 0; i < players.size(); i++){
+		if (players.at(i) == startingPlayer){
+			cout << "***" << startingPlayer->getName() << endl;
+			players.erase(players.begin() + i);
+			players.insert(players.begin(), startingPlayer);
+		}
+	}
+	
 	
 	//setting game state for the observer
 	setState(ready);
