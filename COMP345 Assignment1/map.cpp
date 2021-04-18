@@ -199,6 +199,18 @@ int Region::getNbArmiesByName(string name){
 	return 0;
 }
 
+int Region::getNbArmiesByPlayer(Player* p){
+	for(pair<Player*, int> pl: playerArmies){
+		if (pl.first == p){
+			return pl.second;
+		}
+	}
+	
+	cout << "no such player" << endl;
+	//return 0 if there is no such player
+	return 0;
+}
+
 
 int Region::getId(){
 	return this->id;
@@ -901,3 +913,59 @@ void Map::printRegions(){
 		cout << "\n" << endl;
 	}
 }
+
+vector<Region*> Map::getPlayersRegions(Player* p){
+	vector<Region*> playersRegions = vector<Region*>();
+	for (Continent* c : continents){
+		for(Region* r: c->getRegions()){
+			if (r->getOwner().compare(p->getName()) == 0){
+				playersRegions.push_back(r);
+			}
+		}
+	}
+	return playersRegions;
+}
+
+int Map::getPlayersTotalNbRegions(Player* p){
+	int nbOfRegions = 0;
+	for (Continent* c : continents){
+		for (Region* r: c->getRegions()){
+			if (r->getOwner().compare(p->getName()) == 0){
+					nbOfRegions++;
+				}
+			}
+		}
+	return nbOfRegions;
+}
+
+int Map::getPlayersRegionsByContinent(Player* p, Continent* continent){
+	int nbOfRegions = 0;
+	
+	for (Continent* c : continents){
+		if (c == continent){
+			for (Region* r: c->getRegions()){
+				if (r->getOwner().compare(p->getName()) == 0){
+					nbOfRegions++;
+				}
+			}
+		}
+	}
+	return nbOfRegions;
+}
+
+vector<pair<Player*, int>> Map::compareTotalNumberOfRegions(){
+	vector<pair<Player*, int>> playersTotalRegions = vector<pair<Player*, int>>();
+	for (Player* p : players){
+		playersTotalRegions.push_back(pair(p, getPlayersTotalNbRegions(p)));
+	}
+	return playersTotalRegions;
+}
+
+vector<pair<Player*, int>> Map::compareTotalNumberOfRegionsByContinent(Continent* c){
+	vector<pair<Player*, int>> playersTotalRegions = vector<pair<Player*, int>>();
+	for (Player* p : players){
+		playersTotalRegions.push_back(pair(p, getPlayersRegionsByContinent(p, c)));
+	}
+	return playersTotalRegions;
+}
+

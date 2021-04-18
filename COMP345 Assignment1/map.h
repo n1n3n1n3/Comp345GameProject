@@ -51,6 +51,7 @@ public:
 	int getId();
 	string getName();
 	int getNbArmiesByName(string name);
+	int getNbArmiesByPlayer(Player* p);
 	string getContinent() const;
 	int getContinentId();
 	vector<pair<Player*, int>> getPlayerArmies();
@@ -185,6 +186,15 @@ public:
 	void printRegions();
 	void printContinents();
 	bool validate(); 
+	
+// observer functions
+	vector<Region*> getPlayersRegions(Player* p);
+	int getPlayersTotalNbRegions(Player* p);
+	int getPlayersRegionsByContinent(Player* p, Continent* c);
+	
+	
+	vector<pair<Player*, int>> compareTotalNumberOfRegions();
+	vector<pair<Player*, int>> compareTotalNumberOfRegionsByContinent(Continent* c);
 };
 
 #endif
