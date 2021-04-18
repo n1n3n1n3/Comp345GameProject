@@ -196,8 +196,7 @@ int Player::checkFlying() {
 		return 1;
 }
 
-//STRATEGY TIME
-
+//Player passes Card decision to its Strategy
 Card* Player::selectCard(Map* m, Deck* d) {
 	return this->strat->chooseCard(this, m, d);
 }
