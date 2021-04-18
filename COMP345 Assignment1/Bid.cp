@@ -134,7 +134,7 @@ void Bid::makeBids(){
 			else {
 				
 				while (!valid) {
-					cout << bidder->getName() << ", enter your bid (maximum of " << Bid::maxBid << ") -> ";
+					cout << bidder->getName() << ", Strategy: " << bidder->strat << ". enter your bid (maximum of " << Bid::maxBid << ") -> ";
 					cin >> bid;
 					if ((bid > Bid::maxBid)||(bid < 0)) {
 						cout << "\nInvalid input.\n\n";

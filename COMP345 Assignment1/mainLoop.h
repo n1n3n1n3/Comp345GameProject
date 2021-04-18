@@ -62,7 +62,7 @@ public:
 	
 	void manualSetup();
 	
-	void tourneySetup();
+	void tourneySetup(string p1Name, int p1Strat, string p2Name, int p2Strat, Map* m);
 	
 	//Mutation tings
 	void setTurnsRemaining(int t);

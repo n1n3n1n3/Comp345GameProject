@@ -435,37 +435,32 @@ void MainLoop::manualSetup(){
 	//setState(ready);
 }
 
-void MainLoop::tourneySetup(){
-	this->map = GameStart::selectMap();
+void MainLoop::tourneySetup(string p1Name, int p1Strat, string p2Name, int p2Strat, Map* m) {
+	players.clear();
+	cout << "\nSetting map..." << endl;
+	this->map = m;
 	
-	for(int i = 0; i < 2; i++){
-		cout << "enter player " << i+1 << " name: ";
-		string playerName;
-		cin >> playerName;
-		
-		int strat;
-		while (true) {
-			cout <<"\nHUMAN - 0\nAGRO - 1\nCHILL - 2\n***enter starting strategy number for " << playerName << ": ";
-			cin >> strat;
-			if ((strat < 0)||(strat > 2))
-				cout << "\n...invalid, try again..." << endl;
-			else
-				break;	
-		}
-		
-		players.push_back(new Player(14, playerName));
-		players.at(i)->setStrat(strat);
-	}
+
+	cout << "\nPushing Players..." << endl;	
+	players.push_back(new Player(14, p1Name));
+	players.push_back(new Player(14, p2Name));
+	
+	cout << "\nSetting Strats " << p1Strat << " and " << p2Strat << "..." << endl;
+	players.at(0)->setStrat(p1Strat);
+	players.at(1)->setStrat(p2Strat);
+	
 
 	
 	cout.ios_base::setstate(ios_base::failbit);
+	cout << "\nSetting Players..." << endl;
 	this->players = GameStart::setPlayers(players);
 	
 	
-	
+	cout << "\nSetting Pieces..." << endl;
 	GameStartUp::setPlayerPieces(players, map);
+	cout << "\nSetting Deck..." << endl;
 	this->deck = GameStart::setDeck();
-	GameStartUp::setPlayerPieces(players, map);
+	//GameStartUp::setPlayerPieces(players, map);
 	GameStartUp::shuffleDeck(deck);
 	GameStartUp::setCardCost(deck);
 	
@@ -478,10 +473,10 @@ void MainLoop::tourneySetup(){
 		index[i] = distr(gen);
 		cout << index[i] << endl;
 	}
-	
+	cout << "\nPlacing Initial Pieces..." << endl;
 	GameStartUp::placeInitialPieces(players, map, index);
 	players.erase(players.begin()+2);
-	
+	cout << "\nMaking Bids..." << endl;
 	Player* startingPlayer = GameStartUp::makeBids(players);
 	
 	if (players.size() == 2) {

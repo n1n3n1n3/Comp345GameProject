@@ -532,7 +532,7 @@ void agroPlayer::DestroyArmy(Player* p, Map* m) {
 		if (a.find("Place") != string::npos)
 			return (0 + c->getCost());
 		else if (a.find("Move") != string::npos)
-			return (1 + c->getCost());
+			return (0 + c->getCost());
 		else
 			return (2 + c->getCost());
 		

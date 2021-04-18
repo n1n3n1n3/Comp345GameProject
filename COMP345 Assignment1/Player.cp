@@ -129,14 +129,17 @@ void Player::setStrat(int s) {
 	if (s == 0) {
 		this->strat = new humanPlayer();
 		bid->setStrat("human");
+		cout << "Setting strat human" << endl;
 	}
 	else if (s == 1) {
 		this->strat = new agroPlayer();
 		bid->setStrat("agro");
+		cout << "Setting strat agro" << endl;
 	}
 	else {
 		this->strat = new chillPlayer();
 		bid->setStrat("chill");
+		cout << "Setting strat chill" << endl;
 	}
 }
 

@@ -38,6 +38,7 @@ public:
 	//functions
 	static void loadMapFilePaths();
 	static Map* selectMap();
+	static Map* selectMap(int i);
 	static Map* selectMap(string path);
 	static vector<Player*> setPlayers();
 	static vector<Player*> setPlayers(vector<Player*> playerList);
