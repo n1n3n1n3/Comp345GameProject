@@ -48,8 +48,6 @@ Region::Region(int id, string name, string continent, int continentId){
 //streaming friend
 std::ostream& operator<<(std::ostream &strm, const Region &r) {
 	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << "\nbelongs to: " << r.owner << "\nContinent: " << r.continent << "\n" << r.getPlayersAndArmiesString() << endl;
-	
-//	<< "\nnb of armies ++ \n" << r.player << "\n--------------------\n";
 }
 
 const string Region::getPlayersAndArmiesString() const{

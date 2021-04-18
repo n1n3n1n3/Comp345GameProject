@@ -6,7 +6,7 @@
 #include "Subject.h"
 
 
-enum State {initiated, bidding, ready, playing, marking, done};
+enum State {Initiated, Bidding, Ready, GetCard, Place, Move, Destroy,  Build, CountingScore, Done};
 
 class MainLoop : public Subject{
 	
@@ -25,14 +25,12 @@ private:
 	
 	//subject stuff
 	State state;
-	string currAction;
-	Card* currentCard;
-	int actionNbArmiesPlaced;
-	int actionNbArmiesMoved;
-	int action;
-	pair<Player*, Region*> currSubjectDestroyedArmies;
-	Region* currCityBuild;
-	int currSubjectCost;
+	Hand* currHand;
+	Player* currPlayer;
+	
+	int actionNbArmies;
+	int actionNbArmiesBonus;
+
 	
 public:
 	MainLoop();
@@ -64,7 +62,12 @@ public:
 	State getState();
 	void setState(State newState);
 	
-	string getCurrAction();
+	Player* getCurrPlayer();
+	Hand* getCurrHand();
+	Map* getMap();
+	Region* getStartingRegion();
+	int getActionNbArmies();
+	int getActionNbArmiesBonus();
 };
 
 

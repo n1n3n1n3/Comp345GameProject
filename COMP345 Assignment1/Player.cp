@@ -70,7 +70,7 @@ Player& Player::operator = (const Player &p) {
 
 //Output
 std::ostream& operator<<(std::ostream &strm, const Player &p) {
-	return strm << p.name << " has...\n" << p.coin << " coins.\n" << p.city <<" cities.\n" << p.army << " armies.";
+	return strm <<"[" << p.name << "]      coins:: " << p.coin << " cities:: " << p.city <<" armies:: " << p.army << endl;
 }
 
 

@@ -15,10 +15,9 @@ int main(int argc, char *argv[]) {
 	ml->Attach(observer);
 	//setting up game
 	ml->autoSetup();
-//	observer->Update();
-	vector<Player*> pl = ml->getPlayers();
 	
-	for (Player* p : pl){
-		cout << p->getName() << endl;
-	}
+	ml->singleTurn(ml->getPlayers().at(0));	
+	ml->singleTurn(ml->getPlayers().at(1));	
+	ml->singleTurn(ml->getPlayers().at(0));	
+	ml->singleTurn(ml->getPlayers().at(1));	
 }

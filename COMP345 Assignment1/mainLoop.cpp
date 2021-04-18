@@ -10,7 +10,7 @@ int MainLoop::numPlayers = 0;
 int MainLoop::turnsRemaining = 0;
 
 MainLoop::MainLoop(){
-	state = initiated;
+	setState(Initiated);
 }
 //Constructor that currently can only handle a 2 player game
 MainLoop::MainLoop(vector<Player*> players, Deck* deck, Map* map) {
@@ -18,7 +18,7 @@ MainLoop::MainLoop(vector<Player*> players, Deck* deck, Map* map) {
 	this->deck = deck;
 	this->map = map;
 	this->numPlayers = players.size();
-	state = initiated;
+	setState(Initiated);
 	if (numPlayers == 2)
 		this->turnsRemaining = 26;
 	else {
@@ -49,7 +49,6 @@ vector<Player*> MainLoop::getPlayers(){
 
 //Check whose turn it is
 Player* MainLoop::whoseTurn() const{
-	//int turn = turnsRemaining%(this->players.size());
 	return this->players.at(turnsRemaining%numPlayers);
 }
 
@@ -65,7 +64,7 @@ void MainLoop::showBoard() {
 
 //Determine the action from a card and have the player execute the action
 void MainLoop::takeAction(Player* p, Card *c) {
-	
+	currPlayer = p;
 	bool andAction = false;
 	bool orAction = false;
 	int bonus = 0;
@@ -155,54 +154,52 @@ void MainLoop::takeAction(Player* p, Card *c) {
 			case 1:
 				bonus = p->checkPlacementBonus();
 				num = second + bonus;
-				cout << "\n***************************************\nPlacing " << second << " armies with a bonus of " << bonus << " for a total of " << num;
+				
+				//subject state elements
+				actionNbArmies = second;
+				actionNbArmiesBonus = bonus;
+				setState(Place);
+			
 				
 				p->PlaceNewArmies(num, map);
 				
-				//subject state elements
-				currAction = "place";
-				actionNbArmiesPlaced = num;
 				
 				break;
 			case 2:
 				bonus = p->checkMovementBonus();
 				num = second + bonus;
+				
+				actionNbArmies = second;
+				actionNbArmiesBonus = bonus;
+				setState(Move);
+				
 				cout << "\n***************************************\nMoving " << second << " armies with a bonus of " << bonus << " for a total of " << num << ".\nMoving over water costs " << p->checkFlying() << " per Army.";
 				
 				p->MoveArmies(num, map);
 				
-				//subject state elements
-				currAction = "move";
-				actionNbArmiesMoved = num;
+				
 				break;
 			case 3:
-				cout << "\n***************************************\nDestroying an army...";
-				p->DestroyArmy(map);
+				setState(Destroy);
 				
-				//subject state elements
-				currAction = "destroy";
+				p->DestroyArmy(map);
 				
 				break;
 			case 4:
-				cout << "\n***************************************\nBuilding a city...";
+				setState(Build);
 				
 				p->BuildCity(map);
-				
-				//subject state elements
-				currAction = "build";
 				
 				break;
 			default:
 				ret+= "\n***************************************\nInvalid...";
 		}
-//		Notify();
 	}
 	
 }
 
 //A single turn
 void MainLoop::singleTurn(Player *p) {
-	
 	//Display the Map & Hand
 	showBoard();
 	//Show the player all their cards, end turn
@@ -236,23 +233,22 @@ void MainLoop::singleTurn(Player *p) {
 	
 	
 	//Player chooses the card they want from the hand
+	currPlayer = p;
+	currHand = deck->getHand();
+	setState(GetCard);
 	Card* theCard = p->selectCard(this->map, this->deck);
-	currentCard = theCard;
 	//check Immune card
 	if (theCard->getGood() == 9)
 		map->setImmunePlayer(p);
 	
 	//Player takes the action of the Card
 	takeAction(p, theCard);
-//	Notify();
-//		cout << "\n***************************************\n...Turn Over...\n***************************************\n\n";
 }
 
 Player* MainLoop::playGame() {
 	
 	//Welcome message
 	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~Welcome to Eight-Minute Empire: Legends!~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
-	setState(playing);
 	//Fixed # of turns per game to manage the mainloop
 	while (turnsRemaining > 0) {
 		
@@ -266,14 +262,14 @@ Player* MainLoop::playGame() {
 		turnsRemaining--;
 	}
 	
-	setState(marking);
+	setState(CountingScore);
 	
 	cout << "\nCard limit reached! Time to tally the score...\n";
 	Player* theWinner = determineWinner();
 	
 	cout << "\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n*~*~*!Congratulations to " << theWinner->getName() << " for their victory!*~*~*\n*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*\n";
 	
-	setState(done);
+	setState(Done);
 	cout << "\n\n...............\n.......Goodbye for now.......\n...............";
 	
 	return theWinner;
@@ -332,20 +328,17 @@ void MainLoop::autoSetup(){
 	//too lay to make this fully manual
 	Player* startingPlayer = GameStartUp::makeBids(players);
 	
-//	if (players.at(0) != startingPlayer){
 	for (int i = 0; i < players.size(); i++){
 		if (players.at(i) == startingPlayer){
-			cout << "***" << startingPlayer->getName() << endl;
 			players.erase(players.begin() + i);
 			players.insert(players.begin(), startingPlayer);
 		}
 	}
-//	}
 	
-	setState(bidding);
+	setState(Bidding);
 
 	//setting game state for the observer
-	setState(ready);
+	setState(Ready);
 }
 
 void MainLoop::manualSetup(){
@@ -363,8 +356,29 @@ void MainLoop::manualSetup(){
 	
 	Player* startingPlayer = GameStartUp::makeBids(players);
 	
-	//setting game state for the observer
-	setState(ready);
 }
 
 
+Player* MainLoop::getCurrPlayer(){
+	return currPlayer;
+}
+
+Hand* MainLoop::getCurrHand(){
+	return currHand;
+}
+
+int MainLoop::getActionNbArmies(){
+	return actionNbArmies;
+}
+
+int MainLoop::getActionNbArmiesBonus(){
+	return actionNbArmiesBonus;
+}
+
+Map* MainLoop::getMap(){
+	return map;
+}
+
+Region* MainLoop::getStartingRegion(){
+	return map->getStartingRegion();
+}
