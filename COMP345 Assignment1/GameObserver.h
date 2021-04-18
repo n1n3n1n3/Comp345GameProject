@@ -23,12 +23,22 @@ class GameObserver : public Observer{
 		void showMap();
 		void setViewOn(bool setting);
 		
+		
+		void gameStatisticsController();
+		
+		void gameStatisticsMenu();
 		void displayGlobalPlayerAssets();
 		void displayPlayerOwnedRegions();
+		void displayPlayerArmies();
 		void displayAllPlayerArmies();
+		void displayPlayerCities();
 		void displayAllPlayerCities();
 		void displayPlayerVictoryPoints();
-		void displayGameStatistics();
+		void displayTotalGameStatistics();
+		void displayRegionOccupation();
+		void displayVictoryPoints();
+		void displayAllPlayerVictoryPoints();
+		void displayHand();
 		
 	private:
 		Player* currPlayer;

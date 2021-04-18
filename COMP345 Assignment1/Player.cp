@@ -525,3 +525,75 @@ int Player::computeScore(Map* m) {
 	
 	return score;
 }
+
+int Player::getScore(Map* m){
+	cout << "\n[" << this->getName() <<"]\n";
+	int score = 0;
+	
+	//REGION SCORE
+	vector<Continent*> continents = m->getContinents();
+	for (int i = 0; i < continents.size(); i++) {
+		vector<Region*> regions = continents.at(i)->getRegions();
+		for (int j = 0; j < regions.size(); j++) {
+			if ((regions.at(j)->getOwner()) == this->name) {
+				score++;
+			}
+		}
+	}
+	cout << "Region score: " << score << endl;
+	
+	int cScore = 0;
+	//CONTINENT SCORE
+	for (int i = 0; i < continents.size(); i++) {
+		if ((continents.at(i)->getOwner(m)) == this->name) {
+			cScore++;
+		}
+	}
+	
+	cout << "Continent score: " << cScore << endl;
+	score+=cScore;
+	
+	//CARDS SCORE
+	cScore = 0;
+	for (int i = 0; i < scoringCards.size(); i++) {
+		int thisCard = cardScore(scoringCards.at(i).first, scoringCards.at(i).second);
+		cScore += thisCard;
+	}
+	cout <<"Total card score: " << cScore << endl;;
+	score += cScore;
+	
+	//ELIXIR SCORE
+	vector <Player*> p = m->getPlayers();
+	bool most = true;
+	bool tie = false;
+	cScore = 0;
+	for (int i = 0; i < p.size(); i++) {
+		if (p.at(i) != this) {
+			if (p.at(i)->getElixir() > this->elixir) {
+				most = false;
+				tie = false;
+				break;
+			}
+			else if (p.at(i)->getElixir() == this->elixir) {
+				most = false;
+				tie = true;
+			}
+		}
+	}
+	if (most) {
+		cScore = 2;
+	}
+	
+	else if (tie) {
+		cScore = 1;
+	}
+	
+	else {
+		cScore = 0;
+	}
+	cout <<"Total card score: " << cScore << endl;
+	cout << "\nTotal score: " << score << endl;
+	
+	return score;
+
+}

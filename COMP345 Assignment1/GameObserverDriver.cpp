@@ -11,8 +11,10 @@ int main(int argc, char *argv[]) {
 	MainLoop* ml = new MainLoop();
 	//observer
 	GameObserver* observer = new GameObserver(ml);
+	
+//	set on for part 3
 	observer->setViewOn(true);
-	//attaching observer
+	//attaching observer''
 	ml->Attach(observer);
 	//setting up game
 	ml->autoSetup();

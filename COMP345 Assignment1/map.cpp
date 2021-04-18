@@ -151,7 +151,6 @@ bool Region::checkCity(Player *p) {
 				return true;
 			}
 			else {
-				//cout << "\nNo city for this player at this region" << endl;
 				return false;
 			}
 		}
@@ -992,16 +991,7 @@ vector<Region*> Map::getPlayerCities(Player* p){
 }
 
 int Map::getPlayerTotalCities(Player* p){
-	int nbCities;
-	
-	for (Continent* c : continents){
-		for (Region* r : c->getRegions()){
-			if(r->checkCity(p)){
-				nbCities++;			}
-		}
-	}
-	
-	return nbCities;
+	return getPlayerCities(p).size();
 }
 
 int Map::getPlayersTotalNbArmies(Player* p){
