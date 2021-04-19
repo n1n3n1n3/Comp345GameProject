@@ -30,7 +30,7 @@ private:
 	
 	int actionNbArmies;
 	int actionNbArmiesBonus;
-
+	bool tournamentMode;
 	
 public:
 	MainLoop();
@@ -61,6 +61,13 @@ public:
 	//Observer stuff
 	State getState();
 	void setState(State newState);
+	
+	void tourneySetup(string p1Name, int p1Strat, string p2Name, int p2Strat, Map* m);
+	
+	//Mutation tings
+	void setTurnsRemaining(int t);
+	void setTournamentMode(bool t);
+	bool getTournamentMode();
 	
 	Player* getCurrPlayer();
 	Hand* getCurrHand();

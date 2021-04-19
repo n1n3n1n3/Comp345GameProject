@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <random>
 #include "mainLoop.h"
 #include "gameStart.h"
 #include "GameStartUp.h"
@@ -51,6 +52,19 @@ vector<Player*> MainLoop::getPlayers(){
 //Check whose turn it is
 Player* MainLoop::whoseTurn() const{
 	return this->players.at(turnsRemaining%numPlayers);
+}
+
+
+void MainLoop::setTurnsRemaining(int t) {
+	this->turnsRemaining = t;
+}
+
+void MainLoop::setTournamentMode(bool t) {
+	this->tournamentMode = t;
+}
+
+bool MainLoop::getTournamentMode() {
+	return this->tournamentMode;
 }
 
 
@@ -211,22 +225,22 @@ void MainLoop::singleTurn(Player *p) {
 	
 	cout << *deck;
 	
-	int St;
-	cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";
-	//cin >> St;
-	
-	
-	
-	if (St == 0) {
-		while (true) {
-			int s;
-			cout << "\nEnter 0 for Human, 1 for AgroCPU, 2 for ChillCPU ->";
-			cin >> s;
-			if ((s < 0)||(s > 2))
-				cout << "\nInvalid...." << endl;
-			else {
-				p->setStrat(s);
-				break;
+	if (!tournamentMode) {
+		int St;
+		cout << "\n\n" << p->getName() << ". Your current Strategy is " << p->getStrat() << ".\nEnter 0 to change the strategy, anything else to skip->";
+		cin >> St;
+		
+		if (St == 0) {
+			while (true) {
+				int s;
+				cout << "\nEnter 0 for Human, 1 for AgroCPU, 2 for ChillCPU ->";
+				cin >> s;
+				if ((s < 0)||(s > 2))
+					cout << "\nInvalid...." << endl;
+				else {
+					p->setStrat(s);
+					break;
+				}
 			}
 		}
 	}
@@ -370,16 +384,104 @@ void MainLoop::manualSetup(){
 	players = GameStart::setPlayers();
 	
 	GameStartUp::setPlayerPieces(players, map);
-	Deck* deck = GameStart::setDeck();
+	deck = GameStart::setDeck();
 	GameStartUp::setPlayerPieces(players, map);
 	GameStartUp::shuffleDeck(deck);
 	GameStartUp::setCardCost(deck);
+	
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(1, 20);
+	
+	int index[10];
+	for (int i = 0; i < 10; i++) {
+		index[i] = distr(gen);
+		cout << index[i] << endl;
+	}
+	
+	GameStartUp::placeInitialPieces(players, map, index);
+	
 	
 	players.erase(players.begin()+2);
 	
 	Player* startingPlayer = GameStartUp::makeBids(players);
 	
+	if (players.size() == 2) {
+		this->turnsRemaining = 26;
+		this->numPlayers = 2;
+	}
+	
+	
+	//	if (players.at(0) != startingPlayer){
+	for (int i = 0; i < players.size(); i++){
+		if (players.at(i) == startingPlayer){
+			cout << "***" << startingPlayer->getName() << endl;
+			players.erase(players.begin() + i);
+			players.insert(players.begin(), startingPlayer);
+		}
+	}
+	
+	
 }
+
+void MainLoop::tourneySetup(string p1Name, int p1Strat, string p2Name, int p2Strat, Map* m) {
+	players.clear();
+	cout << "\nSetting map..." << endl;
+	this->map = m;
+	
+	
+	cout << "\nPushing Players..." << endl;	
+	players.push_back(new Player(14, p1Name));
+	players.push_back(new Player(14, p2Name));
+	
+	cout << "\nSetting Strats " << p1Strat << " and " << p2Strat << "..." << endl;
+	players.at(0)->setStrat(p1Strat);
+	players.at(1)->setStrat(p2Strat);
+
+	cout.ios_base::setstate(ios_base::failbit);
+	cout << "\nSetting Players..." << endl;
+	this->players = GameStart::setPlayers(players);
+	
+	
+	cout << "\nSetting Pieces..." << endl;
+	GameStartUp::setPlayerPieces(players, map);
+	cout << "\nSetting Deck..." << endl;
+	this->deck = GameStart::setDeck();
+	//GameStartUp::setPlayerPieces(players, map);
+	GameStartUp::shuffleDeck(deck);
+	GameStartUp::setCardCost(deck);
+	
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(1, 20);
+	
+	int index[10];
+	for (int i = 0; i < 10; i++) {
+		index[i] = distr(gen);
+		cout << index[i] << endl;
+	}
+	cout << "\nPlacing Initial Pieces..." << endl;
+	GameStartUp::placeInitialPieces(players, map, index);
+	players.erase(players.begin()+2);
+	cout << "\nMaking Bids..." << endl;
+	Player* startingPlayer = GameStartUp::makeBids(players);
+	
+	if (players.size() == 2) {
+		this->turnsRemaining = 26;
+		this->numPlayers = 2;
+	}
+	
+	
+	//	if (players.at(0) != startingPlayer){
+	for (int i = 0; i < players.size(); i++){
+		if (players.at(i) == startingPlayer){
+			cout << "***" << startingPlayer->getName() << endl;
+			players.erase(players.begin() + i);
+			players.insert(players.begin(), startingPlayer);
+		}
+	}
+}
+
 
 
 Player* MainLoop::getCurrPlayer(){
