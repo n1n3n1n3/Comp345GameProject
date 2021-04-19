@@ -136,7 +136,7 @@ void GameObserver::gameStatisticsMenu(){
 		cout << "(7) all player victory points" << endl;
 		cout << "(8) global game statistics " << endl;
 		cout << "(9) see Hand" << endl;
-		cout << "(9) Exit" << endl;
+		cout << "(10) Exit" << endl;
 		cout << "select option :: ";
 		cin >> entry;
 		
@@ -334,7 +334,7 @@ void GameObserver::displayTotalGameStatistics(){
 		cout << p->getName() << ": " << ml->getMap()->getPlayerTotalCities(p) << "  ";
 	}
 	
-	cout <<"\n\n [TOTAL VICTORY POINTS] [";
+	cout <<"\n\n [TOTAL VICTORY POINTS]";
 	for (int i = 0; i < players.size(); i++){
 		nbCities = ml->getMap()->getPlayerTotalCities(players.at(i));
 		int victoryPoints = players.at(i)->getScore(ml->getMap());
@@ -342,7 +342,7 @@ void GameObserver::displayTotalGameStatistics(){
 		for (int j = 0; j < victoryPoints; j++){
 			cout << playerSymbols[i];
 		}
-		cout << "]\n";
+		cout << "\n";
 	}
 	
 	for (Player* p: players){

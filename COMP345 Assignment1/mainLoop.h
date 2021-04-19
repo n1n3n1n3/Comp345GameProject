@@ -32,8 +32,6 @@ private:
 	int actionNbArmiesBonus;
 
 	
-	bool tournamentMode;
-	
 public:
 	MainLoop();
 	MainLoop(vector<Player*> players, Deck* deck, Map* map);
@@ -59,14 +57,6 @@ public:
 	void autoSetup();
 	
 	void manualSetup();
-	
-	void tourneySetup(string p1Name, int p1Strat, string p2Name, int p2Strat, Map* m);
-	
-	//Mutation tings
-	void setTurnsRemaining(int t);
-	void setTournamentMode(bool t);
-	bool getTournamentMode();
-	
 	
 	//Observer stuff
 	State getState();
