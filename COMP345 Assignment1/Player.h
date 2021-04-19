@@ -102,7 +102,12 @@ public:
 	
 	Card* selectCard(Map* m, Deck* d);
 	
+//<<<<<<< HEAD
 	pair<string, vector<int>> computeScore(Map* m);
+//=======
+	//int computeScore(Map* m);
+	int getScore(Map* m);
+//>>>>>>> f7e30149c02f5dc6992803337df4717084231ff3
 	int cardScore(Card* c, int q);
 	
 };

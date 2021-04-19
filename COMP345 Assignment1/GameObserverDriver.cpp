@@ -11,14 +11,16 @@ int main(int argc, char *argv[]) {
 	MainLoop* ml = new MainLoop();
 	//observer
 	GameObserver* observer = new GameObserver(ml);
-	//attaching observer
+	
+//	set on for part 3
+	observer->setViewOn(true);
+	//attaching observer''
 	ml->Attach(observer);
 	//setting up game
 	ml->autoSetup();
-//	observer->Update();
-	vector<Player*> pl = ml->getPlayers();
 	
-	for (Player* p : pl){
-		cout << p->getName() << endl;
-	}
+	ml->singleTurn(ml->getPlayers().at(0));	
+	ml->singleTurn(ml->getPlayers().at(1));	
+	ml->singleTurn(ml->getPlayers().at(0));	
+	ml->singleTurn(ml->getPlayers().at(1));	
 }

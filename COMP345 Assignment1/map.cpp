@@ -48,8 +48,6 @@ Region::Region(int id, string name, string continent, int continentId){
 //streaming friend
 std::ostream& operator<<(std::ostream &strm, const Region &r) {
 	return strm << "\n--------------------\nRegion #" << r.id << " " << r.name << "\nbelongs to: " << r.owner << "\nContinent: " << r.continent << "\n" << r.getPlayersAndArmiesString() << endl;
-	
-//	<< "\nnb of armies ++ \n" << r.player << "\n--------------------\n";
 }
 
 const string Region::getPlayersAndArmiesString() const{
@@ -153,7 +151,6 @@ bool Region::checkCity(Player *p) {
 				return true;
 			}
 			else {
-				//cout << "\nNo city for this player at this region" << endl;
 				return false;
 			}
 		}
@@ -189,6 +186,14 @@ void Region::removeArmies(Player* p, int nb){
 	this->determineOwner();
 }
 
+int Region::getTotalArmies(){
+	int nbArmies = 0;
+	for (pair<Player*, int> p: playerArmies){
+		nbArmies += p.second;
+	}
+	return nbArmies;
+}
+
 int Region::getNbArmiesByName(string name){
 	for(pair<Player*, int> p: playerArmies){
 		if((p.first->getName().compare(name)) == 0){
@@ -196,7 +201,19 @@ int Region::getNbArmiesByName(string name){
 		}
 	}
 	
-	cout << "no such player" << endl;
+	cout << "no such player in this region" << endl;
+	//return 0 if there is no such player
+	return 0;
+}
+
+int Region::getNbArmiesByPlayer(Player* p){
+	for(pair<Player*, int> pl: playerArmies){
+		if (pl.first == p){
+			return pl.second;
+		}
+	}
+	
+	cout << "no such player in this region" << endl;
 	//return 0 if there is no such player
 	return 0;
 }
@@ -902,4 +919,87 @@ void Map::printRegions(){
 		}
 		cout << "\n" << endl;
 	}
+}
+
+vector<Region*> Map::getPlayersRegions(Player* p){
+	vector<Region*> playersRegions = vector<Region*>();
+	for (Continent* c : continents){
+		for(Region* r: c->getRegions()){
+			if (r->getOwner().compare(p->getName()) == 0){
+				playersRegions.push_back(r);
+			}
+		}
+	}
+	return playersRegions;
+}
+
+int Map::getPlayersTotalNbRegions(Player* p){
+	int nbOfRegions = 0;
+	for (Continent* c : continents){
+		for (Region* r: c->getRegions()){
+			if (r->getOwner().compare(p->getName()) == 0){
+					nbOfRegions++;
+				}
+			}
+		}
+	return nbOfRegions;
+}
+
+int Map::getPlayersRegionsByContinent(Player* p, Continent* continent){
+	int nbOfRegions = 0;
+	
+	for (Continent* c : continents){
+		if (c == continent){
+			for (Region* r: c->getRegions()){
+				if (r->getOwner().compare(p->getName()) == 0){
+					nbOfRegions++;
+				}
+			}
+		}
+	}
+	return nbOfRegions;
+}
+
+vector<pair<Player*, int>> Map::compareTotalNumberOfRegions(){
+	vector<pair<Player*, int>> playersTotalRegions = vector<pair<Player*, int>>();
+	for (Player* p : players){
+		playersTotalRegions.push_back(pair(p, getPlayersTotalNbRegions(p)));
+	}
+	return playersTotalRegions;
+}
+
+vector<pair<Player*, int>> Map::compareTotalNumberOfRegionsByContinent(Continent* c){
+	vector<pair<Player*, int>> playersTotalRegions = vector<pair<Player*, int>>();
+	for (Player* p : players){
+		playersTotalRegions.push_back(pair(p, getPlayersRegionsByContinent(p, c)));
+	}
+	return playersTotalRegions;
+}
+
+vector<Region*> Map::getPlayerCities(Player* p){
+	vector<Region*> playersCities = vector<Region*>();
+	
+	for (Continent* c : continents){
+		for (Region* r : c->getRegions()){
+			if(r->checkCity(p)){
+				playersCities.push_back(r);
+			}
+		}
+	}
+	
+	return playersCities;
+}
+
+int Map::getPlayerTotalCities(Player* p){
+	return getPlayerCities(p).size();
+}
+
+int Map::getPlayersTotalNbArmies(Player* p){
+	int nbArmies = 0;
+	for (Continent* c: continents){
+		for (Region* r : c->getRegions()){
+			nbArmies += r->getNbArmiesByPlayer(p);
+		}
+	}
+	return nbArmies;
 }
